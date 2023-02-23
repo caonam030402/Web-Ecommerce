@@ -1,12 +1,16 @@
+import Footer from 'src/components/Footer'
+import RegisterHeader from 'src/components/RegisterHeader'
+
 interface Props {
   children?: React.ReactNode
 }
 
 export default function RegisterLayout({ children }: Props) {
   return (
-    <div>
-      Register Layout
+    <div className='m-auto py-3 lg:px-0'>
+      <RegisterHeader />
       {children}
+      <Footer />
     </div>
   )
 }
