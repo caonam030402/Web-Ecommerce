@@ -7,7 +7,7 @@ interface Props {
 
 export default function RegisterLayout({ children }: Props) {
   return (
-    <div className='m-auto py-3 lg:px-0'>
+    <div className='m-auto lg:px-0'>
       <RegisterHeader />
       {children}
       <Footer />

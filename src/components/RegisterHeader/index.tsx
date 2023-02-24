@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function RegisterHeader() {
   return (
-    <header className='mx-auto py-3 px-3 lg:max-w-7xl lg:px-0'>
+    <header className='mx-auto py-6 px-3 lg:max-w-7xl lg:px-0'>
       <nav className='flex items-center justify-between'>
         <div className='flex items-end'>
           <svg
