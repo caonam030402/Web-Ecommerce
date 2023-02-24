@@ -1,25 +1,21 @@
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import Input from 'src/components/Input'
-import { getRules } from 'src/utils/rules'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Schema, schema } from 'src/utils/rules'
 
-// interface for FormData
-interface FormData {
-  email: string
-  password: string
-  confirm_password: string
-}
+type FormData = Pick<Schema, 'email' | 'password'> // Pick the fields from Schema object which we want to keep
+const LoginSchema = schema.pick(['email', 'password']) // Create a new object with those selected fields
 
 export default function Login() {
+  // register new form using useFormhook
   const {
     register,
     handleSubmit,
-    getValues,
     formState: { errors }
-  } = useForm<FormData>()
-
-  // Get Rules
-  const rules = getRules(getValues)
+  } = useForm<FormData>({
+    resolver: yupResolver(LoginSchema)
+  })
 
   const onSubmit = handleSubmit((data) => {
     console.log(data)
@@ -36,7 +32,6 @@ export default function Login() {
           className='mt-8'
           errorMassage={errors.email?.message}
           placeholder='Email'
-          rules={rules.email}
         />
         <Input
           name='password'
@@ -44,7 +39,7 @@ export default function Login() {
           className='mt-4'
           errorMassage={errors.password?.message}
           placeholder='Password'
-          rules={rules.password}
+          type='password'
         />
         <button type='submit' className='mt-5 rounded-sm bg-primaryColor p-[10px] text-sm text-white'>
           ĐĂNG NHẬP

@@ -1,14 +1,11 @@
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import Input from 'src/components/Input'
-import { getRules } from 'src/utils/rules'
+import { Schema, schema } from 'src/utils/rules'
+import { yupResolver } from '@hookform/resolvers/yup'
 
-// interface for FormData
-interface FormData {
-  email: string
-  password: string
-  confirm_password: string
-}
+type FormData = Pick<Schema, 'email' | 'password' | 'confirm_password'> // Pick the fields from Schema type which are required
+const registerSchema = schema.pick(['email', 'password', 'confirm_password']) // Create a new schema with only picked fields
 
 export default function Register() {
   // register new form using useFormhook
@@ -17,10 +14,9 @@ export default function Register() {
     handleSubmit,
     getValues,
     formState: { errors }
-  } = useForm<FormData>()
-
-  // Get Rules
-  const rules = getRules(getValues)
+  } = useForm<FormData>({
+    resolver: yupResolver(registerSchema)
+  })
 
   // Submit the form
   const onSubmit = handleSubmit(
@@ -44,7 +40,6 @@ export default function Register() {
           className='mt-8'
           errorMassage={errors.email?.message}
           placeholder='Email'
-          rules={rules.email}
         />
         <Input
           name='password'
@@ -52,7 +47,7 @@ export default function Register() {
           className='mt-3'
           errorMassage={errors.password?.message}
           placeholder='Password'
-          rules={rules.password}
+          type='password'
         />
         <Input
           name='confirm_password'
@@ -60,7 +55,7 @@ export default function Register() {
           className='mt-3'
           errorMassage={errors.confirm_password?.message}
           placeholder='Confirm Password'
-          rules={rules.confirm_password}
+          type='password'
         />
         <button type='submit' className='mt-4 rounded-sm bg-primaryColor p-[10px] text-sm text-white'>
           ĐĂNG NHẬP

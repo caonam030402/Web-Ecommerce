@@ -1,4 +1,5 @@
 import { RegisterOptions, UseFormGetValues } from 'react-hook-form'
+import * as yup from 'yup'
 
 // This type is used to define the validation rules for the input fields in the form
 type Rules = { [key in 'email' | 'password' | 'confirm_password']?: RegisterOptions }
@@ -53,3 +54,25 @@ export const getRules = (getValues?: UseFormGetValues<any>): Rules => ({
       typeof getValues === 'function' ? (value) => value === getValues('password') || 'Password không khớp' : undefined
   }
 })
+
+// Define the schema for the input
+export const schema = yup.object({
+  email: yup
+    .string()
+    .required('Email là bắt buộc')
+    .email('Email không đúng định dạng')
+    .max(160, 'Độ dài từ 5 - 160 kí tự')
+    .min(5, 'Độ dài từ 5 - 160 kí tự'),
+  password: yup
+    .string()
+    .required('Password là bắt buộc')
+    .max(160, 'Độ dài từ 5 - 160 kí tự')
+    .min(6, 'Độ dài từ 5 - 160 kí tự'),
+  confirm_password: yup
+    .string()
+    .required('Confirm password là bắt buộc')
+    .oneOf([yup.ref('password')], 'Nhập lại password không khớp')
+})
+
+// Schema definition to validate the values provided in input fields of signup form
+export type Schema = yup.InferType<typeof schema>
