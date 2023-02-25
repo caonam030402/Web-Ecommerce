@@ -8,7 +8,6 @@ import { registerAccount } from 'src/apis/auth.api'
 import { omit } from 'lodash'
 import { isAxiosUnprocessableEntity } from 'src/utils/utils'
 import { SuccessResponse } from 'src/types/utils.type'
-import { type } from 'os'
 
 type FormData = Pick<Schema, 'email' | 'password' | 'confirm_password'> // Pick the fields from Schema type which are required
 const registerSchema = schema.pick(['email', 'password', 'confirm_password']) // Create a new schema with only picked fields
