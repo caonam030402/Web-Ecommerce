@@ -6,10 +6,25 @@ import { BiHelpCircle } from 'react-icons/bi'
 import { MdLanguage } from 'react-icons/md'
 import { FaFacebook } from 'react-icons/fa'
 import { AiFillInstagram } from 'react-icons/ai'
-import { useFloating } from '@floating-ui/react'
-import { useState } from 'react'
+import { useFloating, FloatingPortal, arrow, shift, offset } from '@floating-ui/react'
+import { useState, useRef } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import './style.scss'
+import { transform } from 'lodash'
 
 export default function Header() {
+  const [isOpen, setIsOpen] = useState(false)
+  const arrowRef = useRef<HTMLElement>(null)
+
+  const { x, y, strategy, refs, middlewareData } = useFloating({
+    middleware: [shift(), offset(10), arrow({ element: arrowRef })]
+  })
+  const showPopover = () => {
+    setIsOpen(true)
+  }
+  const hidePopover = () => {
+    setIsOpen(false)
+  }
   return (
     <header className='bg-primaryColor py-2'>
       <div className='container text-white'>
@@ -37,10 +52,50 @@ export default function Header() {
               <BiHelpCircle className='mr-[2px] text-[20px]' />
               <span>Hỗ Trợ</span>
             </Link>
-            <div className='flex items-center'>
+            <div
+              className='flex cursor-pointer items-center'
+              ref={refs.setReference}
+              onMouseEnter={showPopover}
+              onMouseLeave={hidePopover}
+            >
               <MdLanguage className='mr-[2px] text-xl' />
               <span>Tiếng Việt</span>
+              {/* Popover Language */}
+              <FloatingPortal>
+                {isOpen && (
+                  <AnimatePresence>
+                    <motion.div
+                      ref={refs.setFloating}
+                      style={{
+                        position: strategy,
+                        top: y ?? 0,
+                        left: x ?? 0,
+                        width: 'max-content',
+                        transformOrigin: `${middlewareData.arrow?.x}px top`
+                      }}
+                      initial={{ opacity: 0, transform: 'scale(0)' }}
+                      animate={{ opacity: 1, transform: 'scale(1)' }}
+                      exit={{ opacity: 0, transform: 'scale(0)' }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <span
+                        style={{
+                          left: middlewareData.arrow?.x,
+                          top: middlewareData.arrow?.y
+                        }}
+                        ref={arrowRef}
+                        className='arrow_popover'
+                      ></span>
+                      <div className='flex flex-col rounded-sm bg-white shadow-xl'>
+                        <button className='px-10 py-2 hover:text-primaryColor'>Tiếng Việt</button>
+                        <button className='px-10 py-2 hover:text-primaryColor'>English</button>
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
+                )}
+              </FloatingPortal>
             </div>
+
             <Link to=''>Đăng nhập</Link>
             <Link to=''>Đăng kí</Link>
           </div>
@@ -110,6 +165,3 @@ export default function Header() {
     </header>
   )
 }
-
-// npm install framer-motion
-//npm install @floating-ui/dom
