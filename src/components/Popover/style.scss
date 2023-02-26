@@ -5,7 +5,7 @@
   transform: translateY(-100%);
   &::after {
     content: '';
-    min-width: 200px;
+    width: 50px;
     background: transparent;
     position: absolute;
     height: 20px;
@@ -14,7 +14,7 @@
   }
   &::before {
     content: '';
-    min-width: 200px;
+    width: 50px;
     background: transparent;
     position: absolute;
     height: 20px;

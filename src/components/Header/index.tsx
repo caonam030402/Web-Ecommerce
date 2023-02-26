@@ -6,25 +6,12 @@ import { BiHelpCircle } from 'react-icons/bi'
 import { MdLanguage } from 'react-icons/md'
 import { FaFacebook } from 'react-icons/fa'
 import { AiFillInstagram } from 'react-icons/ai'
-import { useFloating, FloatingPortal, arrow, shift, offset } from '@floating-ui/react'
-import { useState, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import './style.scss'
-import { transform } from 'lodash'
+import Popover from '../Popover'
+import avatar from '../../assets/ava.jpg'
+import codeQr from '../../assets/image/CodeQr.png'
+import dealNotify from '../../assets/image/deal.jpg'
 
 export default function Header() {
-  const [isOpen, setIsOpen] = useState(false)
-  const arrowRef = useRef<HTMLElement>(null)
-
-  const { x, y, strategy, refs, middlewareData } = useFloating({
-    middleware: [shift(), offset(10), arrow({ element: arrowRef })]
-  })
-  const showPopover = () => {
-    setIsOpen(true)
-  }
-  const hidePopover = () => {
-    setIsOpen(false)
-  }
   return (
     <header className='bg-primaryColor py-2'>
       <div className='container text-white'>
@@ -32,7 +19,18 @@ export default function Header() {
           <div className='flex gap-5'>
             <Link to=''>Kênh Người Bán</Link>
             <Link to=''>Trở thành Người bán Shopee</Link>
-            <Link to=''>Tải ứng dụng</Link>
+
+            {/* Popover Install */}
+            <Popover
+              renderPopover={
+                <div>
+                  <img src={codeQr} alt='' />
+                </div>
+              }
+              className=''
+            >
+              <Link to=''>Tải ứng dụng</Link>
+            </Popover>
             <div>
               <div className=' flex items-center'>
                 <span className='mr-[4px]'>Kết nối</span>
@@ -44,60 +42,71 @@ export default function Header() {
             </div>
           </div>
           <div className='flex items-center gap-5'>
-            <div className='flex items-center'>
+            {/* Popover Notifi */}
+            <Popover
+              className='flex items-center'
+              renderPopover={
+                <div className='rounded-sm bg-white shadow-sm'>
+                  <h1 className='p-3 text-gray-400'>Thông Báo Mới Nhận</h1>
+                  <ul>
+                    <Link className=' flex items-start p-3 hover:bg-slate-50 ' to=''>
+                      <img className='mr-2 h-10 w-10' src={dealNotify} alt='' />
+                      <div>
+                        <h1>SALE ĐẾN 50% HÀNG QUỐC TẾ</h1>
+                        <p className='max-w-[340px] text-xs font-normal text-gray-500'>
+                          Thêm Voucher đến 100.000Đ hàng quốc tế, sale là mê, dùng là phê
+                        </p>
+                      </div>
+                    </Link>
+                  </ul>
+                  <Link to=''>
+                    <p className='py-3 text-center hover:bg-gray-50'>Xem tất cả</p>
+                  </Link>
+                </div>
+              }
+            >
               <MdNotificationsNone className='mr-[2px] text-[22px]' />
               <span>Thông Báo</span>
-            </div>
+            </Popover>
+
             <Link className='flex items-center' to=''>
               <BiHelpCircle className='mr-[2px] text-[20px]' />
               <span>Hỗ Trợ</span>
             </Link>
-            <div
+
+            {/* Popover Language */}
+            <Popover
+              renderPopover={
+                <div className='flex flex-col items-start rounded-sm bg-white shadow-xl'>
+                  <button className='py-2 pr-20 pl-3 hover:text-primaryColor'>Tiếng Việt</button>
+                  <button className='py-2 pr-20 pl-3 hover:text-primaryColor'>English</button>
+                </div>
+              }
               className='flex cursor-pointer items-center'
-              ref={refs.setReference}
-              onMouseEnter={showPopover}
-              onMouseLeave={hidePopover}
             >
               <MdLanguage className='mr-[2px] text-xl' />
               <span>Tiếng Việt</span>
-              {/* Popover Language */}
-              <FloatingPortal>
-                {isOpen && (
-                  <AnimatePresence>
-                    <motion.div
-                      ref={refs.setFloating}
-                      style={{
-                        position: strategy,
-                        top: y ?? 0,
-                        left: x ?? 0,
-                        width: 'max-content',
-                        transformOrigin: `${middlewareData.arrow?.x}px top`
-                      }}
-                      initial={{ opacity: 0, transform: 'scale(0)' }}
-                      animate={{ opacity: 1, transform: 'scale(1)' }}
-                      exit={{ opacity: 0, transform: 'scale(0)' }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <span
-                        style={{
-                          left: middlewareData.arrow?.x,
-                          top: middlewareData.arrow?.y
-                        }}
-                        ref={arrowRef}
-                        className='arrow_popover'
-                      ></span>
-                      <div className='flex flex-col rounded-sm bg-white shadow-xl'>
-                        <button className='px-10 py-2 hover:text-primaryColor'>Tiếng Việt</button>
-                        <button className='px-10 py-2 hover:text-primaryColor'>English</button>
-                      </div>
-                    </motion.div>
-                  </AnimatePresence>
-                )}
-              </FloatingPortal>
-            </div>
+            </Popover>
 
-            <Link to=''>Đăng nhập</Link>
-            <Link to=''>Đăng kí</Link>
+            {/* Popover Login */}
+            <Popover
+              renderPopover={
+                <div className='flex flex-col items-start rounded-sm bg-white shadow-xl'>
+                  <button className='px-3 py-2 hover:text-primaryColor'>Tài Khoản Của Tôi</button>
+                  <button className=' px-3 py-2 hover:text-primaryColor'>Đơn Mua</button>
+                  <button className='px-3 py-2 hover:text-primaryColor'>Đăng Xuất</button>
+                </div>
+              }
+            >
+              <Link to=''>
+                <div className='flex items-center'>
+                  <img src={avatar} alt='' className='mr-1 w-5 rounded-full' />
+                  <p className='flex-shrink-0'>Caonam</p>
+                </div>
+              </Link>
+            </Popover>
+            {/* <Link to='/login'>Đăng nhập</Link>
+            <Link to='/register'>Đăng kí</Link> */}
           </div>
         </div>
         <div className='mt-4 flex items-center'>
