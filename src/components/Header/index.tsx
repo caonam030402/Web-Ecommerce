@@ -6,6 +6,7 @@ import { BiHelpCircle } from 'react-icons/bi'
 import { MdLanguage } from 'react-icons/md'
 import { FaFacebook } from 'react-icons/fa'
 import { AiFillInstagram } from 'react-icons/ai'
+import { IoCartOutline } from 'react-icons/io5'
 import Popover from '../Popover'
 import avatar from '../../assets/ava.jpg'
 import codeQr from '../../assets/image/CodeQr.png'
@@ -20,17 +21,6 @@ export default function Header() {
             <Link to=''>Kênh Người Bán</Link>
             <Link to=''>Trở thành Người bán Shopee</Link>
 
-            {/* Popover Install */}
-            <Popover
-              renderPopover={
-                <div>
-                  <img src={codeQr} alt='' />
-                </div>
-              }
-              className=''
-            >
-              <Link to=''>Tải ứng dụng</Link>
-            </Popover>
             <div>
               <div className=' flex items-center'>
                 <span className='mr-[4px]'>Kết nối</span>
@@ -144,20 +134,98 @@ export default function Header() {
             </button>
           </div>
           <div className='flex w-[10%] justify-center'>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              fill='none'
-              viewBox='0 0 24 24'
-              strokeWidth={1.5}
-              stroke='currentColor'
-              className='h-8 w-8'
+            {/* Popover Cart */}
+            <Popover
+              className=''
+              renderPopover={
+                <div className='relative max-w-[400px] rounded-sm bg-white shadow-sm '>
+                  <h1 className='cursor-default p-3 capitalize text-gray-400'>Sản phẩm được thêm</h1>
+                  <ul>
+                    <Link to='' className='flex p-3 hover:bg-slate-50'>
+                      <img
+                        className='mr-2 h-11 w-11 object-cover'
+                        src='https://cf.shopee.vn/file/00221bb185735209598eef3ce8b4f9f9_tn'
+                        alt=''
+                      />
+                      <div className='line-clamp-2 mr-6 overflow-hidden truncate'>
+                        Ốp lưng iphone cạnh vuông lỗ camera tiger lucky
+                        6/6splus/7/7plus/8/8plus/x/xr/xs/11/12/13/pro/max/plus/-Sale Sốc T2-1
+                      </div>
+                      <p className='text-primaryColor'> đ20.000</p>
+                    </Link>
+                    <Link to='' className='flex p-3 hover:bg-slate-50'>
+                      <img
+                        className='mr-2 h-11 w-11 object-cover'
+                        src='https://cf.shopee.vn/file/00221bb185735209598eef3ce8b4f9f9_tn'
+                        alt=''
+                      />
+                      <div className='line-clamp-2 mr-6 overflow-hidden truncate'>
+                        Ốp lưng iphone cạnh vuông lỗ camera tiger lucky
+                        6/6splus/7/7plus/8/8plus/x/xr/xs/11/12/13/pro/max/plus/-Sale Sốc T2-1
+                      </div>
+                      <p className='text-primaryColor'> đ20.000</p>
+                    </Link>
+                    <Link to='' className='flex p-3 hover:bg-slate-50'>
+                      <img
+                        className='mr-2 h-11 w-11 object-cover'
+                        src='https://cf.shopee.vn/file/00221bb185735209598eef3ce8b4f9f9_tn'
+                        alt=''
+                      />
+                      <div className='line-clamp-2 mr-6 overflow-hidden truncate'>
+                        Ốp lưng iphone cạnh vuông lỗ camera tiger lucky
+                        6/6splus/7/7plus/8/8plus/x/xr/xs/11/12/13/pro/max/plus/-Sale Sốc T2-1
+                      </div>
+                      <p className='text-primaryColor'> đ20.000</p>
+                    </Link>
+                    <Link to='' className='flex p-3 hover:bg-slate-50'>
+                      <img
+                        className='mr-2 h-11 w-11 object-cover'
+                        src='https://cf.shopee.vn/file/00221bb185735209598eef3ce8b4f9f9_tn'
+                        alt=''
+                      />
+                      <div className='line-clamp-2 mr-6 overflow-hidden truncate'>
+                        Ốp lưng iphone cạnh vuông lỗ camera tiger lucky
+                        6/6splus/7/7plus/8/8plus/x/xr/xs/11/12/13/pro/max/plus/-Sale Sốc T2-1
+                      </div>
+                      <p className='text-primaryColor'> đ20.000</p>
+                    </Link>
+                    <Link to='' className='flex p-3 hover:bg-slate-50'>
+                      <img
+                        className='mr-2 h-11 w-11 object-cover'
+                        src='https://cf.shopee.vn/file/00221bb185735209598eef3ce8b4f9f9_tn'
+                        alt=''
+                      />
+                      <div className='line-clamp-2 mr-6 overflow-hidden truncate'>
+                        Ốp lưng iphone cạnh vuông lỗ camera tiger lucky
+                        6/6splus/7/7plus/8/8plus/x/xr/xs/11/12/13/pro/max/plus/-Sale Sốc T2-1
+                      </div>
+                      <p className='text-primaryColor'> đ20.000</p>
+                    </Link>
+                  </ul>
+                  <div className='flex items-center justify-between p-3'>
+                    <p className='cursor-default text-xs capitalize'>15 thêm vào giỏ hàng</p>
+                    <button className='bg-primaryColor px-3 py-2 text-sm text-white transition-all hover:opacity-80'>
+                      Xem Giỏ Hàng
+                    </button>
+                  </div>
+                </div>
+              }
             >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
-              />
-            </svg>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                fill='none'
+                viewBox='0 0 24 24'
+                strokeWidth={1.5}
+                stroke='currentColor'
+                className='h-8 w-8'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
+                />
+              </svg>
+            </Popover>
           </div>
         </div>
         <div className='mt-1 flex gap-3 pl-[13%] text-[12px]'>
