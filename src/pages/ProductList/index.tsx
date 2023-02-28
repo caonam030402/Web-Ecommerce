@@ -1,3 +1,9 @@
+import Slide from 'src/components/Slide'
+
 export default function ProductList() {
-  return <div>ProductList</div>
+  return (
+    <div>
+      <Slide />
+    </div>
+  )
 }

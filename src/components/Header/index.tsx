@@ -6,10 +6,8 @@ import { BiHelpCircle } from 'react-icons/bi'
 import { MdLanguage } from 'react-icons/md'
 import { FaFacebook } from 'react-icons/fa'
 import { AiFillInstagram } from 'react-icons/ai'
-import { IoCartOutline } from 'react-icons/io5'
 import Popover from '../Popover'
 import avatar from '../../assets/ava.jpg'
-import codeQr from '../../assets/image/CodeQr.png'
 import dealNotify from '../../assets/image/deal.jpg'
 
 export default function Header() {
@@ -136,9 +134,9 @@ export default function Header() {
           <div className='flex w-[10%] justify-center'>
             {/* Popover Cart */}
             <Popover
-              className=''
+              className='index-1000'
               renderPopover={
-                <div className='relative max-w-[400px] rounded-sm bg-white shadow-sm '>
+                <div className='relative max-w-[400px] rounded-sm bg-white shadow-md '>
                   <h1 className='cursor-default p-3 capitalize text-gray-400'>Sản phẩm được thêm</h1>
                   <ul>
                     <Link to='' className='flex p-3 hover:bg-slate-50'>
