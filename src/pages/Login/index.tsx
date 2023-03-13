@@ -1,12 +1,14 @@
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Input from 'src/components/Input'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Schema, schema } from 'src/utils/rules'
 import { useMutation } from '@tanstack/react-query'
 import { login } from 'src/apis/auth.api'
 import { isAxiosUnprocessableEntity } from 'src/utils/utils'
-import { SuccessResponse } from 'src/types/utils.type'
+import { ErrorResponse } from 'src/types/utils.type'
+import { useContext } from 'react'
+import { AppContext } from 'src/components/Contexts/app.contexts'
 
 type FormData = Pick<Schema, 'email' | 'password'> // Pick the fields from Schema object which we want to keep
 const LoginSchema = schema.pick(['email', 'password']) // Create a new object with those selected fields
@@ -24,15 +26,17 @@ export default function Login() {
 
   // useMutation ReactQuery
   const loginMutation = useMutation({ mutationFn: (body: FormData) => login(body) })
-
+  const { setIsAuthenticated } = useContext(AppContext)
+  const navigate = useNavigate()
   // onsubmit form
   const onSubmit = handleSubmit((data) => {
     loginMutation.mutate(data, {
       onSuccess: (data) => {
-        console.log(data)
+        setIsAuthenticated(true)
+        navigate('/')
       },
       onError: (errors) => {
-        if (isAxiosUnprocessableEntity<SuccessResponse<FormData>>(errors)) {
+        if (isAxiosUnprocessableEntity<ErrorResponse<FormData>>(errors)) {
           const formError = errors.response?.data.data
           if (formError) {
             Object.keys(formError).forEach((key) => {

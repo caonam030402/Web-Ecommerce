@@ -1,6 +1,8 @@
-import { Link } from 'react-router-dom'
+import { Link, useMatch } from 'react-router-dom'
 
 export default function RegisterHeader() {
+  const matchRegister = useMatch('/register')
+  const isRegister = Boolean(matchRegister)
   return (
     <header className='mx-auto py-6 px-3 lg:max-w-7xl lg:px-0'>
       <nav className='flex items-center justify-between'>
@@ -18,7 +20,10 @@ export default function RegisterHeader() {
               </g>
             </svg>
           </Link>
-          <h1 className='text-2xl'>Đăng nhập</h1>
+          <h1 className='text-2xl'>
+            {isRegister && 'Đăng Ký'}
+            {!isRegister && 'Đăng Nhập'}
+          </h1>
         </div>
         <h3 className='text-sm text-primaryColor'>Bạn cần giúp đỡ?</h3>
       </nav>

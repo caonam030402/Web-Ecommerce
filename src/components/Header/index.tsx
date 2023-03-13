@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 // eslint-disable-next-line import/no-duplicates
 import { MdNotificationsNone } from 'react-icons/md'
 import { BiHelpCircle } from 'react-icons/bi'
@@ -9,8 +9,30 @@ import { AiFillInstagram } from 'react-icons/ai'
 import Popover from '../Popover'
 import avatar from '../../assets/ava.jpg'
 import dealNotify from '../../assets/image/deal.jpg'
+import { useMutation } from '@tanstack/react-query'
+import { logout } from 'src/apis/auth.api'
+import { useContext } from 'react'
+import { AppContext } from '../Contexts/app.contexts'
 
 export default function Header() {
+  // useContext
+  const { setIsAuthenticated, isAuthenticated } = useContext(AppContext)
+
+  //Navigate
+  const navigate = useNavigate()
+
+  // logout Mutation
+  const logoutMutation = useMutation({
+    mutationFn: logout,
+    onSuccess: () => {
+      setIsAuthenticated(false)
+      navigate('/login')
+    }
+  })
+
+  const handleLogout = () => {
+    logoutMutation.mutate()
+  }
   return (
     <header className='bg-primaryColor py-2'>
       <div className='container text-white'>
@@ -56,12 +78,10 @@ export default function Header() {
               <MdNotificationsNone className='mr-[2px] text-[22px]' />
               <span>Thông Báo</span>
             </Popover>
-
             <Link className='flex items-center' to=''>
               <BiHelpCircle className='mr-[2px] text-[20px]' />
               <span>Hỗ Trợ</span>
             </Link>
-
             {/* Popover Language */}
             <Popover
               renderPopover={
@@ -77,24 +97,33 @@ export default function Header() {
             </Popover>
 
             {/* Popover Login */}
-            <Popover
-              renderPopover={
-                <div className='flex flex-col items-start rounded-sm bg-white shadow-xl'>
-                  <button className='px-3 py-2 hover:text-primaryColor'>Tài Khoản Của Tôi</button>
-                  <button className=' px-3 py-2 hover:text-primaryColor'>Đơn Mua</button>
-                  <button className='px-3 py-2 hover:text-primaryColor'>Đăng Xuất</button>
-                </div>
-              }
-            >
-              <Link to=''>
-                <div className='flex items-center'>
-                  <img src={avatar} alt='' className='mr-1 w-5 rounded-full' />
-                  <p className='flex-shrink-0'>Caonam</p>
-                </div>
-              </Link>
-            </Popover>
-            {/* <Link to='/login'>Đăng nhập</Link>
-            <Link to='/register'>Đăng kí</Link> */}
+            {isAuthenticated ? (
+              <Popover
+                renderPopover={
+                  <div className='flex flex-col items-start rounded-sm bg-white shadow-xl'>
+                    <button className='px-3 py-2 hover:text-primaryColor'>Tài Khoản Của Tôi</button>
+                    <button className=' px-3 py-2 hover:text-primaryColor'>Đơn Mua</button>
+                    <button onClick={handleLogout} className='px-3 py-2 hover:text-primaryColor'>
+                      Đăng Xuất
+                    </button>
+                  </div>
+                }
+              >
+                <Link to=''>
+                  <div className='flex items-center'>
+                    <img src={avatar} alt='' className='mr-1 w-5 rounded-full' />
+                    <p className='flex-shrink-0'>Caonam</p>
+                  </div>
+                </Link>
+              </Popover>
+            ) : (
+              <div>
+                <Link className='mr-5' to='/login'>
+                  Đăng nhập
+                </Link>
+                <Link to='/register'>Đăng kí</Link>
+              </div>
+            )}
           </div>
         </div>
         <div className='mt-4 flex items-center'>

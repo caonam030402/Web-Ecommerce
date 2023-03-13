@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Input from 'src/components/Input'
 import { Schema, schema } from 'src/utils/rules'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -7,7 +7,9 @@ import { useMutation } from '@tanstack/react-query'
 import { registerAccount } from 'src/apis/auth.api'
 import { omit } from 'lodash'
 import { isAxiosUnprocessableEntity } from 'src/utils/utils'
-import { SuccessResponse } from 'src/types/utils.type'
+import { ErrorResponse } from 'src/types/utils.type'
+import { useContext } from 'react'
+import { AppContext } from 'src/components/Contexts/app.contexts'
 
 type FormData = Pick<Schema, 'email' | 'password' | 'confirm_password'> // Pick the fields from Schema type which are required
 const registerSchema = schema.pick(['email', 'password', 'confirm_password']) // Create a new schema with only picked fields
@@ -23,20 +25,27 @@ export default function Register() {
     resolver: yupResolver(registerSchema)
   })
 
+  // useContext
+  const { setIsAuthenticated } = useContext(AppContext)
+
   // useMutation ReactQuery
   const registerAccountMutation = useMutation({
     mutationFn: (body: Omit<FormData, 'confirm_password'>) => registerAccount(body)
   })
 
+  //Navigate
+  const navigate = useNavigate()
+
   // Submit the form
   const onSubmit = handleSubmit((data) => {
     const body = omit(data, ['confirm_password'])
     registerAccountMutation.mutate(body, {
-      onSuccess: (data) => {
-        console.log(data)
+      onSuccess: () => {
+        setIsAuthenticated(true)
+        navigate('/')
       },
       onError: (errors) => {
-        const isError = isAxiosUnprocessableEntity<SuccessResponse<Omit<FormData, 'confirm_password'>>>(errors)
+        const isError = isAxiosUnprocessableEntity<ErrorResponse<Omit<FormData, 'confirm_password'>>>(errors)
         if (isError) {
           const formError = errors.response?.data.data
           if (formError) {
@@ -47,21 +56,6 @@ export default function Register() {
               })
             })
           }
-          // //Check error email
-          // if (formError?.email) {
-          //   setError('email', {
-          //     message: formError.email,
-          //     type: 'Server'
-          //   })
-          // }
-
-          // //Check error password
-          // if (formError?.password) {
-          //   setError('password', {
-          //     message: formError.password,
-          //     type: 'Server'
-          //   })
-          // }
         }
       }
     })

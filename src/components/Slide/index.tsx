@@ -22,6 +22,8 @@ export default function Slide() {
         modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
         spaceBetween={10}
         slidesPerView={1}
+        loop={true}
+        loopedSlides={1}
         navigation={{ nextEl: '.button-slide-next', prevEl: '.button-slide-prev' }}
         pagination={{ clickable: true }}
         scrollbar={{ draggable: true }}
