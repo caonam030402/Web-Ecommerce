@@ -10,6 +10,7 @@ import { isAxiosUnprocessableEntity } from 'src/utils/utils'
 import { ErrorResponse } from 'src/types/utils.type'
 import { useContext } from 'react'
 import { AppContext } from 'src/components/Contexts/app.contexts'
+import Button from 'src/components/Button'
 
 type FormData = Pick<Schema, 'email' | 'password' | 'confirm_password'> // Pick the fields from Schema type which are required
 const registerSchema = schema.pick(['email', 'password', 'confirm_password']) // Create a new schema with only picked fields
@@ -20,10 +21,20 @@ export default function Register() {
     register,
     handleSubmit,
     setError,
+    watch,
+    getValues,
     formState: { errors }
   } = useForm<FormData>({
     resolver: yupResolver(registerSchema)
   })
+
+  const checkInputEmpty = () => {
+    const valueInput = (watch('password') && watch('email')) || (getValues('password') && getValues('email'))
+    if (valueInput !== '') {
+      return false
+    }
+    return true
+  }
 
   // useContext
   const { setIsAuthenticated } = useContext(AppContext)
@@ -89,9 +100,14 @@ export default function Register() {
           placeholder='Confirm Password'
           type='password'
         />
-        <button type='submit' className='mt-4 rounded-sm bg-primaryColor p-[10px] text-sm text-white'>
-          ĐĂNG NHẬP
-        </button>
+        <Button
+          disabled={registerAccountMutation.isLoading || checkInputEmpty()}
+          isLoading={registerAccountMutation.isLoading || checkInputEmpty()}
+          type='submit'
+          className='mt-4 flex items-center justify-center rounded-sm bg-primaryColor p-[10px] text-sm text-white'
+        >
+          ĐĂNG KÍ
+        </Button>
         <div className='mx-auto mt-3'>
           <span className='text-gray-400'>Bạn đã có tài khoản?</span>
           <Link className='ml-1 text-primaryColor' to='/login'>

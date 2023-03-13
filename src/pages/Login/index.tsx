@@ -7,8 +7,9 @@ import { useMutation } from '@tanstack/react-query'
 import { login } from 'src/apis/auth.api'
 import { isAxiosUnprocessableEntity } from 'src/utils/utils'
 import { ErrorResponse } from 'src/types/utils.type'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { AppContext } from 'src/components/Contexts/app.contexts'
+import Button from 'src/components/Button'
 
 type FormData = Pick<Schema, 'email' | 'password'> // Pick the fields from Schema object which we want to keep
 const LoginSchema = schema.pick(['email', 'password']) // Create a new object with those selected fields
@@ -19,10 +20,20 @@ export default function Login() {
     register,
     handleSubmit,
     setError,
+    watch,
+    getValues,
     formState: { errors }
   } = useForm<FormData>({
     resolver: yupResolver(LoginSchema)
   })
+
+  const checkInputEmpty = () => {
+    const valueInput = (watch('password') && watch('email')) || (getValues('password') && getValues('email'))
+    if (valueInput !== '') {
+      return false
+    }
+    return true
+  }
 
   // useMutation ReactQuery
   const loginMutation = useMutation({ mutationFn: (body: FormData) => login(body) })
@@ -71,9 +82,14 @@ export default function Login() {
           placeholder='Password'
           type='password'
         />
-        <button type='submit' className='mt-5 rounded-sm bg-primaryColor p-[10px] text-sm text-white'>
+        <Button
+          disabled={loginMutation.isLoading || checkInputEmpty()}
+          isLoading={loginMutation.isLoading || checkInputEmpty()}
+          type='submit'
+          className='mt-4 flex items-center justify-center rounded-sm bg-primaryColor p-[10px] text-sm text-white'
+        >
           ĐĂNG NHẬP
-        </button>
+        </Button>
         <div className='mx-auto mt-6'>
           <span className='text-gray-400'>Bạn mới biết đến Shopee?</span>
           <Link className='ml-1 text-primaryColor' to='/register'>
