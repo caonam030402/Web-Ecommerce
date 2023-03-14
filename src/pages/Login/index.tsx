@@ -10,6 +10,7 @@ import { ErrorResponse } from 'src/types/utils.type'
 import { useContext, useState } from 'react'
 import { AppContext } from 'src/components/Contexts/app.contexts'
 import Button from 'src/components/Button'
+import { path } from 'src/constants/path'
 
 type FormData = Pick<Schema, 'email' | 'password'> // Pick the fields from Schema object which we want to keep
 const LoginSchema = schema.pick(['email', 'password']) // Create a new object with those selected fields
@@ -37,13 +38,14 @@ export default function Login() {
 
   // useMutation ReactQuery
   const loginMutation = useMutation({ mutationFn: (body: FormData) => login(body) })
-  const { setIsAuthenticated } = useContext(AppContext)
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
   const navigate = useNavigate()
   // onsubmit form
   const onSubmit = handleSubmit((data) => {
     loginMutation.mutate(data, {
       onSuccess: (data) => {
         setIsAuthenticated(true)
+        setProfile(data.data.data.user)
         navigate('/')
       },
       onError: (errors) => {
@@ -92,7 +94,7 @@ export default function Login() {
         </Button>
         <div className='mx-auto mt-6'>
           <span className='text-gray-400'>Bạn mới biết đến Shopee?</span>
-          <Link className='ml-1 text-primaryColor' to='/register'>
+          <Link className='ml-1 text-primaryColor' to={path.register}>
             Đăng ký
           </Link>
         </div>

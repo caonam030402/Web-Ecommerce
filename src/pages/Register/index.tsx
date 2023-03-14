@@ -11,6 +11,7 @@ import { ErrorResponse } from 'src/types/utils.type'
 import { useContext } from 'react'
 import { AppContext } from 'src/components/Contexts/app.contexts'
 import Button from 'src/components/Button'
+import { path } from 'src/constants/path'
 
 type FormData = Pick<Schema, 'email' | 'password' | 'confirm_password'> // Pick the fields from Schema type which are required
 const registerSchema = schema.pick(['email', 'password', 'confirm_password']) // Create a new schema with only picked fields
@@ -37,7 +38,7 @@ export default function Register() {
   }
 
   // useContext
-  const { setIsAuthenticated } = useContext(AppContext)
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
 
   // useMutation ReactQuery
   const registerAccountMutation = useMutation({
@@ -51,8 +52,9 @@ export default function Register() {
   const onSubmit = handleSubmit((data) => {
     const body = omit(data, ['confirm_password'])
     registerAccountMutation.mutate(body, {
-      onSuccess: () => {
+      onSuccess: (data) => {
         setIsAuthenticated(true)
+        setProfile(data.data.data.user)
         navigate('/')
       },
       onError: (errors) => {
@@ -110,7 +112,7 @@ export default function Register() {
         </Button>
         <div className='mx-auto mt-3'>
           <span className='text-gray-400'>Bạn đã có tài khoản?</span>
-          <Link className='ml-1 text-primaryColor' to='/login'>
+          <Link className='ml-1 text-primaryColor' to={path.login}>
             Đăng nhập
           </Link>
         </div>

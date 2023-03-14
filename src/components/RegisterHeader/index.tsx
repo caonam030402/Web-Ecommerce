@@ -1,7 +1,8 @@
 import { Link, useMatch } from 'react-router-dom'
+import { path } from 'src/constants/path'
 
 export default function RegisterHeader() {
-  const matchRegister = useMatch('/register')
+  const matchRegister = useMatch(path.register)
   const isRegister = Boolean(matchRegister)
   return (
     <header className='mx-auto py-6 px-3 lg:max-w-7xl lg:px-0'>

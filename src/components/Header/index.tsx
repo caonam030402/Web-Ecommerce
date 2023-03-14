@@ -13,10 +13,11 @@ import { useMutation } from '@tanstack/react-query'
 import { logout } from 'src/apis/auth.api'
 import { useContext } from 'react'
 import { AppContext } from '../Contexts/app.contexts'
+import { path } from 'src/constants/path'
 
 export default function Header() {
   // useContext
-  const { setIsAuthenticated, isAuthenticated } = useContext(AppContext)
+  const { setIsAuthenticated, isAuthenticated, setProfile, profile } = useContext(AppContext)
 
   //Navigate
   const navigate = useNavigate()
@@ -26,7 +27,8 @@ export default function Header() {
     mutationFn: logout,
     onSuccess: () => {
       setIsAuthenticated(false)
-      navigate('/login')
+      navigate(path.login)
+      setProfile(null)
     }
   })
 
@@ -101,7 +103,11 @@ export default function Header() {
               <Popover
                 renderPopover={
                   <div className='flex flex-col items-start rounded-sm bg-white shadow-xl'>
-                    <button className='px-3 py-2 hover:text-primaryColor'>Tài Khoản Của Tôi</button>
+                    <button className='px-3 py-2 hover:text-primaryColor'>
+                      <Link className='block' to={path.profile}>
+                        Tài khoản của tôi
+                      </Link>
+                    </button>
                     <button className=' px-3 py-2 hover:text-primaryColor'>Đơn Mua</button>
                     <button onClick={handleLogout} className='px-3 py-2 hover:text-primaryColor'>
                       Đăng Xuất
@@ -112,16 +118,16 @@ export default function Header() {
                 <Link to=''>
                   <div className='flex items-center'>
                     <img src={avatar} alt='' className='mr-1 w-5 rounded-full' />
-                    <p className='flex-shrink-0'>Caonam</p>
+                    <p className='flex-shrink-0'>{profile?.email}</p>
                   </div>
                 </Link>
               </Popover>
             ) : (
               <div>
-                <Link className='mr-5' to='/login'>
+                <Link className='mr-5' to={path.login}>
                   Đăng nhập
                 </Link>
-                <Link to='/register'>Đăng kí</Link>
+                <Link to={path.register}>Đăng kí</Link>
               </div>
             )}
           </div>

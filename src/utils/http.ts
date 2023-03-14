@@ -1,4 +1,4 @@
-import { clearAccessTokenFromLS, getAccessTokenFromLS, saveAccessTokenToLS } from './auth'
+import { clearLS, getAccessTokenFromLS, setAccessTokenToLS, setProfileToLS } from './auth'
 import { AuthResponse } from './../types/auth.type'
 import { HttpStatusCode } from './../constants/httpStatusCode'
 import axios, { type AxiosInstance } from 'axios'
@@ -39,11 +39,13 @@ class Http {
       (response) => {
         const { url } = response.config
         if (url === URL.login || url === URL.register) {
-          this.accessToken = (response.data as AuthResponse).data.access_token
-          saveAccessTokenToLS(this.accessToken)
+          const data = response.data as AuthResponse
+          this.accessToken = data.data.access_token
+          setAccessTokenToLS(this.accessToken)
+          setProfileToLS(data.data.user)
         } else if (url === URL.logout) {
           this.accessToken = ''
-          clearAccessTokenFromLS()
+          clearLS()
         }
         return response
       },
