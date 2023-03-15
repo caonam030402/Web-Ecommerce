@@ -2,6 +2,7 @@ import { useFloating, FloatingPortal, arrow, shift, offset, type Placement } fro
 import { useState, useRef, useId, ElementType } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import './style.scss'
+import { number } from 'yup'
 
 // Type Props
 interface Props {
@@ -11,6 +12,9 @@ interface Props {
   initialOpen?: boolean
   as?: ElementType
   placement?: Placement
+  classNameArrow?: string
+  offsetTop?: number
+  duration?: number
 }
 
 export default function Popover({
@@ -19,7 +23,10 @@ export default function Popover({
   renderPopover,
   as: Element = 'div',
   initialOpen,
-  placement = 'bottom-end'
+  placement = 'bottom-end',
+  classNameArrow = 'arrow_popover',
+  offsetTop = 10,
+  duration = 0.3
 }: Props) {
   const [isOpen, setIsOpen] = useState(initialOpen || false)
   const arrowRef = useRef<HTMLElement>(null)
@@ -28,7 +35,7 @@ export default function Popover({
   const id = useId()
 
   const { x, y, strategy, refs, middlewareData } = useFloating({
-    middleware: [shift(), offset(10), arrow({ element: arrowRef })],
+    middleware: [shift(), offset(offsetTop), arrow({ element: arrowRef })],
     placement: placement
   })
   const showPopover = () => {
@@ -56,7 +63,7 @@ export default function Popover({
               initial={{ opacity: 0, transform: 'scale(0)' }}
               animate={{ opacity: 1, transform: 'scale(1)' }}
               exit={{ opacity: 0, transform: 'scale(0)' }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: duration }}
             >
               {/* Arrow midđlewareData */}
               <span
@@ -65,7 +72,7 @@ export default function Popover({
                   top: middlewareData.arrow?.y
                 }}
                 ref={arrowRef}
-                className='arrow_popover '
+                className={classNameArrow}
               ></span>
               {renderPopover}
             </motion.div>
