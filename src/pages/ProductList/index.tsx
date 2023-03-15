@@ -1,7 +1,7 @@
 import Slide from 'src/components/Slide'
-import AsideFitter from './AsideFitter'
-import ProductItem from './Product'
-import SortProductList from './SortProductList'
+import AsideFitter from './Components/AsideFitter'
+import ProductItem from './Components/Product'
+import SortProductList from './Components/SortProductList'
 
 export default function ProductList() {
   return (
