@@ -10,7 +10,7 @@ import Popover from '../Popover'
 import avatar from '../../assets/ava.jpg'
 import dealNotify from '../../assets/image/deal.jpg'
 import { useMutation } from '@tanstack/react-query'
-import { logout } from 'src/apis/auth.api'
+import { authApi } from 'src/apis/auth.api'
 import { useContext } from 'react'
 import { AppContext } from '../Contexts/app.contexts'
 import { path } from 'src/constants/path'
@@ -24,7 +24,7 @@ export default function Header() {
 
   // logout Mutation
   const logoutMutation = useMutation({
-    mutationFn: logout,
+    mutationFn: authApi.logout,
     onSuccess: () => {
       setIsAuthenticated(false)
       navigate(path.login)
@@ -180,7 +180,7 @@ export default function Header() {
                         src='https://cf.shopee.vn/file/00221bb185735209598eef3ce8b4f9f9_tn'
                         alt=''
                       />
-                      <div className='line-clamp-2 mr-6 overflow-hidden truncate'>
+                      <div className='mr-6 overflow-hidden truncate line-clamp-2'>
                         Ốp lưng iphone cạnh vuông lỗ camera tiger lucky
                         6/6splus/7/7plus/8/8plus/x/xr/xs/11/12/13/pro/max/plus/-Sale Sốc T2-1
                       </div>
@@ -192,7 +192,7 @@ export default function Header() {
                         src='https://cf.shopee.vn/file/00221bb185735209598eef3ce8b4f9f9_tn'
                         alt=''
                       />
-                      <div className='line-clamp-2 mr-6 overflow-hidden truncate'>
+                      <div className='mr-6 overflow-hidden truncate line-clamp-2'>
                         Ốp lưng iphone cạnh vuông lỗ camera tiger lucky
                         6/6splus/7/7plus/8/8plus/x/xr/xs/11/12/13/pro/max/plus/-Sale Sốc T2-1
                       </div>
@@ -204,7 +204,7 @@ export default function Header() {
                         src='https://cf.shopee.vn/file/00221bb185735209598eef3ce8b4f9f9_tn'
                         alt=''
                       />
-                      <div className='line-clamp-2 mr-6 overflow-hidden truncate'>
+                      <div className='mr-6 overflow-hidden truncate line-clamp-2'>
                         Ốp lưng iphone cạnh vuông lỗ camera tiger lucky
                         6/6splus/7/7plus/8/8plus/x/xr/xs/11/12/13/pro/max/plus/-Sale Sốc T2-1
                       </div>
@@ -216,7 +216,7 @@ export default function Header() {
                         src='https://cf.shopee.vn/file/00221bb185735209598eef3ce8b4f9f9_tn'
                         alt=''
                       />
-                      <div className='line-clamp-2 mr-6 overflow-hidden truncate'>
+                      <div className='mr-6 overflow-hidden truncate line-clamp-2'>
                         Ốp lưng iphone cạnh vuông lỗ camera tiger lucky
                         6/6splus/7/7plus/8/8plus/x/xr/xs/11/12/13/pro/max/plus/-Sale Sốc T2-1
                       </div>
@@ -228,7 +228,7 @@ export default function Header() {
                         src='https://cf.shopee.vn/file/00221bb185735209598eef3ce8b4f9f9_tn'
                         alt=''
                       />
-                      <div className='line-clamp-2 mr-6 overflow-hidden truncate'>
+                      <div className='mr-6 overflow-hidden truncate line-clamp-2'>
                         Ốp lưng iphone cạnh vuông lỗ camera tiger lucky
                         6/6splus/7/7plus/8/8plus/x/xr/xs/11/12/13/pro/max/plus/-Sale Sốc T2-1
                       </div>

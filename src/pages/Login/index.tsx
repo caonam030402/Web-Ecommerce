@@ -4,10 +4,10 @@ import Input from 'src/components/Input'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Schema, schema } from 'src/utils/rules'
 import { useMutation } from '@tanstack/react-query'
-import { login } from 'src/apis/auth.api'
+import { authApi } from 'src/apis/auth.api'
 import { isAxiosUnprocessableEntity } from 'src/utils/utils'
 import { ErrorResponse } from 'src/types/utils.type'
-import { useContext, useState } from 'react'
+import { useContext } from 'react'
 import { AppContext } from 'src/components/Contexts/app.contexts'
 import Button from 'src/components/Button'
 import { path } from 'src/constants/path'
@@ -37,7 +37,7 @@ export default function Login() {
   }
 
   // useMutation ReactQuery
-  const loginMutation = useMutation({ mutationFn: (body: FormData) => login(body) })
+  const loginMutation = useMutation({ mutationFn: (body: FormData) => authApi.login(body) })
   const { setIsAuthenticated, setProfile } = useContext(AppContext)
   const navigate = useNavigate()
   // onsubmit form
