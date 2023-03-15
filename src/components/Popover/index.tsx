@@ -2,7 +2,6 @@ import { useFloating, FloatingPortal, arrow, shift, offset, type Placement } fro
 import { useState, useRef, useId, ElementType } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import './style.scss'
-import { number } from 'yup'
 
 // Type Props
 interface Props {

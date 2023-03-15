@@ -1,7 +1,6 @@
 import Slide from 'src/components/Slide'
-import { array } from 'yup'
 import AsideFitter from './AsideFitter'
-import Product from './Product'
+import ProductItem from './Product'
 import SortProductList from './SortProductList'
 
 export default function ProductList() {
@@ -17,12 +16,12 @@ export default function ProductList() {
           </div>
           <div className='col-span-10'>
             <SortProductList />
-            <div className='mt-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
+            <div className='mt-6 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
               {Array(30)
                 .fill(0)
                 .map((_, index) => (
                   <div className='' key={index}>
-                    <Product />
+                    <ProductItem />
                   </div>
                 ))}
             </div>

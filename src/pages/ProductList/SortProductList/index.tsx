@@ -4,8 +4,8 @@ import { MdKeyboardArrowDown, MdKeyboardArrowLeft, MdKeyboardArrowRight } from '
 
 export default function SortProductList() {
   return (
-    <div className='flex w-full justify-between bg-gray-200/50 px-5 py-3'>
-      <div className='flex items-center gap-3'>
+    <div className='flex w-full flex-wrap justify-between bg-gray-200/50 px-5 py-3'>
+      <div className='flex flex-wrap items-center gap-3 '>
         <h1>Sắp xếp theo</h1>
         <button className='flex items-center justify-center rounded-sm bg-primaryColor px-3 py-2 text-sm text-white hover:opacity-90'>
           Phổ biến

@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom'
 
 export default function Footer() {
   return (
-    <footer className='my-10 border-t-4 border-primaryColor'>
+    // my-10 border-t-4 border-primaryColor
+    <footer className='my-10'>
       <div className='x mx-auto mt-9 px-3 text-gray-500 lg:max-w-7xl lg:px-0 lg:text-left'>
         <div className=' grid grid-cols-1 text-center text-sm lg:grid-cols-3 lg:text-left'>
           <p className='lg:col-span-1'>© 2023 Shopee. Tất cả các quyền được bảo lưu.</p>
