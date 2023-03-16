@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-
 import { Product as ProductType } from 'src/types/product.type'
 import { formatCurrency, formatNumberToSocialStyle } from 'src/utils/utils'
 import ProductRating from 'src/components/ProductRating'

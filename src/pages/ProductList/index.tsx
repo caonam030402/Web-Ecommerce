@@ -1,5 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
 import { productApi } from 'src/apis/product.api'
+import Pagination from 'src/components/Pagination'
 import Slide from 'src/components/Slide'
 import UseQueryParams from 'src/hooks/UseQueryParams'
 import AsideFitter from './Components/AsideFitter'
@@ -7,6 +9,8 @@ import ProductItem from './Components/Product'
 import SortProductList from './Components/SortProductList'
 
 export default function ProductList() {
+  const [page, setPage] = useState(4)
+
   const queryParams = UseQueryParams()
   const { data } = useQuery({
     queryKey: ['products', queryParams],
@@ -35,6 +39,7 @@ export default function ProductList() {
                   </div>
                 ))}
             </div>
+            <Pagination page={page} setPage={setPage} sizePage={20} />
           </div>
         </div>
       </div>
