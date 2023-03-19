@@ -18,15 +18,17 @@ export default function ProductList() {
   const queryConfig: QueryConfig = omitBy(
     {
       page: queryParams.page || '1',
-      limit: queryParams.limit || '15',
+      limit: queryParams.limit || '20',
       sort_by: queryParams.sort_by,
       exclude: queryParams.exclude,
       name: queryParams.name,
       order: queryParams.order,
-      price_max: queryParams.order,
+      price_max: queryParams.price_max,
       price_min: queryParams.price_min,
-      rating_filter: queryParams.rating_filter
+      rating_filter: queryParams.rating_filter,
+      category: queryParams.category
     },
+
     isUndefined
   )
 
@@ -39,7 +41,7 @@ export default function ProductList() {
   })
 
   return (
-    <div className=''>
+    <div>
       <div>
         <Slide />
       </div>
@@ -50,7 +52,7 @@ export default function ProductList() {
               <AsideFitter />
             </div>
             <div className='col-span-10'>
-              <SortProductList />
+              <SortProductList queryConfig={queryConfig} pageSize={data.data.data.pagination.page_size} />
               <div className='mt-6 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
                 {data?.data.data.products.map((product) => (
                   <div className='' key={product._id}>

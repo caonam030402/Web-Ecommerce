@@ -1,7 +1,7 @@
 import { MdOutlineMenu } from 'react-icons/md'
 import { AiOutlineCaretRight } from 'react-icons/ai'
 import { CiFilter } from 'react-icons/ci'
-import { BsStarFill, BsStar } from 'react-icons/bs'
+import { BsStarFill } from 'react-icons/bs'
 import { Link } from 'react-router-dom'
 import Input from 'src/components/Input'
 import Button from 'src/components/Button'
