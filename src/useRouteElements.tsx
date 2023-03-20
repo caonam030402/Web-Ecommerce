@@ -11,7 +11,6 @@ import Register from './pages/Register'
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext)
-  console.log(isAuthenticated)
   return isAuthenticated ? <Outlet /> : <Navigate to={path.login} />
 }
 

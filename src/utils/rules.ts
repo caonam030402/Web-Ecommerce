@@ -55,6 +55,14 @@ export const getRules = (getValues?: UseFormGetValues<any>): Rules => ({
   }
 })
 
+function testPriceMinMax(this: yup.TestContext<yup.AnyObject>) {
+  const { price_min, price_max } = this.parent as { price_min: string; price_max: string }
+  if (price_min !== '' && price_max !== '') {
+    return Number(price_min) <= Number(price_max)
+  }
+  return price_min !== '' || price_max !== ''
+}
+
 // Define the schema for the input
 export const schema = yup.object({
   email: yup
@@ -71,7 +79,17 @@ export const schema = yup.object({
   confirm_password: yup
     .string()
     .required('Confirm password là bắt buộc')
-    .oneOf([yup.ref('password')], 'Nhập lại password không khớp')
+    .oneOf([yup.ref('password')], 'Nhập lại password không khớp'),
+  price_min: yup.string().test({
+    name: 'price-not-allowed',
+    message: 'Vui lòng điền khoảng giá phù hợp',
+    test: testPriceMinMax
+  }),
+  price_max: yup.string().test({
+    name: 'price-not-allowed',
+    message: 'Vui lòng điền khoảng giá phù hợp',
+    test: testPriceMinMax
+  })
 })
 
 // Schema definition to validate the values provided in input fields of signup form
