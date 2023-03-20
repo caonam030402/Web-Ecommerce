@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { omitBy, isUndefined } from 'lodash'
+import { categoryApi } from 'src/apis/category.api'
 import { productApi } from 'src/apis/product.api'
 import Pagination from 'src/components/Pagination'
 import Slide from 'src/components/Slide'
@@ -32,12 +33,19 @@ export default function ProductList() {
     isUndefined
   )
 
-  const { data } = useQuery({
+  const { data: productData } = useQuery({
     queryKey: ['products', queryConfig],
     queryFn: () => {
       return productApi.getProducts(queryConfig as ProductListConfig)
     },
     keepPreviousData: true
+  })
+
+  const { data: categoriesData } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => {
+      return categoryApi.getCategories()
+    }
   })
 
   return (
@@ -46,21 +54,21 @@ export default function ProductList() {
         <Slide />
       </div>
       <div className='container mt-10'>
-        {data && (
+        {productData && (
           <div className='grid grid-cols-12 gap-6'>
             <div className='col-span-2'>
-              <AsideFitter />
+              <AsideFitter queryConfig={queryConfig} categories={categoriesData?.data.data || []} />
             </div>
             <div className='col-span-10'>
-              <SortProductList queryConfig={queryConfig} pageSize={data.data.data.pagination.page_size} />
+              <SortProductList queryConfig={queryConfig} pageSize={productData.data.data.pagination.page_size} />
               <div className='mt-6 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
-                {data?.data.data.products.map((product) => (
+                {productData?.data.data.products.map((product) => (
                   <div className='' key={product._id}>
                     <ProductItem product={product} />
                   </div>
                 ))}
               </div>
-              <Pagination queryConfig={queryConfig} pageSize={data.data.data.pagination.page_size} />
+              <Pagination queryConfig={queryConfig} pageSize={productData.data.data.pagination.page_size} />
             </div>
           </div>
         )}

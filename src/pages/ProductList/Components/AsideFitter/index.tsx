@@ -2,33 +2,54 @@ import { MdOutlineMenu } from 'react-icons/md'
 import { AiOutlineCaretRight } from 'react-icons/ai'
 import { CiFilter } from 'react-icons/ci'
 import { BsStarFill } from 'react-icons/bs'
-import { Link } from 'react-router-dom'
+import { createSearchParams, Link } from 'react-router-dom'
 import Input from 'src/components/Input'
 import Button from 'src/components/Button'
+import { QueryConfig } from '../..'
+import { Category } from 'src/types/categogy.type'
+import classNames from 'classnames'
+import { path } from 'src/constants/path'
 
-export default function AsideFitter() {
+interface Props {
+  queryConfig: QueryConfig
+  categories: Category[]
+}
+
+export default function AsideFitter({ categories, queryConfig }: Props) {
+  const { category } = queryConfig
   return (
     <div>
-      <h1 className='flex items-center gap-1 text-base font-semibold'>
+      <h1
+        className={classNames('flex items-center gap-1 text-base font-semibold', {
+          'text-primaryColor': !category
+        })}
+      >
         <MdOutlineMenu className='mr-1' /> Tất cả doanh mục
       </h1>
       <div className='my-4 h-[0.8px] bg-gray-300'></div>
       <ul>
-        <li className='py-2'>
-          <Link className='relative flex items-center font-semibold text-primaryColor' to=''>
-            <AiOutlineCaretRight className='absolute text-[10px]' /> <span className='mx-3'>Thời trang Nam</span>
-          </Link>
-        </li>
-        <li className='py-2'>
-          <Link className='flex items-center ' to=''>
-            <span className='mx-3'>Áo Khoác</span>
-          </Link>
-        </li>
-        <li className='py-2'>
-          <Link className='flex items-center ' to=''>
-            <span className='mx-3'>Áo Blaze</span>
-          </Link>
-        </li>
+        {categories.map((categoryItem) => {
+          const isActive = category === categoryItem._id
+          return (
+            <li className='py-2' key={categoryItem._id}>
+              <Link
+                className={classNames('relative flex items-center ', {
+                  'font-semibold text-primaryColor': isActive
+                })}
+                to={{
+                  pathname: path.home,
+                  search: createSearchParams({
+                    ...queryConfig,
+                    category: categoryItem._id
+                  }).toString()
+                }}
+              >
+                {isActive && <AiOutlineCaretRight className='absolute text-[10px]' />}
+                <span className='mx-3'>{categoryItem.name}</span>
+              </Link>
+            </li>
+          )
+        })}
       </ul>
       <div className='my-4 h-[0.8px] bg-gray-300'></div>
       <h1 className='flex cursor-pointer items-center gap-2 font-bold'>
