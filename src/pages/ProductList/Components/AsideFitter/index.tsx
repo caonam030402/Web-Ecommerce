@@ -1,7 +1,6 @@
 import { MdOutlineMenu } from 'react-icons/md'
 import { AiOutlineCaretRight } from 'react-icons/ai'
 import { CiFilter } from 'react-icons/ci'
-import { BsStarFill } from 'react-icons/bs'
 import { createSearchParams, Link, useNavigate } from 'react-router-dom'
 import Button from 'src/components/Button'
 import { QueryConfig } from '../..'
@@ -13,6 +12,8 @@ import { useForm, Controller } from 'react-hook-form'
 import { Schema, schema } from 'src/utils/rules'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { NoUndefineField } from 'src/types/utils.type'
+import RatingStars from '../RatingStars'
+import { omit } from 'lodash'
 
 interface Props {
   queryConfig: QueryConfig
@@ -31,6 +32,7 @@ export default function AsideFitter({ categories, queryConfig }: Props) {
     control,
     handleSubmit,
     trigger,
+    resetField,
     formState: { errors }
   } = useForm<FormData>({
     defaultValues: {
@@ -47,6 +49,16 @@ export default function AsideFitter({ categories, queryConfig }: Props) {
       search: createSearchParams({ ...queryConfig, price_max: data.price_max, price_min: data.price_min }).toString()
     })
   })
+
+  const handleRemoveAll = () => {
+    resetField('price_min')
+    resetField('price_max')
+    navigate({
+      pathname: path.home,
+      search: createSearchParams(omit(queryConfig, ['price_min', 'price_max', 'category', 'rating_filter'])).toString()
+    })
+  }
+
   return (
     <div>
       <h1
@@ -140,28 +152,12 @@ export default function AsideFitter({ categories, queryConfig }: Props) {
       </div>
       <div className='my-5'>
         <h1 className=''> Đánh giá</h1>
-        <ul className='mt-3'>
-          <li className='py-1 pl-2'>
-            <Link to='' className='flex items-center py-1 text-sm'>
-              {Array(5)
-                .fill(0)
-                .map((_, index) => (
-                  <BsStarFill key={index} className='mr-[6px] text-yellow-500' />
-                ))}
-              <span>trở lên</span>
-            </Link>
-            <Link to='' className='flex items-center py-1 text-sm'>
-              {Array(5)
-                .fill(0)
-                .map((_, index) => (
-                  <BsStarFill key={index} className='mr-[6px] text-yellow-500' />
-                ))}
-              <span>trở lên</span>
-            </Link>
-          </li>
-        </ul>
+        <RatingStars queryConfig={queryConfig} />
         <div className='my-4 h-[0.8px] bg-gray-300'></div>
-        <Button className='mt-5 flex w-full items-center justify-center rounded-sm bg-primaryColor p-2 text-sm uppercase uppercase text-white hover:opacity-90'>
+        <Button
+          onClick={handleRemoveAll}
+          className='mt-5 flex w-full items-center justify-center rounded-sm bg-primaryColor p-2 text-sm uppercase uppercase text-white hover:opacity-90'
+        >
           Xóa tất cả
         </Button>
       </div>

@@ -1,22 +1,26 @@
 import { useQuery } from '@tanstack/react-query'
-import { omitBy, isUndefined } from 'lodash'
+import { omitBy, isUndefined, omit } from 'lodash'
 import { AiOutlineFileSearch } from 'react-icons/ai'
+import { createSearchParams, useNavigate } from 'react-router-dom'
 import { categoryApi } from 'src/apis/category.api'
 import { productApi } from 'src/apis/product.api'
 import Button from 'src/components/Button'
 import Pagination from 'src/components/Pagination'
 import Slide from 'src/components/Slide'
+import { path } from 'src/constants/path'
 import UseQueryParams from 'src/hooks/UseQueryParams'
 import { ProductListConfig } from 'src/types/product.type'
 import AsideFitter from './Components/AsideFitter'
 import ProductItem from './Components/Product'
 import SortProductList from './Components/SortProductList'
+import { useForm } from 'react-hook-form'
 
 export type QueryConfig = {
   [key in keyof ProductListConfig]: string
 }
 
 export default function ProductList() {
+  const navigate = useNavigate()
   const queryParams: QueryConfig = UseQueryParams()
   const queryConfig: QueryConfig = omitBy(
     {
@@ -34,6 +38,13 @@ export default function ProductList() {
 
     isUndefined
   )
+
+  const handleRemoveAll = () => {
+    navigate({
+      pathname: path.home,
+      search: createSearchParams(omit(queryConfig, ['price_min', 'price_max', 'category', 'rating_filter'])).toString()
+    })
+  }
 
   const { data: productData } = useQuery({
     queryKey: ['products', queryConfig],
@@ -56,7 +67,6 @@ export default function ProductList() {
     }
   }
 
-  console.log(checkProductListEmpty())
   return (
     <div>
       <div>
@@ -87,7 +97,10 @@ export default function ProductList() {
                 <AiOutlineFileSearch className='text-[100px]' />
                 <p className='mt-3 text-lg'>Hix. Không có sản phẩm nào. Bạn thử tắt điều kiện lọc và tìm lại nhé?</p>
                 <p className='mt-4'>Or</p>
-                <Button className='mt-4 flex w-[13%] items-center justify-center rounded-sm bg-primaryColor p-2 text-base text-white hover:opacity-90'>
+                <Button
+                  onClick={handleRemoveAll}
+                  className='mt-4 flex w-[13%] items-center justify-center rounded-sm bg-primaryColor p-2 text-base text-white hover:opacity-90'
+                >
                   Xóa Bộ Lọc
                 </Button>
               </div>

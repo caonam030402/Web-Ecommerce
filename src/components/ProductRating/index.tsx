@@ -2,7 +2,7 @@ import { BsStarFill } from 'react-icons/bs'
 
 export default function ProductRating({ rating }: { rating: number }) {
   const handleWithStar = (order: number) => {
-    if (order < rating) {
+    if (order <= rating) {
       return '100%'
     }
     if (order > rating && order - rating < 1) {
@@ -12,7 +12,6 @@ export default function ProductRating({ rating }: { rating: number }) {
   }
   return (
     <div className='flex items-center gap-[2px]'>
-      {' '}
       {Array(5)
         .fill(0)
         .map((_, index) => (
