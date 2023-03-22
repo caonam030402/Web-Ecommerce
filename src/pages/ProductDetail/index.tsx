@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 import { productApi } from 'src/apis/product.api'
+import { Product } from 'src/types/product.type'
 import { MdOutlineNavigateBefore, MdOutlineNavigateNext } from 'react-icons/md'
 import { VscAdd, VscChromeMinimize } from 'react-icons/vsc'
 import ProductRating from 'src/components/ProductRating'
@@ -8,7 +9,7 @@ import { formatCurrency, formatNumberToSocialStyle, rateSale } from 'src/utils/u
 import { BsCartPlus } from 'react-icons/bs'
 import InputNumber from 'src/components/InputNumber'
 import DOMPurify from 'dompurify'
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 export default function ProductDetail() {
   const { id } = useParams()
@@ -17,7 +18,37 @@ export default function ProductDetail() {
     queryFn: () => productApi.getProductDetail(id as string)
   })
 
+  const [currentIndexImages, setCurentIndexImage] = useState([0, 5])
+  const [activeImage, setActiveImage] = useState('')
+
   const product = productDetailData?.data.data
+  const currentListImage = useMemo(
+    () => (product ? product.images.slice(...currentIndexImages) : []),
+    [product, currentIndexImages]
+  )
+
+  useEffect(() => {
+    if (product && product.images) {
+      setActiveImage(product.images[0])
+    }
+  }, [product, currentIndexImages])
+
+  const hoverActiveImage = (img: string) => {
+    setActiveImage(img)
+  }
+
+  const NextImage = () => {
+    if (currentIndexImages[1] < (product as Product).images.length) {
+      setCurentIndexImage((prev) => [prev[0] + 1, prev[1] + 1])
+    }
+  }
+
+  const PrevImage = () => {
+    if (currentIndexImages[0] > 0) {
+      setCurentIndexImage((prev) => [prev[0] - 1, prev[1] - 1])
+    }
+  }
+
   if (!product) return null
 
   return (
@@ -28,18 +59,25 @@ export default function ProductDetail() {
             <div className='relative w-full pt-[100%] '>
               <img
                 className='absolute top-0 right-0 h-full w-[100%] rounded-t-sm object-cover'
-                src={product.image}
+                src={activeImage}
                 alt={product.name}
               />
             </div>
             <div className='relative mt-4 grid grid-cols-5 gap-1'>
-              <button className='absolute left-0 top-1/2 z-10 flex h-9 w-5 translate-y-[-50%] items-center bg-black/20 text-white'>
+              <button
+                onClick={PrevImage}
+                className='absolute left-0 top-1/2 z-10 flex h-9 w-5 translate-y-[-50%] items-center bg-black/20 text-white'
+              >
                 <MdOutlineNavigateBefore className='text-3xl' />
               </button>
-              {product.images.slice(0, 5).map((img, index) => {
-                const isActive = index === 0
+              {currentListImage.map((img) => {
+                const isActive = img === activeImage
                 return (
-                  <div className='relative w-full cursor-pointer pt-[100%]' key={img}>
+                  <div
+                    className='relative w-full cursor-pointer pt-[100%]'
+                    key={img}
+                    onMouseEnter={() => hoverActiveImage(img)}
+                  >
                     <img
                       className='absolute top-0 right-0 h-full w-[100%] rounded-t-sm object-cover'
                       src={img}
@@ -49,7 +87,10 @@ export default function ProductDetail() {
                   </div>
                 )
               })}
-              <button className='absolute right-0 top-1/2 z-10 flex h-9 w-5 translate-y-[-50%] items-center bg-black/20 text-white'>
+              <button
+                onClick={NextImage}
+                className='absolute right-0 top-1/2 z-10 flex h-9 w-5 translate-y-[-50%] items-center bg-black/20 text-white'
+              >
                 <MdOutlineNavigateNext className='text-3xl' />
               </button>
             </div>
