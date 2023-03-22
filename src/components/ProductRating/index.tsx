@@ -1,6 +1,14 @@
 import { BsStarFill } from 'react-icons/bs'
 
-export default function ProductRating({ rating }: { rating: number }) {
+export default function ProductRating({
+  rating,
+  activeClassName = 'mr-[2px] text-[10px] text-yellow-400',
+  noActiveClassName = 'mr-[2px] text-[10px] text-gray-300'
+}: {
+  rating: number
+  activeClassName?: string
+  noActiveClassName?: string
+}) {
   const handleWithStar = (order: number) => {
     if (order <= rating) {
       return '100%'
@@ -17,9 +25,9 @@ export default function ProductRating({ rating }: { rating: number }) {
         .map((_, index) => (
           <div key={index} className='relative '>
             <div style={{ width: handleWithStar(index + 1) }} className='absolute left-0 top-0 h-full overflow-hidden'>
-              <BsStarFill className='mr-[2px] text-[10px] text-yellow-400' />
+              <BsStarFill className={activeClassName} />
             </div>
-            <BsStarFill className='mr-[2px] text-[10px] text-gray-300' />
+            <BsStarFill className={noActiveClassName} />
           </div>
         ))}
     </div>

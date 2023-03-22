@@ -133,7 +133,7 @@ export default function Header() {
           </div>
         </div>
         <div className='mt-4 flex items-center'>
-          <div>
+          <Link to={path.home}>
             <svg
               viewBox='0 0 192 65'
               className='shopee-svg-icon LybVoA m2rqmO icon-shopee-logo mr-5 hidden w-36 md:block '
@@ -145,7 +145,7 @@ export default function Header() {
                 ></path>
               </g>
             </svg>
-          </div>
+          </Link>
 
           <div className='flex flex-1 rounded-sm bg-white py-[3px] pr-[3px] pl-5'>
             <input className='flex-1 text-neutral-900 outline-none' type='text' placeholder='Bạn tìm gì hôm nay ?' />

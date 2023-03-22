@@ -5,6 +5,7 @@ import { path } from './constants/path'
 import MainLayout from './layouts/MainLayout'
 import RegisterLayout from './layouts/RegisterLayout'
 import Login from './pages/Login'
+import ProductDetail from './pages/ProductDetail'
 import ProductList from './pages/ProductList'
 import Profile from './pages/Profile'
 import Register from './pages/Register'
@@ -53,6 +54,15 @@ export default function useRouteElements() {
           )
         }
       ]
+    },
+    // Product Detail
+    {
+      path: path.productDetail,
+      element: (
+        <MainLayout>
+          <ProductDetail />
+        </MainLayout>
+      )
     },
     // Profile Page
     {
