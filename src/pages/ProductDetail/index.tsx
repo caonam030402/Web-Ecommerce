@@ -9,10 +9,11 @@ import { formatCurrency, formatNumberToSocialStyle, rateSale } from 'src/utils/u
 import { BsCartPlus } from 'react-icons/bs'
 import InputNumber from 'src/components/InputNumber'
 import DOMPurify from 'dompurify'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 export default function ProductDetail() {
   const { id } = useParams()
+  const refImage = useRef<HTMLImageElement>(null)
   const { data: productDetailData } = useQuery({
     queryKey: ['productDetail'],
     queryFn: () => productApi.getProductDetail(id as string)
@@ -85,6 +86,25 @@ export default function ProductDetail() {
     }
   }
 
+  const handleZoomImage = (event: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
+    const rect = event.currentTarget.getBoundingClientRect()
+    const image = refImage.current as HTMLImageElement
+    const { naturalHeight, naturalWidth } = image
+    const { offsetX, offsetY } = event.nativeEvent
+    const top = offsetY * (1 - naturalHeight / rect.height)
+    const left = offsetX * (1 - naturalWidth / rect.width)
+    console.log(1 - naturalWidth / rect.width)
+    image.style.width = naturalWidth + 'px'
+    image.style.height = naturalHeight + 'px'
+    image.style.maxWidth = 'unset'
+    image.style.top = top + 'px'
+    image.style.left = left + 'px'
+  }
+
+  const handleRemoveZoomImage = () => {
+    refImage.current?.removeAttribute('style')
+  }
+
   if (!product) return null
 
   return (
@@ -92,19 +112,23 @@ export default function ProductDetail() {
       <div className='container relative mt-10 bg-white p-4 shadow'>
         <div className='grid grid-cols-12 gap-9'>
           <div className='col-span-5'>
-            <button
+            <div
               onClick={() => {
                 setOpenModalImage(true)
                 setActiveImageInModal(activeImage)
               }}
-              className='relative w-full pt-[100%]'
+              aria-hidden='true'
+              className=' relative w-full cursor-zoom-in overflow-hidden pt-[100%]'
+              onMouseMove={handleZoomImage}
+              onMouseLeave={handleRemoveZoomImage}
             >
               <img
-                className='absolute top-0 right-0 h-full w-[100%] rounded-t-sm object-cover'
+                className='pointer-events-none absolute top-0 right-0 h-full w-[100%] rounded-t-sm object-cover'
                 src={activeImage}
                 alt={product.name}
+                ref={refImage}
               />
-            </button>
+            </div>
             <div className='relative mt-4 grid grid-cols-5 gap-1'>
               <button
                 onClick={prevImage}
