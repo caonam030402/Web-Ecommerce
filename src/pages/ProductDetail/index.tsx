@@ -5,14 +5,15 @@ import { Product } from 'src/types/product.type'
 import { MdOutlineNavigateBefore, MdOutlineNavigateNext } from 'react-icons/md'
 import { VscAdd, VscChromeMinimize } from 'react-icons/vsc'
 import ProductRating from 'src/components/ProductRating'
-import { formatCurrency, formatNumberToSocialStyle, rateSale } from 'src/utils/utils'
+import { formatCurrency, formatNumberToSocialStyle, getIdFromNameId, rateSale } from 'src/utils/utils'
 import { BsCartPlus } from 'react-icons/bs'
 import InputNumber from 'src/components/InputNumber'
 import DOMPurify from 'dompurify'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 export default function ProductDetail() {
-  const { id } = useParams()
+  const { nameId } = useParams()
+  const id = getIdFromNameId(nameId as string)
   const refImage = useRef<HTMLImageElement>(null)
   const { data: productDetailData } = useQuery({
     queryKey: ['productDetail'],
