@@ -21,6 +21,9 @@ export default function ProductDetail() {
   const [currentIndexImages, setCurentIndexImage] = useState([0, 5])
   const [activeImage, setActiveImage] = useState('')
 
+  const [activeImageInModal, setActiveImageInModal] = useState('')
+  const [openModalImage, setOpenModalImage] = useState(false)
+
   const product = productDetailData?.data.data
   const currentListImage = useMemo(
     () => (product ? product.images.slice(...currentIndexImages) : []),
@@ -37,15 +40,48 @@ export default function ProductDetail() {
     setActiveImage(img)
   }
 
-  const NextImage = () => {
+  const clickActiveImage = (img: string) => {
+    setActiveImageInModal(img)
+  }
+
+  // BTN NEXT AND PREV IMAGE
+  const nextImage = () => {
     if (currentIndexImages[1] < (product as Product).images.length) {
       setCurentIndexImage((prev) => [prev[0] + 1, prev[1] + 1])
     }
   }
 
-  const PrevImage = () => {
+  const prevImage = () => {
     if (currentIndexImages[0] > 0) {
       setCurentIndexImage((prev) => [prev[0] - 1, prev[1] - 1])
+    }
+  }
+
+  // BTN NEXT AND PREV IMAGE IN MODAL
+  const btnImageModal = (name: string) => {
+    if (product && product.images) {
+      const findIndexImage = product.images.findIndex((image) => {
+        return image === activeImageInModal
+      })
+
+      const increaseIndexImage = name === 'next' ? findIndexImage + 1 : findIndexImage - 1
+
+      // NEXT IMAGE MODAL
+      if (name === 'next') {
+        if (product.images.length > increaseIndexImage) {
+          setActiveImageInModal(product.images[increaseIndexImage])
+        } else {
+          setActiveImageInModal(product.images[product.images.length - increaseIndexImage])
+        }
+      }
+      // PREV IMAGE MODAL
+      if (name === 'prev') {
+        if (0 <= increaseIndexImage) {
+          setActiveImageInModal(product.images[increaseIndexImage])
+        } else {
+          setActiveImageInModal(product.images[product.images.length - 1])
+        }
+      }
     }
   }
 
@@ -56,16 +92,22 @@ export default function ProductDetail() {
       <div className='container relative mt-10 bg-white p-4 shadow'>
         <div className='grid grid-cols-12 gap-9'>
           <div className='col-span-5'>
-            <div className='relative w-full pt-[100%] '>
+            <button
+              onClick={() => {
+                setOpenModalImage(true)
+                setActiveImageInModal(activeImage)
+              }}
+              className='relative w-full pt-[100%]'
+            >
               <img
                 className='absolute top-0 right-0 h-full w-[100%] rounded-t-sm object-cover'
                 src={activeImage}
                 alt={product.name}
               />
-            </div>
+            </button>
             <div className='relative mt-4 grid grid-cols-5 gap-1'>
               <button
-                onClick={PrevImage}
+                onClick={prevImage}
                 className='absolute left-0 top-1/2 z-10 flex h-9 w-5 translate-y-[-50%] items-center bg-black/20 text-white'
               >
                 <MdOutlineNavigateBefore className='text-3xl' />
@@ -73,7 +115,11 @@ export default function ProductDetail() {
               {currentListImage.map((img) => {
                 const isActive = img === activeImage
                 return (
-                  <div
+                  <button
+                    onClick={() => {
+                      setOpenModalImage(true)
+                      setActiveImageInModal(img)
+                    }}
                     className='relative w-full cursor-pointer pt-[100%]'
                     key={img}
                     onMouseEnter={() => hoverActiveImage(img)}
@@ -84,12 +130,12 @@ export default function ProductDetail() {
                       alt={img}
                     />
                     {isActive && <div className='absolute inset-0 border-2 border-primaryColor'> </div>}
-                  </div>
+                  </button>
                 )
               })}
               <button
-                onClick={NextImage}
-                className='absolute right-0 top-1/2 z-10 flex h-9 w-5 translate-y-[-50%] items-center bg-black/20 text-white'
+                onClick={nextImage}
+                className='absolute right-0 top-1/2 z-0 flex h-9 w-5 translate-y-[-50%] items-center bg-black/20 text-white'
               >
                 <MdOutlineNavigateNext className='text-3xl' />
               </button>
@@ -166,6 +212,56 @@ export default function ProductDetail() {
         </div>
         <div className='col-span-2'></div>
       </div>
+
+      {/* MODAL */}
+      {openModalImage && (
+        <div className='index-2000 fixed inset-0 flex items-center justify-center bg-black/30'>
+          <button onClick={() => setOpenModalImage(false)} className='fixed inset-0 cursor-pointer'></button>
+          <div className=' grid h-[70vh] w-[100vh] grid-cols-12 gap-2 rounded-sm bg-white p-3 shadow-sm'>
+            <div className='relative col-span-8 w-full cursor-pointer pt-[100%]'>
+              <img
+                className='absolute top-0 right-0 h-full w-[100%] rounded-t-sm object-cover '
+                src={activeImageInModal}
+                alt=''
+              />
+              <button
+                onClick={() => btnImageModal('next')}
+                className='absolute right-0 top-1/2 z-0 flex h-12 w-7 translate-y-[-50%] items-center bg-black/20 text-white'
+              >
+                <MdOutlineNavigateNext className='text-8xl' />
+              </button>
+              <button
+                onClick={() => btnImageModal('prev')}
+                className='absolute left-0 top-1/2 z-10 flex h-12 w-7 translate-y-[-50%] items-center bg-black/20 text-white'
+              >
+                <MdOutlineNavigateBefore className='text-8xl' />
+              </button>
+            </div>
+
+            <div className='col-span-4'>
+              <div className='grid grid-cols-3 gap-2'>
+                {product.images.map((img) => {
+                  const isActive = img === activeImageInModal
+                  return (
+                    <button
+                      className='relative cursor-pointer pt-[100%]'
+                      key={img}
+                      onClick={() => clickActiveImage(img)}
+                    >
+                      <img
+                        className='absolute top-0 right-0 h-full w-[100%] rounded-t-sm object-cover'
+                        src={img}
+                        alt={img}
+                      />
+                      {isActive && <div className='absolute inset-0 border-2 border-primaryColor'> </div>}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

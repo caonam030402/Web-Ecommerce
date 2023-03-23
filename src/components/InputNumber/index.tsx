@@ -11,7 +11,6 @@ const InputNumber = forwardRef<HTMLInputElement, Props>(function InputNumberInne
     classNameInput = 'w-full rounded-sm border-[0.5px] border-gray-300 py-2 px-3 outline-none focus:border-gray-700',
     className,
     onChange,
-
     ...rest
   },
   ref
