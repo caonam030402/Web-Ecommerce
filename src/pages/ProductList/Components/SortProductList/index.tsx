@@ -1,11 +1,12 @@
 import { createSearchParams, Link, useNavigate } from 'react-router-dom'
 import Popover from 'src/components/Popover'
 import { MdKeyboardArrowDown, MdKeyboardArrowLeft, MdKeyboardArrowRight, MdOutlineCheck } from 'react-icons/md'
-import { QueryConfig } from '../..'
+import { QueryConfig } from 'src/hooks/useQueryConfig'
 import { ProductListConfig } from 'src/types/product.type'
 import { sortBy, order as orderConstant } from 'src/constants/product'
 import classNames from 'classnames'
 import { path } from 'src/constants/path'
+import { omit } from 'lodash'
 
 interface Props {
   queryConfig: QueryConfig
@@ -25,7 +26,7 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
   const handleSort = (sortByValue: Exclude<ProductListConfig['sort_by'], undefined>) => {
     navigate({
       pathname: path.home,
-      search: createSearchParams({ ...queryConfig, sort_by: sortByValue.toString() }).toString()
+      search: createSearchParams(omit({ ...queryConfig, sort_by: sortByValue.toString() }, ['order'])).toString()
     })
   }
 

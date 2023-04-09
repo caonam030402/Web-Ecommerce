@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 // eslint-disable-next-line import/no-duplicates
 import { MdNotificationsNone } from 'react-icons/md'
 import { BiHelpCircle } from 'react-icons/bi'
@@ -14,10 +14,28 @@ import { authApi } from 'src/apis/auth.api'
 import { useContext } from 'react'
 import { AppContext } from '../Contexts/app.contexts'
 import { path } from 'src/constants/path'
+import useQueryConfig from 'src/hooks/useQueryConfig'
+import { useForm } from 'react-hook-form'
+import { Schema, schema } from 'src/utils/rules'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { omit } from 'lodash'
+
+type FormData = Pick<Schema, 'name'>
+const nameSchema = schema.pick(['name'])
 
 export default function Header() {
   // useContext
   const { setIsAuthenticated, isAuthenticated, setProfile, profile } = useContext(AppContext)
+
+  // useQuery
+  const queryConfig = useQueryConfig()
+
+  const { handleSubmit, register } = useForm<FormData>({
+    defaultValues: {
+      name: ''
+    },
+    resolver: yupResolver(nameSchema)
+  })
 
   //Navigate
   const navigate = useNavigate()
@@ -35,6 +53,17 @@ export default function Header() {
   const handleLogout = () => {
     logoutMutation.mutate()
   }
+
+  const onSubmitSearch = handleSubmit((data) => {
+    const config = queryConfig.order
+      ? omit({ ...queryConfig, name: data.name }, ['order', 'sort_by'])
+      : omit({ ...queryConfig, name: data.name }, [''])
+
+    navigate({
+      pathname: path.home,
+      search: createSearchParams(config).toString()
+    })
+  })
   return (
     <header className='bg-primaryColor py-2'>
       <div className='container text-white'>
@@ -147,8 +176,13 @@ export default function Header() {
             </svg>
           </Link>
 
-          <div className='flex flex-1 rounded-sm bg-white py-[3px] pr-[3px] pl-5'>
-            <input className='flex-1 text-neutral-900 outline-none' type='text' placeholder='Bạn tìm gì hôm nay ?' />
+          <form onSubmit={onSubmitSearch} className='flex flex-1 rounded-sm bg-white py-[3px] pr-[3px] pl-5'>
+            <input
+              {...register('name')}
+              className='flex-1 text-neutral-900 outline-none'
+              type='text'
+              placeholder='Bạn tìm gì hôm nay ?'
+            />
             <button className='flex w-[6.5%] items-center justify-center rounded-sm bg-primaryColor p-[6px]'>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
@@ -165,7 +199,7 @@ export default function Header() {
                 />
               </svg>
             </button>
-          </div>
+          </form>
           <div className='flex w-[10%] justify-center'>
             {/* Popover Cart */}
             <Popover

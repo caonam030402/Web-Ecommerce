@@ -89,7 +89,8 @@ export const schema = yup.object({
     name: 'price-not-allowed',
     message: 'Vui lòng điền khoảng giá phù hợp',
     test: testPriceMinMax
-  })
+  }),
+  name: yup.string().trim().required('Tên sản phẩm là bắt buộc')
 })
 
 // Schema definition to validate the values provided in input fields of signup form

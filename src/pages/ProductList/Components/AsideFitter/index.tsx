@@ -3,7 +3,6 @@ import { AiOutlineCaretRight } from 'react-icons/ai'
 import { CiFilter } from 'react-icons/ci'
 import { createSearchParams, Link, useNavigate } from 'react-router-dom'
 import Button from 'src/components/Button'
-import { QueryConfig } from '../..'
 import { Category } from 'src/types/categogy.type'
 import classNames from 'classnames'
 import { path } from 'src/constants/path'
@@ -14,6 +13,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { NoUndefineField } from 'src/types/utils.type'
 import RatingStars from '../RatingStars'
 import { omit } from 'lodash'
+import { QueryConfig } from 'src/hooks/useQueryConfig'
 
 interface Props {
   queryConfig: QueryConfig

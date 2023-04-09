@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { omitBy, isUndefined, omit } from 'lodash'
+import { omit } from 'lodash'
 import { AiOutlineFileSearch } from 'react-icons/ai'
 import { createSearchParams, useNavigate } from 'react-router-dom'
 import { categoryApi } from 'src/apis/category.api'
@@ -8,41 +8,23 @@ import Button from 'src/components/Button'
 import Pagination from 'src/components/Pagination'
 import Slide from 'src/components/Slide'
 import { path } from 'src/constants/path'
-import UseQueryParams from 'src/hooks/UseQueryParams'
 import { ProductListConfig } from 'src/types/product.type'
 import AsideFitter from './Components/AsideFitter'
 import ProductItem from './Components/Product'
 import SortProductList from './Components/SortProductList'
-import { useForm } from 'react-hook-form'
-
-export type QueryConfig = {
-  [key in keyof ProductListConfig]: string
-}
+import useQueryConfig from 'src/hooks/useQueryConfig'
 
 export default function ProductList() {
   const navigate = useNavigate()
-  const queryParams: QueryConfig = UseQueryParams()
-  const queryConfig: QueryConfig = omitBy(
-    {
-      page: queryParams.page || '1',
-      limit: queryParams.limit || '20',
-      sort_by: queryParams.sort_by,
-      exclude: queryParams.exclude,
-      name: queryParams.name,
-      order: queryParams.order,
-      price_max: queryParams.price_max,
-      price_min: queryParams.price_min,
-      rating_filter: queryParams.rating_filter,
-      category: queryParams.category
-    },
 
-    isUndefined
-  )
+  const queryConfig = useQueryConfig()
 
   const handleRemoveAll = () => {
     navigate({
       pathname: path.home,
-      search: createSearchParams(omit(queryConfig, ['price_min', 'price_max', 'category', 'rating_filter'])).toString()
+      search: createSearchParams(
+        omit(queryConfig, ['price_min', 'price_max', 'category', 'rating_filter', 'name', 'sort_by'])
+      ).toString()
     })
   }
 
