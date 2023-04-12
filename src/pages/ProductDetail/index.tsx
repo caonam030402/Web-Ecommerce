@@ -11,8 +11,10 @@ import InputNumber from 'src/components/InputNumber'
 import DOMPurify from 'dompurify'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import ProductItem from '../ProductList/Components/Product'
+import QuantityController from 'src/components/QuantityController'
 
 export default function ProductDetail() {
+  const [buyCount, setBuyCount] = useState(1)
   const { nameId } = useParams()
   const id = getIdFromNameId(nameId as string)
   const refImage = useRef<HTMLImageElement>(null)
@@ -119,6 +121,10 @@ export default function ProductDetail() {
     refImage.current?.removeAttribute('style')
   }
 
+  const hanleBuyCount = (value: number) => {
+    setBuyCount(value)
+  }
+
   if (!product) return null
 
   return (
@@ -212,18 +218,13 @@ export default function ProductDetail() {
             </div>
             <div className='mt-8 flex items-center gap-6 text-black/60'>
               <p>Số Lượng</p>
-              <div className='flex items-center border-[1px] border-r-[1px] border-gray-200'>
-                <button className='px-2 py-1'>
-                  <VscChromeMinimize />
-                </button>
-                <InputNumber
-                  value='1'
-                  classNameInput='text-base px-2 py-1 w-[60px] outline-none border-r-[1px] border-l-[1px] border-gray-200 text-center justify-center'
-                ></InputNumber>
-                <button className='px-2 py-1 '>
-                  <VscAdd />
-                </button>
-              </div>
+              <QuantityController
+                onDecrease={hanleBuyCount}
+                onType={hanleBuyCount}
+                onIncrease={hanleBuyCount}
+                value={buyCount}
+                max={product.quantity}
+              />
               <p>{product.quantity} Sản phẩm có sẵn</p>
             </div>
             <div className='mt-8 flex text-base text-primaryColor'>
