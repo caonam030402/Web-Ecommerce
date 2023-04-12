@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
-import { useParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { productApi } from 'src/apis/product.api'
-import { Product } from 'src/types/product.type'
+import { Product, ProductListConfig } from 'src/types/product.type'
 import { MdOutlineNavigateBefore, MdOutlineNavigateNext } from 'react-icons/md'
 import { VscAdd, VscChromeMinimize } from 'react-icons/vsc'
 import ProductRating from 'src/components/ProductRating'
@@ -10,13 +10,15 @@ import { BsCartPlus } from 'react-icons/bs'
 import InputNumber from 'src/components/InputNumber'
 import DOMPurify from 'dompurify'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import ProductItem from '../ProductList/Components/Product'
 
 export default function ProductDetail() {
   const { nameId } = useParams()
   const id = getIdFromNameId(nameId as string)
   const refImage = useRef<HTMLImageElement>(null)
+
   const { data: productDetailData } = useQuery({
-    queryKey: ['productDetail'],
+    queryKey: ['productDetail', id],
     queryFn: () => productApi.getProductDetail(id as string)
   })
 
@@ -27,6 +29,17 @@ export default function ProductDetail() {
   const [openModalImage, setOpenModalImage] = useState(false)
 
   const product = productDetailData?.data.data
+
+  const queryConfig: ProductListConfig = { limit: '20', page: '1', category: product?.category._id }
+  const { data: productsData } = useQuery({
+    queryKey: ['products', queryConfig],
+    queryFn: () => {
+      return productApi.getProducts(queryConfig)
+    },
+    enabled: Boolean(product),
+    staleTime: 3 * 60 * 1000
+  })
+
   const currentListImage = useMemo(
     () => (product ? product.images.slice(...currentIndexImages) : []),
     [product, currentIndexImages]
@@ -284,6 +297,18 @@ export default function ProductDetail() {
                 })}
               </div>
             </div>
+          </div>
+        </div>
+      )}
+      {productsData && (
+        <div className='container mt-6 p-0'>
+          <h1 className='mb-3 text-gray-600'>CÓ THỂ BẠN CŨNG THÍCH</h1>
+          <div className=' grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'>
+            {productsData?.data.data.products.map((product) => (
+              <div className='' key={product._id}>
+                <ProductItem product={product} />
+              </div>
+            ))}
           </div>
         </div>
       )}

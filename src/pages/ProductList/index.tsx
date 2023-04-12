@@ -28,12 +28,13 @@ export default function ProductList() {
     })
   }
 
-  const { data: productData } = useQuery({
+  const { data: productsData } = useQuery({
     queryKey: ['products', queryConfig],
     queryFn: () => {
       return productApi.getProducts(queryConfig as ProductListConfig)
     },
-    keepPreviousData: true
+    keepPreviousData: true,
+    staleTime: 3 * 60 * 1000
   })
 
   const { data: categoriesData } = useQuery({
@@ -44,8 +45,8 @@ export default function ProductList() {
   })
 
   const checkProductListEmpty = () => {
-    if (productData) {
-      return productData.data.data.products.length === 0
+    if (productsData) {
+      return productsData.data.data.products.length === 0
     }
   }
 
@@ -55,22 +56,22 @@ export default function ProductList() {
         <Slide />
       </div>
       <div className='container mt-10'>
-        {productData && (
+        {productsData && (
           <div className='grid grid-cols-12 gap-6'>
             <div className='col-span-2'>
               <AsideFitter queryConfig={queryConfig} categories={categoriesData?.data.data || []} />
             </div>
             {!checkProductListEmpty() && (
               <div className='col-span-10'>
-                <SortProductList queryConfig={queryConfig} pageSize={productData.data.data.pagination.page_size} />
+                <SortProductList queryConfig={queryConfig} pageSize={productsData.data.data.pagination.page_size} />
                 <div className='mt-6 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
-                  {productData?.data.data.products.map((product) => (
+                  {productsData?.data.data.products.map((product) => (
                     <div className='' key={product._id}>
                       <ProductItem product={product} />
                     </div>
                   ))}
                 </div>
-                <Pagination queryConfig={queryConfig} pageSize={productData.data.data.pagination.page_size} />
+                <Pagination queryConfig={queryConfig} pageSize={productsData.data.data.pagination.page_size} />
               </div>
             )}
 
