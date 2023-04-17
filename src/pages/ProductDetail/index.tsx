@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { productApi } from 'src/apis/product.api'
 import { Product, ProductListConfig } from 'src/types/product.type'
@@ -7,11 +7,14 @@ import { VscAdd, VscChromeMinimize } from 'react-icons/vsc'
 import ProductRating from 'src/components/ProductRating'
 import { formatCurrency, formatNumberToSocialStyle, getIdFromNameId, rateSale } from 'src/utils/utils'
 import { BsCartPlus } from 'react-icons/bs'
-import InputNumber from 'src/components/InputNumber'
 import DOMPurify from 'dompurify'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import ProductItem from '../ProductList/Components/Product'
 import QuantityController from 'src/components/QuantityController'
+import { purchaseApi } from 'src/apis/purchase.api'
+import { queryClient } from 'src/main'
+import { purchasesStatus } from 'src/constants/purchase'
+import { toast } from 'react-toastify'
 
 export default function ProductDetail() {
   const [buyCount, setBuyCount] = useState(1)
@@ -41,6 +44,8 @@ export default function ProductDetail() {
     enabled: Boolean(product),
     staleTime: 3 * 60 * 1000
   })
+
+  const addToCartMutation = useMutation(purchaseApi.addToCart)
 
   const currentListImage = useMemo(
     () => (product ? product.images.slice(...currentIndexImages) : []),
@@ -123,6 +128,18 @@ export default function ProductDetail() {
 
   const hanleBuyCount = (value: number) => {
     setBuyCount(value)
+  }
+
+  const addToCart = () => {
+    addToCartMutation.mutate(
+      { buy_count: buyCount, product_id: product?._id as string },
+      {
+        onSuccess: (data) => {
+          toast.success(data.data.message)
+          queryClient.invalidateQueries({ queryKey: ['purchases', { status: purchasesStatus.inCart }] })
+        }
+      }
+    )
   }
 
   if (!product) return null
@@ -228,7 +245,10 @@ export default function ProductDetail() {
               <p>{product.quantity} Sản phẩm có sẵn</p>
             </div>
             <div className='mt-8 flex text-base text-primaryColor'>
-              <button className='flex items-center justify-center rounded-sm border-[1px] border-primaryColor bg-primaryColor/10 py-3 px-5 capitalize hover:bg-primaryColor/5'>
+              <button
+                onClick={addToCart}
+                className='flex items-center justify-center rounded-sm border-[1px] border-primaryColor bg-primaryColor/10 py-3 px-5 capitalize hover:bg-primaryColor/5'
+              >
                 <span>
                   <BsCartPlus className='mr-2 text-xl' />
                 </span>

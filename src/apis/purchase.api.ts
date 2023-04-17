@@ -9,6 +9,8 @@ export const purchaseApi = {
     return http.post<SuccessResponse<Purchase>>(`${URL}/add-to-cart`, body)
   },
   getPurchases(params: { status: PurchaseListStatus }) {
-    return http.get<SuccessResponse<Purchase[]>>(`${URL}`, { params })
+    return http.get<SuccessResponse<Purchase[]>>(`${URL}`, {
+      params
+    })
   }
 }

@@ -9,7 +9,7 @@ import { AiFillInstagram } from 'react-icons/ai'
 import Popover from '../Popover'
 import avatar from '../../assets/ava.jpg'
 import dealNotify from '../../assets/image/deal.jpg'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { authApi } from 'src/apis/auth.api'
 import { useContext } from 'react'
 import { AppContext } from '../Contexts/app.contexts'
@@ -19,9 +19,14 @@ import { useForm } from 'react-hook-form'
 import { Schema, schema } from 'src/utils/rules'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { omit } from 'lodash'
+import { purchasesStatus } from 'src/constants/purchase'
+import { purchaseApi } from 'src/apis/purchase.api'
+import noCard from 'src/assets/no-cart.png'
+import { formatCurrency } from 'src/utils/utils'
 
 type FormData = Pick<Schema, 'name'>
 const nameSchema = schema.pick(['name'])
+const MAX_PURCHASES = 5
 
 export default function Header() {
   // useContext
@@ -49,6 +54,14 @@ export default function Header() {
       setProfile(null)
     }
   })
+
+  const { data: purchasesInCartData } = useQuery({
+    queryKey: ['purchases', { status: purchasesStatus.inCart }],
+    queryFn: () => purchaseApi.getPurchases({ status: purchasesStatus.inCart }),
+    enabled: isAuthenticated
+  })
+
+  const purchasesInCart = purchasesInCartData?.data.data
 
   const handleLogout = () => {
     logoutMutation.mutate()
@@ -206,92 +219,57 @@ export default function Header() {
               className='index-1000'
               renderPopover={
                 <div className='relative max-w-[400px] rounded-sm bg-white shadow-md '>
-                  <h1 className='cursor-default p-3 capitalize text-gray-400'>Sản phẩm được thêm</h1>
-                  <ul>
-                    <Link to='' className='flex p-3 hover:bg-slate-50'>
-                      <img
-                        className='mr-2 h-11 w-11 object-cover'
-                        src='https://cf.shopee.vn/file/00221bb185735209598eef3ce8b4f9f9_tn'
-                        alt=''
-                      />
-                      <div className='mr-6 overflow-hidden truncate line-clamp-2'>
-                        Ốp lưng iphone cạnh vuông lỗ camera tiger lucky
-                        6/6splus/7/7plus/8/8plus/x/xr/xs/11/12/13/pro/max/plus/-Sale Sốc T2-1
+                  {!purchasesInCart && (
+                    <div className='flex h-[250px] w-[400px] flex-col items-center justify-center'>
+                      <img className='w-[100px]' src={noCard} alt='' />
+                      <p className='mt-1 text-sm'>Chưa có sản phẩm</p>
+                    </div>
+                  )}
+                  {purchasesInCart && (
+                    <div>
+                      <h1 className='cursor-default p-3 capitalize text-gray-400'>Sản phẩm được thêm</h1>
+                      <ul>
+                        {purchasesInCart.slice(0, MAX_PURCHASES).map((purchase, index) => (
+                          <Link key={index} to='' className='flex p-3 hover:bg-slate-50'>
+                            <img className='mr-2 h-11 w-11 object-cover' src={purchase.product.image} alt='' />
+                            <div className='mr-6 truncate'>{purchase.product.name}</div>
+                            <p className='text-primaryColor'> {formatCurrency(purchase.price)}₫</p>
+                          </Link>
+                        ))}
+                      </ul>
+                      <div className='flex items-center justify-between p-3'>
+                        <p className='cursor-default text-xs capitalize'>
+                          {purchasesInCart.length < MAX_PURCHASES ? 0 : purchasesInCart.length - MAX_PURCHASES} thêm vào
+                          giỏ hàng
+                        </p>
+                        <button className='bg-primaryColor px-3 py-2 text-sm text-white transition-all hover:opacity-80'>
+                          Xem Giỏ Hàng
+                        </button>
                       </div>
-                      <p className='text-primaryColor'> đ20.000</p>
-                    </Link>
-                    <Link to='' className='flex p-3 hover:bg-slate-50'>
-                      <img
-                        className='mr-2 h-11 w-11 object-cover'
-                        src='https://cf.shopee.vn/file/00221bb185735209598eef3ce8b4f9f9_tn'
-                        alt=''
-                      />
-                      <div className='mr-6 overflow-hidden truncate line-clamp-2'>
-                        Ốp lưng iphone cạnh vuông lỗ camera tiger lucky
-                        6/6splus/7/7plus/8/8plus/x/xr/xs/11/12/13/pro/max/plus/-Sale Sốc T2-1
-                      </div>
-                      <p className='text-primaryColor'> đ20.000</p>
-                    </Link>
-                    <Link to='' className='flex p-3 hover:bg-slate-50'>
-                      <img
-                        className='mr-2 h-11 w-11 object-cover'
-                        src='https://cf.shopee.vn/file/00221bb185735209598eef3ce8b4f9f9_tn'
-                        alt=''
-                      />
-                      <div className='mr-6 overflow-hidden truncate line-clamp-2'>
-                        Ốp lưng iphone cạnh vuông lỗ camera tiger lucky
-                        6/6splus/7/7plus/8/8plus/x/xr/xs/11/12/13/pro/max/plus/-Sale Sốc T2-1
-                      </div>
-                      <p className='text-primaryColor'> đ20.000</p>
-                    </Link>
-                    <Link to='' className='flex p-3 hover:bg-slate-50'>
-                      <img
-                        className='mr-2 h-11 w-11 object-cover'
-                        src='https://cf.shopee.vn/file/00221bb185735209598eef3ce8b4f9f9_tn'
-                        alt=''
-                      />
-                      <div className='mr-6 overflow-hidden truncate line-clamp-2'>
-                        Ốp lưng iphone cạnh vuông lỗ camera tiger lucky
-                        6/6splus/7/7plus/8/8plus/x/xr/xs/11/12/13/pro/max/plus/-Sale Sốc T2-1
-                      </div>
-                      <p className='text-primaryColor'> đ20.000</p>
-                    </Link>
-                    <Link to='' className='flex p-3 hover:bg-slate-50'>
-                      <img
-                        className='mr-2 h-11 w-11 object-cover'
-                        src='https://cf.shopee.vn/file/00221bb185735209598eef3ce8b4f9f9_tn'
-                        alt=''
-                      />
-                      <div className='mr-6 overflow-hidden truncate line-clamp-2'>
-                        Ốp lưng iphone cạnh vuông lỗ camera tiger lucky
-                        6/6splus/7/7plus/8/8plus/x/xr/xs/11/12/13/pro/max/plus/-Sale Sốc T2-1
-                      </div>
-                      <p className='text-primaryColor'> đ20.000</p>
-                    </Link>
-                  </ul>
-                  <div className='flex items-center justify-between p-3'>
-                    <p className='cursor-default text-xs capitalize'>15 thêm vào giỏ hàng</p>
-                    <button className='bg-primaryColor px-3 py-2 text-sm text-white transition-all hover:opacity-80'>
-                      Xem Giỏ Hàng
-                    </button>
-                  </div>
+                    </div>
+                  )}
                 </div>
               }
             >
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth={1.5}
-                stroke='currentColor'
-                className='h-8 w-8'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
-                />
-              </svg>
+              <Link to='' className='relative'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth={1.5}
+                  stroke='currentColor'
+                  className='h-8 w-8'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
+                  />
+                </svg>
+                <span className='absolute top-0 right-[-30%] rounded-full bg-white py-[2px] px-[6px] text-xs leading-3 text-primaryColor'>
+                  {purchasesInCart?.length}
+                </span>
+              </Link>
             </Popover>
           </div>
         </div>
