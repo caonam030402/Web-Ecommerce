@@ -14,6 +14,7 @@ import { NoUndefineField } from 'src/types/utils.type'
 import RatingStars from '../RatingStars'
 import { omit } from 'lodash'
 import { QueryConfig } from 'src/hooks/useQueryConfig'
+import InputV2 from 'src/components/InputV2'
 
 interface Props {
   queryConfig: QueryConfig
@@ -123,6 +124,17 @@ export default function AsideFitter({ categories, queryConfig }: Props) {
                 )
               }}
             />
+            {/* <InputV2
+              control={control}
+              type='number'
+              className='grow'
+              name='price_min'
+              placeholder='₫ TỪ'
+              classNameInput='w-full rounded-sm border-[0.5px] border-gray-300 px-2 py-2 outline-none focus:border-gray-400 '
+              onChange={() => {
+                trigger('price_max')
+              }}
+            /> */}
             <div className='h-[0.75px] w-[10%] bg-slate-300'></div>
             <Controller
               name='price_max'
