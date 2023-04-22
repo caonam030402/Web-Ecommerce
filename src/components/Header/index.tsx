@@ -23,6 +23,7 @@ import { purchasesStatus } from 'src/constants/purchase'
 import { purchaseApi } from 'src/apis/purchase.api'
 import noCard from 'src/assets/no-cart.png'
 import { formatCurrency } from 'src/utils/utils'
+import { queryClient } from 'src/main'
 
 type FormData = Pick<Schema, 'name'>
 const nameSchema = schema.pick(['name'])
@@ -50,8 +51,9 @@ export default function Header() {
     mutationFn: authApi.logout,
     onSuccess: () => {
       setIsAuthenticated(false)
-      navigate(path.login)
+      navigate(path.home)
       setProfile(null)
+      queryClient.removeQueries({ queryKey: ['purchases', { status: purchasesStatus.inCart }] })
     }
   })
 
@@ -242,9 +244,12 @@ export default function Header() {
                           {purchasesInCart.length < MAX_PURCHASES ? 0 : purchasesInCart.length - MAX_PURCHASES} thêm vào
                           giỏ hàng
                         </p>
-                        <button className='bg-primaryColor px-3 py-2 text-sm text-white transition-all hover:opacity-80'>
+                        <Link
+                          to={path.cart}
+                          className='bg-primaryColor px-3 py-2 text-sm text-white transition-all hover:opacity-80'
+                        >
                           Xem Giỏ Hàng
-                        </button>
+                        </Link>
                       </div>
                     </div>
                   )}
@@ -266,9 +271,11 @@ export default function Header() {
                     d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
                   />
                 </svg>
-                <span className='absolute top-0 right-[-30%] rounded-full bg-white py-[2px] px-[6px] text-xs leading-3 text-primaryColor'>
-                  {purchasesInCart?.length}
-                </span>
+                {purchasesInCart && (
+                  <span className='absolute top-0 right-[-30%] rounded-full bg-white py-[2px] px-[6px] text-xs leading-3 text-primaryColor'>
+                    {purchasesInCart?.length}
+                  </span>
+                )}
               </Link>
             </Popover>
           </div>
