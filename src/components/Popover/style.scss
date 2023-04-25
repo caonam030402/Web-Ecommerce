@@ -3,6 +3,7 @@
   border-color: transparent transparent #ffffff transparent;
   position: absolute;
   transform: translateY(-100%);
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   &::after {
     content: '';
     width: 50px;

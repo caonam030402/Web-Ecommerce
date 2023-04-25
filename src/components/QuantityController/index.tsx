@@ -16,7 +16,7 @@ export default function QuantityController({
   onDecrease,
   onType,
   value,
-  classNameWrapper = 'flex items-center border-[1px] border-r-[1px] border-gray-200',
+  classNameWrapper = '',
   ...rest
 }: Props) {
   const [localValue, setLocalValue] = useState<number>(Number(value || 1))
@@ -52,16 +52,19 @@ export default function QuantityController({
   return (
     <div>
       <div className={classNameWrapper}>
-        <button className='px-2 py-1'>
+        <button className='flex h-8 w-8 items-center justify-center rounded-l-sm border border-gray-300 text-gray-600'>
           <VscChromeMinimize onClick={decrease} />
         </button>
         <InputNumber
           value={value || localValue}
-          classNameInput='text-base px-2 py-1 w-[60px] outline-none border-r-[1px] border-l-[1px] border-gray-200 text-center justify-center'
+          classNameInput='h-8 w-14 border-t border-b border-gray-300 p-1 text-center outline-none'
           onChange={handleChange}
           {...rest}
         ></InputNumber>
-        <button onClick={increase} className='px-2 py-1 '>
+        <button
+          onClick={increase}
+          className='flex h-8 w-8 items-center justify-center rounded-l-sm border border-gray-300 text-gray-600 '
+        >
           <VscAdd />
         </button>
       </div>

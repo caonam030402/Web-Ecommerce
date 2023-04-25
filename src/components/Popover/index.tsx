@@ -1,7 +1,18 @@
-import { useFloating, FloatingPortal, arrow, shift, offset, type Placement } from '@floating-ui/react'
+import {
+  useFloating,
+  FloatingPortal,
+  arrow,
+  shift,
+  offset,
+  type Placement,
+  autoUpdate,
+  computePosition
+} from '@floating-ui/react'
 import { useState, useRef, useId, ElementType } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import './style.scss'
+
+type arrowPostion = 'arrowTop' | 'arrowBottom'
 
 // Type Props
 interface Props {
@@ -10,10 +21,12 @@ interface Props {
   className?: string
   initialOpen?: boolean
   as?: ElementType
-  placement?: Placement
+  placementArrow?: Placement
+  placementFloating?: Placement
   classNameArrow?: string
   offsetTop?: number
   duration?: number
+  arrowPosition?: arrowPostion
 }
 
 export default function Popover({
@@ -22,21 +35,45 @@ export default function Popover({
   renderPopover,
   as: Element = 'div',
   initialOpen,
-  placement = 'bottom-end',
   classNameArrow = 'arrow_popover',
   offsetTop = 10,
-  duration = 0.3
+  duration = 0.3,
+  placementArrow = 'bottom-end',
+  placementFloating = 'bottom-end',
+  arrowPosition = 'arrowTop'
 }: Props) {
   const [isOpen, setIsOpen] = useState(initialOpen || false)
   const arrowRef = useRef<HTMLElement>(null)
 
-  //Using useId for Popover
   const id = useId()
 
   const { x, y, strategy, refs, middlewareData } = useFloating({
     middleware: [shift(), offset(offsetTop), arrow({ element: arrowRef })],
-    placement: placement
+    placement: placementArrow
   })
+
+  const floatingEl = refs.floating.current
+  const referenceEl = refs.reference.current
+  const checkNull = referenceEl && floatingEl !== null
+
+  function updatePosition() {
+    if (checkNull) {
+      computePosition(referenceEl, floatingEl, {
+        middleware: [shift(), offset(offsetTop), arrow({ element: arrowRef })],
+        placement: placementFloating
+      }).then(({ x, y }) => {
+        if (checkNull) {
+          floatingEl.style.left = `${x}px`
+          floatingEl.style.top = `${y}px`
+        }
+      })
+    }
+  }
+
+  if (checkNull) {
+    autoUpdate(referenceEl, floatingEl, updatePosition)
+  }
+
   const showPopover = () => {
     setIsOpen(true)
   }
@@ -68,7 +105,8 @@ export default function Popover({
               <span
                 style={{
                   left: middlewareData.arrow?.x,
-                  top: middlewareData.arrow?.y
+                  bottom: arrowPosition === 'arrowBottom' ? -12 : '',
+                  transform: arrowPosition === 'arrowBottom' ? 'rotate(180deg)' : ''
                 }}
                 ref={arrowRef}
                 className={classNameArrow}

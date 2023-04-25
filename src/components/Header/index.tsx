@@ -218,6 +218,7 @@ export default function Header() {
           <div className='flex w-[10%] justify-center'>
             {/* Popover Cart */}
             <Popover
+              placementArrow='bottom-end'
               className='index-1000'
               renderPopover={
                 <div className='relative max-w-[400px] rounded-sm bg-white shadow-md '>
