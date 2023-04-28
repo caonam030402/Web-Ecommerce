@@ -7,6 +7,7 @@ interface Props extends InputNumberProps {
   onIncrease?: (value: number) => void
   onDecrease?: (value: number) => void
   onType?: (value: number) => void
+  onFocusOut?: (value: number) => void
   classNameWrapper?: string
 }
 
@@ -15,6 +16,7 @@ export default function QuantityController({
   onIncrease,
   onDecrease,
   onType,
+  onFocusOut,
   value,
   classNameWrapper = '',
   ...rest
@@ -49,6 +51,11 @@ export default function QuantityController({
     setLocalValue(_value)
   }
 
+  const handleBlur = (event: React.FocusEvent<HTMLInputElement, Element>) => {
+    const _value = Number(event.target.value)
+    onFocusOut && onFocusOut(_value)
+  }
+
   return (
     <div>
       <div className={classNameWrapper}>
@@ -56,6 +63,7 @@ export default function QuantityController({
           <VscChromeMinimize onClick={decrease} />
         </button>
         <InputNumber
+          onBlur={handleBlur}
           value={value || localValue}
           classNameInput='h-8 w-14 border-t border-b border-gray-300 p-1 text-center outline-none'
           onChange={handleChange}
