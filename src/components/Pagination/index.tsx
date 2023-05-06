@@ -2,7 +2,7 @@ import classNames from 'classnames'
 import { MdOutlineArrowForwardIos, MdOutlineArrowBackIos } from 'react-icons/md'
 import { Link, createSearchParams } from 'react-router-dom'
 import { path } from 'src/constants/path'
-import { QueryConfig } from 'src/pages/ProductList'
+import { QueryConfig } from 'src/hooks/useQueryConfig'
 
 interface Props {
   queryConfig: QueryConfig

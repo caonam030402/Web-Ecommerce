@@ -222,13 +222,13 @@ export default function Header() {
               className='index-1000'
               renderPopover={
                 <div className='relative max-w-[400px] rounded-sm bg-white shadow-md '>
-                  {!purchasesInCart && (
+                  {purchasesInCart?.length === 0 && (
                     <div className='flex h-[250px] w-[400px] flex-col items-center justify-center'>
                       <img className='w-[100px]' src={noCard} alt='' />
                       <p className='mt-1 text-sm'>Chưa có sản phẩm</p>
                     </div>
                   )}
-                  {purchasesInCart && (
+                  {purchasesInCart && purchasesInCart?.length >= 1 && (
                     <div>
                       <h1 className='cursor-default p-3 capitalize text-gray-400'>Sản phẩm được thêm</h1>
                       <ul>

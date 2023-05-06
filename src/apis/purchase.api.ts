@@ -13,7 +13,18 @@ export const purchaseApi = {
       params
     })
   },
-  updatePurchases(body: { product_id: string; buy_count: number }) {
+
+  buyProducts(body: { product_id: string; buy_count: number }[]) {
+    return http.post<SuccessResponse<Purchase[]>>(`${URL}/buy-products`, body)
+  },
+
+  updatePurchase(body: { product_id: string; buy_count: number }) {
     return http.put<SuccessResponse<Purchase>>(`${URL}/update-purchase`, body)
+  },
+
+  deletePurchase(purchaseIds: string[]) {
+    return http.delete<SuccessResponse<{ delete_cound: number }>>(`${URL}`, {
+      data: purchaseIds
+    })
   }
 }
