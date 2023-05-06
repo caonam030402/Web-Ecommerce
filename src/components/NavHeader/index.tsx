@@ -10,12 +10,12 @@ import { useContext } from 'react'
 import { AppContext } from '../Contexts/app.contexts'
 import avatar from '../../assets/ava.jpg'
 import { purchasesStatus } from 'src/constants/purchase'
-import { queryClient } from 'src/main'
 import { authApi } from 'src/apis/auth.api'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export default function NavHeader() {
   const { setIsAuthenticated, isAuthenticated, setProfile, profile } = useContext(AppContext)
+  const queryClient = useQueryClient()
 
   //Navigate
   const navigate = useNavigate()

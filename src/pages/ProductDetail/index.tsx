@@ -1,9 +1,8 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { useParams, useSearchParams } from 'react-router-dom'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useNavigate, useParams } from 'react-router-dom'
 import { productApi } from 'src/apis/product.api'
 import { Product, ProductListConfig } from 'src/types/product.type'
 import { MdOutlineNavigateBefore, MdOutlineNavigateNext } from 'react-icons/md'
-import { VscAdd, VscChromeMinimize } from 'react-icons/vsc'
 import ProductRating from 'src/components/ProductRating'
 import { formatCurrency, formatNumberToSocialStyle, getIdFromNameId, rateSale } from 'src/utils/utils'
 import { BsCartPlus } from 'react-icons/bs'
@@ -12,20 +11,23 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import ProductItem from '../ProductList/Components/Product'
 import QuantityController from 'src/components/QuantityController'
 import { purchaseApi } from 'src/apis/purchase.api'
-import { queryClient } from 'src/main'
 import { purchasesStatus } from 'src/constants/purchase'
 import { toast } from 'react-toastify'
+import { path } from 'src/constants/path'
 
 export default function ProductDetail() {
   const [buyCount, setBuyCount] = useState(1)
   const { nameId } = useParams()
   const id = getIdFromNameId(nameId as string)
   const refImage = useRef<HTMLImageElement>(null)
+  const queryClient = useQueryClient()
 
   const { data: productDetailData } = useQuery({
     queryKey: ['productDetail', id],
     queryFn: () => productApi.getProductDetail(id as string)
   })
+
+  const navigate = useNavigate()
 
   const [currentIndexImages, setCurentIndexImage] = useState([0, 5])
   const [activeImage, setActiveImage] = useState('')
@@ -142,6 +144,16 @@ export default function ProductDetail() {
     )
   }
 
+  const buyNow = async () => {
+    const res = await addToCartMutation.mutateAsync({ buy_count: buyCount, product_id: product?._id as string })
+    const purchaseId = res.data.data._id
+    navigate(path.cart, {
+      state: {
+        purchaseId: purchaseId
+      }
+    })
+  }
+
   if (!product) return null
 
   return (
@@ -255,7 +267,10 @@ export default function ProductDetail() {
                 </span>
                 <span>Thêm vào giỏ hàng</span>
               </button>
-              <button className='ml-3 rounded-sm border-[1px] border-primaryColor bg-primaryColor px-5 capitalize text-white hover:bg-primaryColor/90'>
+              <button
+                onClick={buyNow}
+                className='ml-3 rounded-sm border-[1px] border-primaryColor bg-primaryColor px-5 capitalize text-white hover:bg-primaryColor/90'
+              >
                 Mua ngay
               </button>
             </div>

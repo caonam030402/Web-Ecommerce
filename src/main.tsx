@@ -8,7 +8,7 @@ import { AppProvider } from './components/Contexts/app.contexts'
 
 import './index.css'
 
-export const queryClient = new QueryClient({
+const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false // disable retrieving data every time the window is displayed.
