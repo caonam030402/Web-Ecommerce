@@ -135,14 +135,17 @@ export default function Cart() {
   }
 
   return (
-    <div className='container px-0 shadow-sm'>
+    <div className='container shadow-sm'>
       <div className='mt-10 grid grid-cols-12 bg-white px-10 py-4'>
         <div className='col-span-5 flex gap-4 text-sm'>
           <input
-            checked={isAllChecked}
+            checked={purchasesInCart?.length === 0 ? false : isAllChecked}
             onChange={handleCheckAll}
             type='checkbox'
-            className=' w-[18px] flex-shrink border-gray-100 accent-primaryColor'
+            className={`w-[18px] flex-shrink border-gray-100 accent-primaryColor ${
+              purchasesInCart?.length === 0 && 'cursor-not-allowed'
+            }`}
+            disabled={purchasesInCart?.length === 0 && true}
           />
           <h2>Sản phẩm</h2>
         </div>
@@ -222,10 +225,13 @@ export default function Cart() {
         <div className='col-span-3'>
           <div className='flex gap-6 text-base'>
             <input
-              checked={isAllChecked}
+              checked={purchasesInCart?.length === 0 ? false : isAllChecked}
               type='checkbox'
               onChange={handleCheckAll}
-              className=' w-[18px] flex-shrink border-gray-100 accent-primaryColor'
+              className={`w-[18px] flex-shrink border-gray-100 accent-primaryColor ${
+                purchasesInCart?.length === 0 && 'cursor-not-allowed'
+              }`}
+              disabled={purchasesInCart?.length === 0 && true}
             />
             <h2>Chọn tất cả ({extendedPurchases.length})</h2>
             <button onClick={hanleDeleteManyPurchases}>Xóa</button>
