@@ -11,7 +11,8 @@ import './index.css'
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false // disable retrieving data every time the window is displayed.
+      refetchOnWindowFocus: false, // disable retrieving data every time the window is displayed.
+      retry: 0
     }
   }
 })
