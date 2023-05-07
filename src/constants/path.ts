@@ -1,6 +1,9 @@
 export const path = {
   home: '/',
-  profile: '/profile',
+  user: '/user',
+  profile: '/user/profile',
+  changPassword: '/user/password',
+  historyPurchase: '/user/purchase',
   login: '/login',
   register: '/register',
   logout: '/logout',
