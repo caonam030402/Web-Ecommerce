@@ -1,4 +1,53 @@
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useQuery } from '@tanstack/react-query'
+import { useEffect } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { userApi } from 'src/apis/user.api'
+import Input from 'src/components/Input'
+import InputNumber from 'src/components/InputNumber'
+import { UserSchema, userSchema } from 'src/utils/rules'
+
+type FormData = Pick<UserSchema, 'name' | 'address' | 'date_of_birth' | 'avatar' | 'phone'>
+const profileSchema = userSchema.pick(['name', 'address', 'phone', 'date_of_birth', 'avatar'])
+
 export default function Profile() {
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+    getValues,
+    setValue,
+    setError,
+    watch
+  } = useForm<FormData>({
+    defaultValues: {
+      name: '',
+      phone: '',
+      address: '',
+      avatar: '',
+      date_of_birth: new Date(1990, 0, 1)
+    },
+    resolver: yupResolver(profileSchema)
+  })
+
+  const { data: profileData } = useQuery({
+    queryKey: ['profile'],
+    queryFn: userApi.getProfile
+  })
+
+  const profile = profileData?.data.data
+
+  useEffect(() => {
+    if (profile) {
+      setValue('name', profile.name)
+      setValue('phone', profile.phone)
+      setValue('address', profile.address)
+      setValue('avatar', profile.avatar)
+      setValue('date_of_birth', profile.date_of_birth ? new Date(profile.date_of_birth) : new Date(1990, 0, 1))
+    }
+  }, [profile, setValue])
+
   return (
     <div className='bg-white p-7 text-gray-700'>
       <div className='mb-1 text-xl'>Hồ sơ của tôi</div>
@@ -9,15 +58,20 @@ export default function Profile() {
           <table className='w-full'>
             <tr>
               <td className='text-right'>Email</td>
-              <td>caonamhhh</td>
+              <td>{profile?.email}</td>
             </tr>
             <tr className=''>
               <td className='text-right'>Tên</td>
               <td className='w-[75%]'>
-                <div className='align-items 2px flex h-[40px] w-full'>
-                  <input
+                <div className='align-items 2px h-[40px] w-full'>
+                  <Input
+                    register={register}
+                    name='name'
+                    placeholder='Tên'
+                    errorMassage={errors.name?.message}
+                    className='w-full'
                     type='text'
-                    className='flex-1 flex-shrink-0 rounded-sm border-[1px] border-slate-300 px-2 py-2 outline-none'
+                    classNameInput='w-full flex-shrink-0 rounded-sm border-[1px] border-slate-300 px-2 py-2 outline-none'
                   />
                 </div>
               </td>
@@ -26,9 +80,19 @@ export default function Profile() {
               <td className='text-right'>Số Điện Thoại</td>
               <td className='w-[75%]'>
                 <div className='align-items 2px flex h-[40px] w-full'>
-                  <input
-                    type='text'
-                    className='flex-1 flex-shrink-0 rounded-sm border-[1px] border-slate-300 px-2 py-2 outline-none'
+                  <Controller
+                    control={control}
+                    name='phone'
+                    render={({ field }) => (
+                      <InputNumber
+                        placeholder='Số Điện Thoại'
+                        errorMassage={errors.phone?.message}
+                        className='w-full'
+                        classNameInput='w-full flex-shrink-0 rounded-sm border-[1px] border-slate-300 px-2 py-2 outline-none'
+                        {...field}
+                        onChange={field.onChange}
+                      />
+                    )}
                   />
                 </div>
               </td>
@@ -37,9 +101,14 @@ export default function Profile() {
               <td className='text-right'>Địa Chỉ</td>
               <td className='w-[75%]'>
                 <div className='align-items 2px flex h-[40px] w-full'>
-                  <input
+                  <Input
+                    register={register}
+                    name='address'
+                    placeholder='Địa chỉ'
+                    errorMassage={errors.date_of_birth?.message}
+                    className='w-full'
                     type='text'
-                    className='flex-1 flex-shrink-0 rounded-sm border-[1px] border-slate-300 px-2 py-2 outline-none'
+                    classNameInput='w-full flex-shrink-0 rounded-sm border-[1px] border-slate-300 px-2 py-2 outline-none'
                   />
                 </div>
               </td>
@@ -63,7 +132,9 @@ export default function Profile() {
             <tr>
               <td></td>
               <td className='p-0'>
-                <button className='rounded-sm bg-primaryColor px-5 py-2 text-white'>Lưu</button>
+                <button type='submit' className='rounded-sm bg-primaryColor px-5 py-2 text-white'>
+                  Lưu
+                </button>
               </td>
             </tr>
           </table>
@@ -77,7 +148,9 @@ export default function Profile() {
                 className='h-[100px] w-[100px] rounded-full'
               />
               <input accept='.png,.jpeg,.jpg' type='file' className='hidden' />
-              <button className='my-3 border-[1px] border-slate-300 px-4 py-2'>Chọn ảnh</button>
+              <button type='button' className='my-3 border-[1px] border-slate-300 px-4 py-2'>
+                Chọn ảnh
+              </button>
               <p>Dụng lượng file tối đa 1 MB Định dạng:.JPEG, .PNG</p>
             </div>
           </div>

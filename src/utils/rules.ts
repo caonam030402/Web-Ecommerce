@@ -93,5 +93,17 @@ export const schema = yup.object({
   name: yup.string().trim().required('Tên sản phẩm là bắt buộc')
 })
 
+export const userSchema = yup.object({
+  name: yup.string().max(160, 'Độ dài tối đa 160 kí tự'),
+  phone: yup.string().max(20, 'Độ dài tối đa 20 kí tự'),
+  address: yup.string().max(160, 'Độ dài tối đa 160 kí tự'),
+  avatar: yup.string().max(1000, 'Độ dài tối đa 1000 kí tự'),
+  date_of_birth: yup.date().max(new Date(), 'Hãy chọn một ngày trong quá khứ'),
+  password: schema.fields['password'],
+  new_password: schema.fields['password'],
+  confirm_password: schema.fields['confirm_password']
+})
+
 // Schema definition to validate the values provided in input fields of signup form
 export type Schema = yup.InferType<typeof schema>
+export type UserSchema = yup.InferType<typeof userSchema>
