@@ -19,3 +19,9 @@ body {
 a {
   text-decoration: none;
 }
+
+th,
+td {
+  padding-right: 20px;
+  padding-bottom: 33px;
+}
