@@ -248,7 +248,6 @@ export default function ProductDetail() {
             <div className='mt-8 flex items-center gap-6 text-black/60'>
               <p>Số Lượng</p>
               <QuantityController
-                classNameWrapper='flex items-center justify-center'
                 onDecrease={hanleBuyCount}
                 onType={hanleBuyCount}
                 onIncrease={hanleBuyCount}

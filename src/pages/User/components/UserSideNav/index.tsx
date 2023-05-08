@@ -1,18 +1,18 @@
+import { useContext } from 'react'
 import { FaRegUser } from 'react-icons/fa'
 import { MdOutlineModeEditOutline, MdPassword } from 'react-icons/md'
 import { RiBillLine } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
+import { AppContext } from 'src/components/Contexts/app.contexts'
 import { path } from 'src/constants/path'
+import { getAvatarUrl } from 'src/utils/utils'
 
 export default function UserSideNav() {
+  const { profile } = useContext(AppContext)
   return (
     <div className='mt-10'>
       <div className='flex items-center '>
-        <img
-          className='h-[35px] w-[35px] flex-shrink-0 rounded-full'
-          src='https://scontent.fdad3-5.fna.fbcdn.net/v/t39.30808-6/325943176_1141910926526874_1884396859380038867_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=wgGjK5WTTLUAX_GDlQs&_nc_ht=scontent.fdad3-5.fna&oh=00_AfAa2EzN9kp8srMqAUr4X6ZRZZxV5cS3-dqpLNeExF1MAQ&oe=645D0E58'
-          alt=''
-        />
+        <img className='h-[35px] w-[35px] flex-shrink-0 rounded-full' src={getAvatarUrl(profile?.avatar)} alt='' />
         <div className='ml-3'>
           <div className='text-sm font-bold'>Caonam0304</div>
           <div className='flex items-center text-gray-500'>

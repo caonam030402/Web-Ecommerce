@@ -1,6 +1,7 @@
-import { string } from 'yup'
+import avatarDefault from 'src/assets/image/avatarDefault.png'
 import { HttpStatusCode } from './../constants/httpStatusCode'
 import axios, { AxiosError } from 'axios'
+import { config } from 'src/constants/config'
 
 //Check lỗi có phải lỗi axios hay không
 export function isAxiosError<T>(error: unknown): error is AxiosError<T> {
@@ -42,3 +43,6 @@ export const getIdFromNameId = (nameId: string) => {
   const arr = nameId.split('-id=')
   return arr[arr.length - 1]
 }
+
+export const getAvatarUrl = (avatarName?: string) =>
+  avatarName ? `${config.baseUrl}images/${avatarName}` : avatarDefault

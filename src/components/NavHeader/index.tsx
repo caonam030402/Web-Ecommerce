@@ -12,6 +12,7 @@ import avatar from '../../assets/ava.jpg'
 import { purchasesStatus } from 'src/constants/purchase'
 import { authApi } from 'src/apis/auth.api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { getAvatarUrl } from 'src/utils/utils'
 
 export default function NavHeader() {
   const { setIsAuthenticated, isAuthenticated, setProfile, profile } = useContext(AppContext)
@@ -115,7 +116,7 @@ export default function NavHeader() {
           >
             <Link to=''>
               <div className='flex items-center'>
-                <img src={avatar} alt='' className='mr-1 w-5 rounded-full' />
+                <img src={getAvatarUrl(profile?.avatar)} alt='' className='mr-1 w-5 rounded-full' />
                 <p className='flex-shrink-0'>{profile?.email}</p>
               </div>
             </Link>

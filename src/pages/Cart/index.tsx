@@ -206,7 +206,7 @@ export default function Cart() {
                   <div className='col-span-3'>
                     {
                       <QuantityController
-                        classNameWrapper='flex items-center justify-center'
+                        classNameWrapper=''
                         disabled={purchare.disabled}
                         value={purchare.buy_count}
                         max={purchare.product.quantity}

@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { userApi } from 'src/apis/user.api'
 import Input from 'src/components/Input'
@@ -10,6 +10,8 @@ import DateSelect from '../../components/DateSelect'
 import { toast } from 'react-toastify'
 import { AppContext } from 'src/components/Contexts/app.contexts'
 import { setProfileToLS } from 'src/utils/auth'
+import { getAvatarUrl, isAxiosUnprocessableEntity } from 'src/utils/utils'
+import { ErrorResponse } from 'src/types/utils.type'
 
 type FormData = Pick<UserSchema, 'name' | 'address' | 'phone' | 'date_of_birth' | 'avatar'>
 type FormDataError = Omit<FormData, 'date_of_birth'> & {
@@ -18,7 +20,13 @@ type FormDataError = Omit<FormData, 'date_of_birth'> & {
 const profileSchema = userSchema.pick(['name', 'address', 'phone', 'date_of_birth', 'avatar'])
 
 export default function Profile() {
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const { setProfile } = useContext(AppContext)
+  const [file, setFile] = useState<File>()
+
+  const previewImage = useMemo(() => {
+    return file ? URL.createObjectURL(file) : ''
+  }, [file])
 
   const { data: profileData, refetch } = useQuery({
     queryKey: ['profile'],
@@ -27,6 +35,7 @@ export default function Profile() {
 
   const profile = profileData?.data.data
   const updateProfileMutation = useMutation(userApi.updateProfile)
+  const uploadAvatarMutation = useMutation(userApi.uploadAvatar)
 
   const {
     register,
@@ -58,15 +67,50 @@ export default function Profile() {
   }, [profile, setValue])
 
   const onSubmit = handleSubmit(async (data) => {
-    const res = await updateProfileMutation.mutateAsync({
-      ...data,
-      date_of_birth: data.date_of_birth?.toISOString()
-    })
-    setProfileToLS(res.data.data)
-    setProfile(res.data.data)
-    refetch()
-    toast.success(res.data.message)
+    try {
+      let avatarName = avatar
+      if (file) {
+        const form = new FormData()
+        form.append('image', file)
+        const uploadRes = await uploadAvatarMutation.mutateAsync(form)
+        avatarName = uploadRes.data.data
+        setValue('avatar', avatarName)
+      }
+      const res = await updateProfileMutation.mutateAsync({
+        ...data,
+        date_of_birth: data.date_of_birth?.toISOString(),
+        avatar: avatarName
+      })
+      setProfileToLS(res.data.data)
+      setProfile(res.data.data)
+      refetch()
+      toast.success(res.data.message)
+    } catch (error) {
+      const isError = isAxiosUnprocessableEntity<ErrorResponse<FormDataError>>(errors)
+      if (isError) {
+        const formError = errors.response?.data.data
+        if (formError) {
+          Object.keys(formError).forEach((key) => {
+            setError(key as keyof FormDataError, {
+              message: formError[key as keyof FormDataError],
+              type: 'Server'
+            })
+          })
+        }
+      }
+    }
   })
+
+  const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const fileFromLocal = event.target.files?.[0]
+    setFile(fileFromLocal)
+  }
+
+  const handleUpload = () => {
+    fileInputRef.current?.click()
+  }
+
+  const avatar = watch('avatar')
 
   return (
     <div className='bg-white p-7 text-gray-700'>
@@ -165,15 +209,21 @@ export default function Profile() {
           <div className='border-l-[1px] border-slate-200'>
             <div className='flex flex-col items-center justify-center px-14 py-6'>
               <img
-                src='https://scontent.fdad3-5.fna.fbcdn.net/v/t39.30808-6/325943176_1141910926526874_1884396859380038867_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=wgGjK5WTTLUAX_GDlQs&_nc_ht=scontent.fdad3-5.fna&oh=00_AfAa2EzN9kp8srMqAUr4X6ZRZZxV5cS3-dqpLNeExF1MAQ&oe=645D0E58'
+                src={previewImage || getAvatarUrl(profile?.avatar)}
                 alt=''
-                className='h-[100px] w-[100px] rounded-full'
+                className='h-[100px] w-[100px] rounded-full object-cover'
               />
-              <input accept='.png,.jpeg,.jpg' type='file' className='hidden' />
-              <button type='button' className='my-3 border-[1px] border-slate-300 px-4 py-2'>
+              <input
+                onChange={onFileChange}
+                accept='.png,.jpeg,.jpg'
+                type='file'
+                className='hidden'
+                ref={fileInputRef}
+              />
+              <button onClick={handleUpload} type='button' className='my-3 border-[1px] border-slate-300 px-4 py-2'>
                 Chọn ảnh
               </button>
-              <p>Dụng lượng file tối đa 1 MB Định dạng:.JPEG, .PNG</p>
+              <p className='text-sm text-gray-500'> Dụng lượng file tối đa 1 MB Định dạng:.JPEG, .PNG</p>
             </div>
           </div>
         </div>

@@ -57,8 +57,8 @@ export default function QuantityController({
   }
 
   return (
-    <div>
-      <div className={classNameWrapper}>
+    <div className='mb-0'>
+      <div className={classNameWrapper + ' flex justify-center'}>
         <button className='flex h-8 w-8 items-center justify-center rounded-l-sm border border-gray-300 text-gray-600'>
           <VscChromeMinimize onClick={decrease} />
         </button>
@@ -67,6 +67,7 @@ export default function QuantityController({
           value={value || localValue}
           classNameInput='h-8 w-14 border-t border-b border-gray-300 p-1 text-center outline-none'
           onChange={handleChange}
+          classNameError='hidden'
           {...rest}
         ></InputNumber>
         <button
