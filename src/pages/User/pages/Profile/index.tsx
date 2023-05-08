@@ -1,23 +1,38 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { userApi } from 'src/apis/user.api'
 import Input from 'src/components/Input'
 import InputNumber from 'src/components/InputNumber'
 import { UserSchema, userSchema } from 'src/utils/rules'
 import DateSelect from '../../components/DateSelect'
+import { toast } from 'react-toastify'
+import { AppContext } from 'src/components/Contexts/app.contexts'
+import { setProfileToLS } from 'src/utils/auth'
 
-type FormData = Pick<UserSchema, 'name' | 'address' | 'date_of_birth' | 'avatar' | 'phone'>
+type FormData = Pick<UserSchema, 'name' | 'address' | 'phone' | 'date_of_birth' | 'avatar'>
+type FormDataError = Omit<FormData, 'date_of_birth'> & {
+  date_of_birth?: string
+}
 const profileSchema = userSchema.pick(['name', 'address', 'phone', 'date_of_birth', 'avatar'])
 
 export default function Profile() {
+  const { setProfile } = useContext(AppContext)
+
+  const { data: profileData, refetch } = useQuery({
+    queryKey: ['profile'],
+    queryFn: userApi.getProfile
+  })
+
+  const profile = profileData?.data.data
+  const updateProfileMutation = useMutation(userApi.updateProfile)
+
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
-    getValues,
     setValue,
     setError,
     watch
@@ -32,15 +47,6 @@ export default function Profile() {
     resolver: yupResolver(profileSchema)
   })
 
-  const { data: profileData } = useQuery({
-    queryKey: ['profile'],
-    queryFn: userApi.getProfile
-  })
-
-  const profile = profileData?.data.data
-
-  const updateProfileMutation = useMutation(userApi.updateProfile)
-
   useEffect(() => {
     if (profile) {
       setValue('name', profile.name)
@@ -52,7 +58,14 @@ export default function Profile() {
   }, [profile, setValue])
 
   const onSubmit = handleSubmit(async (data) => {
-    // await updateProfileMutation.mutateAsync({})
+    const res = await updateProfileMutation.mutateAsync({
+      ...data,
+      date_of_birth: data.date_of_birth?.toISOString()
+    })
+    setProfileToLS(res.data.data)
+    setProfile(res.data.data)
+    refetch()
+    toast.success(res.data.message)
   })
 
   return (

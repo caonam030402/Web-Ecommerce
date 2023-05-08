@@ -105,5 +105,6 @@ export const userSchema = yup.object({
 })
 
 // Schema definition to validate the values provided in input fields of signup form
-export type Schema = yup.InferType<typeof schema>
 export type UserSchema = yup.InferType<typeof userSchema>
+
+export type Schema = yup.InferType<typeof schema>
