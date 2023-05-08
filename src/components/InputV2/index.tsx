@@ -2,7 +2,7 @@ import { InputHTMLAttributes, useState } from 'react'
 import { FieldValues, useController, UseControllerProps, FieldPath } from 'react-hook-form'
 
 export interface InputNumberProps extends InputHTMLAttributes<HTMLInputElement> {
-  errorMassage?: string
+  errorMessage?: string
   classNameInput?: string
 }
 

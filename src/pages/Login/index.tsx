@@ -73,14 +73,14 @@ export default function Login() {
           name='email'
           register={register}
           className='mt-8'
-          errorMassage={errors.email?.message}
+          errorMessage={errors.email?.message}
           placeholder='Email'
         />
         <Input
           name='password'
           register={register}
           className='mt-4'
-          errorMassage={errors.password?.message}
+          errorMessage={errors.password?.message}
           placeholder='Password'
           type='password'
         />

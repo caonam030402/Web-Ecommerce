@@ -83,14 +83,14 @@ export default function Register() {
           name='email'
           register={register}
           className='mt-8'
-          errorMassage={errors.email?.message}
+          errorMessage={errors.email?.message}
           placeholder='Email'
         />
         <Input
           name='password'
           register={register}
           className='mt-3'
-          errorMassage={errors.password?.message}
+          errorMessage={errors.password?.message}
           placeholder='Password'
           type='password'
         />
@@ -98,7 +98,7 @@ export default function Register() {
           name='confirm_password'
           register={register}
           className='mt-3'
-          errorMassage={errors.confirm_password?.message}
+          errorMessage={errors.confirm_password?.message}
           placeholder='Confirm Password'
           type='password'
         />
