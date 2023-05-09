@@ -116,7 +116,7 @@ export default function NavHeader() {
           >
             <Link to=''>
               <div className='flex items-center'>
-                <img src={getAvatarUrl(profile?.avatar)} alt='' className='mr-1 w-5 rounded-full' />
+                <img src={getAvatarUrl(profile?.avatar)} alt='' className='mr-1 w-5 rounded-full object-cover' />
                 <p className='flex-shrink-0'>{profile?.email}</p>
               </div>
             </Link>

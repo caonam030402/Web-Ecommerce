@@ -14,7 +14,7 @@ export default function UserSideNav() {
       <div className='flex items-center '>
         <img className='h-[35px] w-[35px] flex-shrink-0 rounded-full' src={getAvatarUrl(profile?.avatar)} alt='' />
         <div className='ml-3'>
-          <div className='text-sm font-bold'>Caonam0304</div>
+          <div className='w-[70%] truncate text-sm font-bold'>{profile?.name || profile?.email}</div>
           <div className='flex items-center text-gray-500'>
             <MdOutlineModeEditOutline /> <p>Sửa Hồ Sơ</p>
           </div>
