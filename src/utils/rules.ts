@@ -63,6 +63,13 @@ function testPriceMinMax(this: yup.TestContext<yup.AnyObject>) {
   return price_min !== '' || price_max !== ''
 }
 
+const handleConfirmPasswordYup = (refString: string) => {
+  return yup
+    .string()
+    .required('Confirm password là bắt buộc')
+    .oneOf([yup.ref(refString)], 'Nhập lại password không khớp')
+}
+
 // Define the schema for the input
 export const schema = yup.object({
   email: yup
@@ -76,10 +83,7 @@ export const schema = yup.object({
     .required('Password là bắt buộc')
     .max(160, 'Độ dài từ 5 - 160 kí tự')
     .min(6, 'Độ dài từ 5 - 160 kí tự'),
-  confirm_password: yup
-    .string()
-    .required('Confirm password là bắt buộc')
-    .oneOf([yup.ref('password')], 'Nhập lại password không khớp'),
+  confirm_password: handleConfirmPasswordYup('password'),
   price_min: yup.string().test({
     name: 'price-not-allowed',
     message: 'Vui lòng điền khoảng giá phù hợp',
@@ -99,9 +103,9 @@ export const userSchema = yup.object({
   address: yup.string().max(160, 'Độ dài tối đa 160 kí tự'),
   avatar: yup.string().max(1000, 'Độ dài tối đa 1000 kí tự'),
   date_of_birth: yup.date().max(new Date(), 'Hãy chọn một ngày trong quá khứ'),
-  password: schema.fields['password'],
-  new_password: schema.fields['password'],
-  confirm_password: schema.fields['confirm_password']
+  password: schema.fields['password'] as yup.StringSchema<string | undefined>,
+  new_password: schema.fields['password'] as yup.StringSchema<string | undefined>,
+  confirm_password: handleConfirmPasswordYup('new_password')
 })
 
 // Schema definition to validate the values provided in input fields of signup form

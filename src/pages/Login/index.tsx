@@ -83,6 +83,7 @@ export default function Login() {
           errorMessage={errors.password?.message}
           placeholder='Password'
           type='password'
+          isEyePassword={true}
         />
         <Button
           disabled={loginMutation.isLoading || checkInputEmpty()}

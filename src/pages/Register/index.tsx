@@ -93,6 +93,7 @@ export default function Register() {
           errorMessage={errors.password?.message}
           placeholder='Password'
           type='password'
+          isEyePassword={true}
         />
         <Input
           name='confirm_password'
@@ -101,6 +102,7 @@ export default function Register() {
           errorMessage={errors.confirm_password?.message}
           placeholder='Confirm Password'
           type='password'
+          isEyePassword={true}
         />
         <Button
           disabled={registerAccountMutation.isLoading || checkInputEmpty()}
