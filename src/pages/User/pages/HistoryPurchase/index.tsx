@@ -1,3 +1,3 @@
 export default function HistoryPurchase() {
-  return <div>HistoryPurchase</div>
+  return <div className='bg-white p-7 text-gray-700'>HistoryPurchase</div>
 }

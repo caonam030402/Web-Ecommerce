@@ -13,7 +13,8 @@ import { AppContext } from 'src/components/Contexts/app.contexts'
 import { setProfileToLS } from 'src/utils/auth'
 import { getAvatarUrl, isAxiosUnprocessableEntity } from 'src/utils/utils'
 import { ErrorResponse } from 'src/types/utils.type'
-import { config } from 'src/constants/config'
+
+import InputFile from 'src/components/InputFile'
 
 type FormData = Pick<UserSchema, 'name' | 'address' | 'phone' | 'date_of_birth' | 'avatar'>
 type FormDataError = Omit<FormData, 'date_of_birth'> & {
@@ -22,7 +23,6 @@ type FormDataError = Omit<FormData, 'date_of_birth'> & {
 const profileSchema = userSchema.pick(['name', 'address', 'phone', 'date_of_birth', 'avatar'])
 
 export default function Profile() {
-  const fileInputRef = useRef<HTMLInputElement>(null)
   const { setProfile } = useContext(AppContext)
   const [file, setFile] = useState<File>()
 
@@ -103,20 +103,8 @@ export default function Profile() {
     }
   })
 
-  const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const fileFromLocal = event.target.files?.[0]
-    if (
-      (fileFromLocal && fileFromLocal.size >= config.maxSizeUploadAvartar) ||
-      !fileFromLocal?.type.includes('image')
-    ) {
-      toast.error('Dụng lượng file tối đa 1 MB Định dạng:.JPEG, .PNG')
-    } else {
-      setFile(fileFromLocal)
-    }
-  }
-
-  const handleUpload = () => {
-    fileInputRef.current?.click()
+  const handleChangeFile = (file?: File) => {
+    setFile(file)
   }
 
   const avatar = watch('avatar')
@@ -222,19 +210,7 @@ export default function Profile() {
                 alt=''
                 className='h-[100px] w-[100px] rounded-full object-cover'
               />
-              <input
-                onChange={onFileChange}
-                accept='.png,.jpeg,.jpg'
-                type='file'
-                className='hidden'
-                ref={fileInputRef}
-                onClick={(event) => {
-                  ;(event.target as any).value = null
-                }}
-              />
-              <button onClick={handleUpload} type='button' className='my-3 border-[1px] border-slate-300 px-4 py-2'>
-                Chọn ảnh
-              </button>
+              <InputFile onChange={handleChangeFile} />
               <p className='text-sm text-gray-500'> Dụng lượng file tối đa 1 MB Định dạng:.JPEG, .PNG</p>
             </div>
           </div>
