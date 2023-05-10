@@ -5,8 +5,8 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App'
 import { AppProvider } from './components/Contexts/app.contexts'
-
 import './index.css'
+import ErrorBoundary from './components/ErrorBoudary'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,7 +22,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <AppProvider>
-          <App />
+          <ErrorBoundary>
+            <App />
+          </ErrorBoundary>
         </AppProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </BrowserRouter>
