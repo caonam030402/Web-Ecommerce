@@ -6,7 +6,7 @@ import { ProductListConfig } from 'src/types/product.type'
 import { sortBy, order as orderConstant } from 'src/constants/product'
 import classNames from 'classnames'
 import { path } from 'src/constants/path'
-import { omit } from 'lodash'
+import omit from 'lodash/omit'
 
 interface Props {
   queryConfig: QueryConfig

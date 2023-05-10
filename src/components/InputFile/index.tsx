@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import { toast } from 'react-toastify'
 import { config } from 'src/constants/config'
 

@@ -8,7 +8,6 @@ import { BiHelpCircle } from 'react-icons/bi'
 import { path } from 'src/constants/path'
 import { useContext } from 'react'
 import { AppContext } from '../Contexts/app.contexts'
-import avatar from '../../assets/ava.jpg'
 import { purchasesStatus } from 'src/constants/purchase'
 import { authApi } from 'src/apis/auth.api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -107,7 +106,9 @@ export default function NavHeader() {
                     Tài khoản của tôi
                   </Link>
                 </button>
-                <button className=' px-3 py-2 hover:text-primaryColor'>Đơn Mua</button>
+                <Link to={path.historyPurchase} className=' px-3 py-2 hover:text-primaryColor'>
+                  Đơn Mua
+                </Link>
                 <button onClick={handleLogout} className='px-3 py-2 hover:text-primaryColor'>
                   Đăng Xuất
                 </button>

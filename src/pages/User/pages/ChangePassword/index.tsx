@@ -7,7 +7,7 @@ import { useMutation } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 import { isAxiosUnprocessableEntity } from 'src/utils/utils'
 import { ErrorResponse } from 'src/types/utils.type'
-import { omit } from 'lodash'
+import omit from 'lodash/omit'
 import Button from 'src/components/Button'
 
 type FormData = Pick<UserSchema, 'password' | 'confirm_password' | 'new_password'>
@@ -63,9 +63,9 @@ export default function ChangePassword() {
   }
 
   return (
-    <div className='bg-white p-7 text-gray-700 transition-all'>
-      <div className='mb-1 text-xl'>Hồ sơ của tôi</div>
-      <div>Quản lý thông tin hồ sơ để bảo mật tài khoản</div>
+    <div className='bg-white p-7 text-gray-700 shadow-sm'>
+      <div className='mb-1 text-xl'>Thêm Mật Khẩu</div>
+      <div>Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác</div>
       <div className='my-8 h-[1px] w-full bg-slate-100'></div>
       <div className='grid grid-cols-12 gap-9'>
         <form className='col-span-8 gap-8' action='' onSubmit={onSubmit}>

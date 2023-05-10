@@ -1,10 +1,10 @@
-import { useContext } from 'react'
+import { useContext, lazy, Suspense } from 'react'
 import { Navigate, Outlet, useRoutes } from 'react-router-dom'
 import { AppContext } from './components/Contexts/app.contexts'
 import { path } from './constants/path'
 import MainLayout from './layouts/MainLayout'
 import RegisterLayout from './layouts/RegisterLayout'
-import Login from './pages/Login'
+// import Login from './pages/Login'
 import ProductDetail from './pages/ProductDetail'
 import ProductList from './pages/ProductList'
 import Profile from './pages/User/pages/Profile'
@@ -14,6 +14,8 @@ import CartLayout from './layouts/CartLayout'
 import UserLayout from './pages/User/layouts/UserLayout'
 import ChangePassword from './pages/User/pages/ChangePassword'
 import HistoryPurchase from './pages/User/pages/HistoryPurchase'
+
+const Login = lazy(() => import('./pages/Login'))
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext)
@@ -54,7 +56,9 @@ export default function useRouteElements() {
           path: path.login,
           element: (
             <RegisterLayout>
-              <Login />
+              <Suspense>
+                <Login />
+              </Suspense>
             </RegisterLayout>
           )
         }

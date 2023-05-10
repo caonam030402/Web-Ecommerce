@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { omit } from 'lodash'
+import omit from 'lodash/omit'
 import { AiOutlineFileSearch } from 'react-icons/ai'
 import { createSearchParams, useNavigate } from 'react-router-dom'
 import { categoryApi } from 'src/apis/category.api'

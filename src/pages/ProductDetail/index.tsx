@@ -116,7 +116,6 @@ export default function ProductDetail() {
     const { offsetX, offsetY } = event.nativeEvent
     const top = offsetY * (1 - naturalHeight / rect.height)
     const left = offsetX * (1 - naturalWidth / rect.width)
-    console.log(1 - naturalWidth / rect.width)
     image.style.width = naturalWidth + 'px'
     image.style.height = naturalHeight + 'px'
     image.style.maxWidth = 'unset'

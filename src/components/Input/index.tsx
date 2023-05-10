@@ -56,7 +56,7 @@ export default function Input({
         {rest.type === 'password' && isEyePassword && openEye && (
           <BsEye
             onClick={toggleEye}
-            className='absolute right-[3%] top-[50%] translate-y-[-50%] cursor-pointer text-lg'
+            className='absolute right-[3%] top-[50%] translate-y-[-50%] cursor-pointer text-base'
           />
         )}
       </div>

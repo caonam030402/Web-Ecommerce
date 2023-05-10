@@ -1,5 +1,5 @@
 import { BsStar, BsStarFill } from 'react-icons/bs'
-import { createSearchParams, Link, useNavigate } from 'react-router-dom'
+import { createSearchParams, useNavigate } from 'react-router-dom'
 import { path } from 'src/constants/path'
 import { QueryConfig } from 'src/hooks/useQueryConfig'
 

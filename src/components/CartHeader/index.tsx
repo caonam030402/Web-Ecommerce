@@ -1,6 +1,4 @@
-import React from 'react'
 import NavHeader from '../NavHeader'
-import { path } from 'src/constants/path'
 import { Link } from 'react-router-dom'
 import useSearchProducts from 'src/hooks/useSearchProducts'
 

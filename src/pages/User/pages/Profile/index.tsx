@@ -109,7 +109,7 @@ export default function Profile() {
   const avatar = watch('avatar')
 
   return (
-    <div className='bg-white p-7 text-gray-700 '>
+    <div className='bg-white p-7 text-gray-700 shadow-sm'>
       <div className='mb-1 text-xl'>Hồ sơ của tôi</div>
       <div>Quản lý thông tin hồ sơ để bảo mật tài khoản</div>
       <div className='my-8 h-[1px] w-full bg-slate-100'></div>
