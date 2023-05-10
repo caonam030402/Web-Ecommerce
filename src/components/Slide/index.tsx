@@ -1,10 +1,6 @@
 /* eslint-disable import/no-unresolved */
-import slide1 from '../../assets/image/slide1.jpg'
-import slide2 from '../../assets/image/slide2.jpg'
-import slide3 from '../../assets/image/slide3.jpg'
-import slide4 from '../../assets/image/slide4.jpg'
-import slide5 from '../../assets/image/slide5.jpg'
-import slide6 from '../../assets/image/slide6.jpg'
+import { ImageSlide, Image } from 'src/assets/image/slide'
+
 import { Swiper, SwiperSlide } from 'swiper/react'
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y, Autoplay } from 'swiper'
 // eslint-disable-next-line import/no-unresolved
@@ -31,30 +27,12 @@ export default function Slide() {
         className='group z-0 w-[67%]'
         centeredSlides={true}
       >
-        <SwiperSlide>
-          <img src={slide1} alt='' />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src={slide2} alt='' />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src={slide3} alt='' />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src={slide4} alt='' />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src={slide1} alt='' />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src={slide2} alt='' />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src={slide3} alt='' />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src={slide4} alt='' />
-        </SwiperSlide>
+        {ImageSlide.map((image, index) => (
+          <SwiperSlide key={index}>
+            <img src={image} alt='' />
+          </SwiperSlide>
+        ))}
+
         <div className='button-slide-prev absolute top-[50%] z-50 translate-y-[-50%] rounded-tr-lg  rounded-br-lg bg-black bg-opacity-20 py-5 px-2 opacity-0 transition-opacity group-hover:opacity-100'>
           <svg
             enableBackground='new 0 0 13 20'
@@ -78,12 +56,11 @@ export default function Slide() {
         </div>
       </Swiper>
       <div className='flex flex-1 flex-col gap-[6px]'>
-        <Link to='' className=''>
-          <img src={slide5} alt='' />
-        </Link>
-        <Link to=''>
-          <img src={slide6} alt='' />
-        </Link>
+        {Image.map((image, index) => (
+          <div key={index} className=''>
+            <img src={image} alt='' />
+          </div>
+        ))}
       </div>
     </div>
   )
