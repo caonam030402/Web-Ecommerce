@@ -89,7 +89,7 @@ export const schema = yup.object({
     message: 'Vui lòng điền khoảng giá phù hợp',
     test: testPriceMinMax
   }),
-  price_max: yup.string().test({
+  price_max: yup.string().typeError('Số lượng phải là một số').test({
     name: 'price-not-allowed',
     message: 'Vui lòng điền khoảng giá phù hợp',
     test: testPriceMinMax

@@ -14,9 +14,9 @@ export default function ProductItem({ product }: Props) {
   return (
     <Link to={url}>
       <div className='rounded-sm bg-white shadow-sm transition-none duration-100 hover:translate-y-[-1px]'>
-        <div className='relative w-full pt-[100%]'>
+        <div className='relative z-0 w-full pt-[100%]'>
           <img
-            className='absolute top-0 right-0 h-full w-[100%] rounded-t-sm object-cover'
+            className='absolute top-0 right-0 z-0 h-full w-[100%] rounded-t-sm object-cover'
             src={product.image}
             alt=''
           />

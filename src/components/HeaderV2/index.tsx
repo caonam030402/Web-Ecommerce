@@ -2,7 +2,12 @@ import NavHeader from '../NavHeader'
 import { Link } from 'react-router-dom'
 import useSearchProducts from 'src/hooks/useSearchProducts'
 
-export default function CartHeader() {
+interface Props {
+  searchBar?: boolean
+  namePage?: string
+}
+
+export default function HeaderV2({ searchBar, namePage }: Props) {
   const { register, onSubmitSearch } = useSearchProducts()
   return (
     <div className='border-b border-b-black/10 bg-white'>
@@ -29,34 +34,36 @@ export default function CartHeader() {
                   </g>
                 </svg>
                 <div className='mx-4 h-8 w-[1px] bg-primaryColor'></div>
-                <h1 className='text-lg text-primaryColor'> Giỏ Hàng </h1>
+                <h1 className='text-lg text-primaryColor'> {namePage} </h1>
               </Link>
             </div>
           </nav>
-          <form onSubmit={onSubmitSearch} className='flex w-1/2 rounded-sm border-[2px] border-primaryColor pl-5'>
-            <input
-              {...register('name')}
-              className='flex-1 text-neutral-900 outline-none'
-              type='text'
-              placeholder='Bạn tìm gì hôm nay ?'
-            />
-            <button className='flex w-[12%] items-center justify-center bg-primaryColor p-[10px]'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth={1.5}
-                stroke='#fff'
-                className='h-4 w-4'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z'
-                />
-              </svg>
-            </button>
-          </form>
+          {searchBar && (
+            <form onSubmit={onSubmitSearch} className='flex w-1/2 rounded-sm border-[2px] border-primaryColor pl-5'>
+              <input
+                {...register('name')}
+                className='flex-1 text-neutral-900 outline-none'
+                type='text'
+                placeholder='Bạn tìm gì hôm nay ?'
+              />
+              <button className='flex w-[12%] items-center justify-center bg-primaryColor p-[10px]'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth={1.5}
+                  stroke='#fff'
+                  className='h-4 w-4'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z'
+                  />
+                </svg>
+              </button>
+            </form>
+          )}
         </div>
       </div>
     </div>

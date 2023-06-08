@@ -18,6 +18,7 @@ import { path } from 'src/constants/path'
 export default function ProductDetail() {
   const [buyCount, setBuyCount] = useState(1)
   const { nameId } = useParams()
+
   const id = getIdFromNameId(nameId as string)
   const refImage = useRef<HTMLImageElement>(null)
   const queryClient = useQueryClient()
@@ -219,7 +220,7 @@ export default function ProductDetail() {
             <div>
               <div className='mt-1 flex items-center'>
                 <p className='mr-2 border-b-[1px] border-primaryColor text-base text-primaryColor'>
-                  {product.rating.toFixed(1)}
+                  {product.rating?.toFixed(1)}
                 </p>
                 <ProductRating
                   rating={product.rating}
@@ -288,7 +289,7 @@ export default function ProductDetail() {
 
       {/* MODAL */}
       {openModalImage && (
-        <div className='index-2000 fixed inset-0 flex items-center justify-center bg-black/30'>
+        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/30'>
           <button onClick={() => setOpenModalImage(false)} className='fixed inset-0 cursor-pointer'></button>
           <div className=' grid h-[70vh] w-[100vh] grid-cols-12 gap-2 rounded-sm bg-white p-3 shadow-sm'>
             <div className='relative col-span-8 w-full cursor-pointer pt-[100%]'>
@@ -336,7 +337,7 @@ export default function ProductDetail() {
         </div>
       )}
       {productsData && (
-        <div className='container mt-6 p-0'>
+        <div className='container z-0 mt-6 p-0'>
           <h1 className='mb-3 text-gray-600'>CÓ THỂ BẠN CŨNG THÍCH</h1>
           <div className=' grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'>
             {productsData?.data.data.products.map((product) => (

@@ -8,5 +8,6 @@ export const path = {
   register: '/register',
   logout: '/logout',
   productDetail: ':nameId',
-  cart: '/cart'
+  cart: '/cart',
+  payment: '/payment'
 } as const

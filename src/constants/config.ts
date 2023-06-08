@@ -1,4 +1,4 @@
 export const config = {
-  baseUrl: 'https://api-ecom.duthanhduoc.com/',
+  baseUrl: 'http://localhost:5000/v1/',
   maxSizeUploadAvartar: 1048576
 }

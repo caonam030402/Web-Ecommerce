@@ -7,7 +7,7 @@ import { config } from 'src/constants/config'
 
 enum URL {
   login = '/login',
-  register = '/resgister',
+  register = '/register',
   logout = '/logout'
 }
 

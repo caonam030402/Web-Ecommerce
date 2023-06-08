@@ -4,13 +4,15 @@ import { config } from 'src/constants/config'
 
 interface Props {
   onChange?: (file: File) => void
+  name?: string
 }
 
-export default function InputFile({ onChange }: Props) {
+export default function InputFile({ onChange, name }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileFromLocal = event.target.files?.[0]
+    console.log(fileFromLocal)
     if (
       (fileFromLocal && fileFromLocal.size >= config.maxSizeUploadAvartar) ||
       !fileFromLocal?.type.includes('image')
@@ -30,6 +32,7 @@ export default function InputFile({ onChange }: Props) {
       <input
         onChange={onFileChange}
         type='file'
+        name={name}
         accept='.jpg,.jpeg,.png'
         className='hidden'
         ref={fileInputRef}

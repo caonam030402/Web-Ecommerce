@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import classNames from 'classnames'
 import { useContext, useEffect, useMemo } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { purchaseApi } from 'src/apis/purchase.api'
 import Button from 'src/components/Button'
 import { produce } from 'immer'
@@ -15,11 +15,12 @@ import { formatCurrency, generateNameId } from 'src/utils/utils'
 import keyBy from 'lodash/keyBy'
 import { toast } from 'react-toastify'
 import { AppContext } from 'src/components/Contexts/app.contexts'
-import noCard from 'src/assets/no-cart.png'
+import noCard from 'src/assets/image/no-cart.png'
 
 export default function Cart() {
   const scrollPosition = useScrollPosition()
-  const { extendedPurchases, setExtendedPurchases } = useContext(AppContext)
+  const { extendedPurchases, setExtendedPurchases, profile } = useContext(AppContext)
+  const navigate = useNavigate()
 
   const { data: purchasesInCartData, refetch } = useQuery({
     queryKey: ['purchases', { status: purchasesStatus.inCart }],
@@ -140,12 +141,16 @@ export default function Cart() {
   }
 
   const handleBuyPurchases = () => {
-    if (checkedPurchases.length > 0) {
-      const body = checkedPurchases.map((purchase) => ({
-        product_id: purchase.product._id,
-        buy_count: purchase.buy_count
-      }))
-      buyPurchaseMutation.mutate(body)
+    if (profile?.address === undefined) {
+      navigate(path.profile)
+      toast.error('Vui lòng điền địa chỉ trước khi mua')
+    } else {
+      if (checkedPurchases.length > 0) {
+        const body = checkedPurchases.map((purchase) => ({
+          purchase_id: purchase._id
+        }))
+        buyPurchaseMutation.mutate(body)
+      }
     }
   }
 

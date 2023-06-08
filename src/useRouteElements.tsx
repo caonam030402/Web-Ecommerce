@@ -4,16 +4,16 @@ import { AppContext } from './components/Contexts/app.contexts'
 import { path } from './constants/path'
 import MainLayout from './layouts/MainLayout'
 import RegisterLayout from './layouts/RegisterLayout'
-// import Login from './pages/Login'
 import ProductDetail from './pages/ProductDetail'
 import ProductList from './pages/ProductList'
 import Profile from './pages/User/pages/Profile'
 import Register from './pages/Register'
 import Cart from './pages/Cart'
-import CartLayout from './layouts/CartLayout'
 import UserLayout from './pages/User/layouts/UserLayout'
 import ChangePassword from './pages/User/pages/ChangePassword'
 import HistoryPurchase from './pages/User/pages/HistoryPurchase'
+import Payment from './pages/Payment'
+import LayoutHeaderV2 from './layouts/LayoutHeaderV2'
 
 const Login = lazy(() => import('./pages/Login'))
 
@@ -81,9 +81,9 @@ export default function useRouteElements() {
         {
           path: path.cart,
           element: (
-            <CartLayout>
+            <LayoutHeaderV2 searchBar={true} namePage='Giỏ Hàng'>
               <Cart />
-            </CartLayout>
+            </LayoutHeaderV2>
           )
         },
         {
@@ -107,6 +107,14 @@ export default function useRouteElements() {
               element: <HistoryPurchase />
             }
           ]
+        },
+        {
+          path: path.payment,
+          element: (
+            <LayoutHeaderV2 searchBar={false} namePage='Thanh Toán'>
+              <Payment />
+            </LayoutHeaderV2>
+          )
         }
       ]
     }

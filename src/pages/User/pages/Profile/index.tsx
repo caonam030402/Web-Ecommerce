@@ -70,13 +70,17 @@ export default function Profile() {
   const onSubmit = handleSubmit(async (data) => {
     try {
       let avatarName = avatar
+
       if (file) {
         const form = new FormData()
+
         form.append('image', file)
         const uploadRes = await uploadAvatarMutation.mutateAsync(form)
+
         avatarName = uploadRes.data.data
         setValue('avatar', avatarName)
       }
+
       const res = await updateProfileMutation.mutateAsync({
         ...data,
         date_of_birth: data.date_of_birth?.toISOString(),
@@ -118,11 +122,11 @@ export default function Profile() {
           <table className='w-full'>
             <tbody>
               <tr>
-                <td className='text-right'>Email</td>
+                <td className='pr-[20px] text-right'>Email</td>
                 <td>{profile?.email}</td>
               </tr>
               <tr className=''>
-                <td className='text-right'>Tên</td>
+                <td className='pr-[20px] text-right'>Tên</td>
                 <td className='w-[75%]'>
                   <div className='align-items 2px h-[40px] w-full'>
                     <Input
@@ -138,7 +142,7 @@ export default function Profile() {
                 </td>
               </tr>
               <tr className=''>
-                <td className='text-right'>Số Điện Thoại</td>
+                <td className='pr-[20px] text-right'>Số Điện Thoại</td>
                 <td className='w-[75%]'>
                   <div className='align-items 2px flex h-[40px] w-full'>
                     <Controller
@@ -159,23 +163,23 @@ export default function Profile() {
                 </td>
               </tr>
               <tr className=''>
-                <td className='text-right'>Địa Chỉ</td>
+                <td className='pr-[20px] text-right'>Địa chỉ</td>
                 <td className='w-[75%]'>
-                  <div className='align-items 2px flex h-[40px] w-full'>
+                  <div className='align-items 2px h-[40px] w-full'>
                     <Input
                       register={register}
                       name='address'
-                      placeholder='Địa chỉ'
+                      placeholder='Địa Chỉ'
+                      errorMessage={errors.address?.message}
                       className='w-full'
                       type='text'
                       classNameInput='w-full flex-shrink-0 rounded-sm border-[1px] border-slate-300 px-2 py-2 outline-none'
-                      errorMessage={errors.address?.message}
                     />
                   </div>
                 </td>
               </tr>
               <tr>
-                <td className='text-right'>Ngày sinh</td>
+                <td className='pr-[20px] text-right'>Ngày sinh</td>
                 <td>
                   <Controller
                     control={control}
@@ -209,7 +213,7 @@ export default function Profile() {
                 alt=''
                 className='h-[100px] w-[100px] rounded-full object-cover'
               />
-              <InputFile onChange={handleChangeFile} />
+              <InputFile name='avatar' onChange={handleChangeFile} />
               <p className='text-sm text-gray-500'> Dụng lượng file tối đa 1 MB Định dạng:.JPEG, .PNG</p>
             </div>
           </div>

@@ -18,7 +18,6 @@ export default function Slide() {
         modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
         spaceBetween={10}
         slidesPerView={1}
-        loop={true}
         loopedSlides={1}
         navigation={{ nextEl: '.button-slide-next', prevEl: '.button-slide-prev' }}
         pagination={{ clickable: true }}
@@ -26,6 +25,7 @@ export default function Slide() {
         autoplay={{ delay: 3000, disableOnInteraction: false }}
         className='group z-0 w-[67%]'
         centeredSlides={true}
+        loop={true}
       >
         {ImageSlide.map((image, index) => (
           <SwiperSlide key={index}>
@@ -33,7 +33,7 @@ export default function Slide() {
           </SwiperSlide>
         ))}
 
-        <div className='button-slide-prev absolute top-[50%] z-50 translate-y-[-50%] rounded-tr-lg  rounded-br-lg bg-black bg-opacity-20 py-5 px-2 opacity-0 transition-opacity group-hover:opacity-100'>
+        <div className='button-slide-prev absolute top-[50%] z-50 translate-y-[-50%] rounded-tr-lg rounded-br-lg bg-black bg-opacity-20 py-5 px-2 opacity-0 transition-opacity group-hover:opacity-100'>
           <svg
             enableBackground='new 0 0 13 20'
             viewBox='0 0 13 20'

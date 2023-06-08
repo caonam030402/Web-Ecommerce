@@ -14,7 +14,7 @@ export const purchaseApi = {
     })
   },
 
-  buyProducts(body: { product_id: string; buy_count: number }[]) {
+  buyProducts(body: { purchase_id: string }[]) {
     return http.post<SuccessResponse<Purchase[]>>(`${URL}/buy-products`, body)
   },
 
