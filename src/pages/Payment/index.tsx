@@ -1,8 +1,72 @@
-import React from 'react'
+import { useQuery } from '@tanstack/react-query'
+import classNames from 'classnames'
+import { Address, District, Ward } from 'src/types/address.type'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { TfiLocationPin } from 'react-icons/tfi'
+import { addressApi } from 'src/apis/address.api'
 import Button from 'src/components/Button'
+import { AppContext } from 'src/components/Contexts/app.contexts'
+import Input from 'src/components/Input'
+import { useOnClickOutside } from 'usehooks-ts'
 
 export default function Payment() {
+  const [isOpenSeclect, setIsOpenSelect] = useState(false)
+  const [isOpenModal, setIsOpenModal] = useState(false)
+  const [addressCity, setAddressCity] = useState<Address>()
+  const [addressDistrict, setAddressDistrict] = useState<District>()
+
+  const [addressValue, setAddressValue] = useState({
+    city: '',
+    district: '',
+    ward: ''
+  })
+
+  // const isActive = (type: 'city' | 'district' | 'ward') => {
+  //   if (!addressCity && type === 'city') {
+  //     return true
+  //   } else if (!addressCity && addressDistrict) {
+  //     return true
+  //   }
+  // }
+
+  const myElementRef = useRef<HTMLDivElement>(null)
+
+  const { data: addressData } = useQuery({
+    queryKey: ['address'],
+    queryFn: addressApi.getAddress
+  })
+
+  const handleOpenSelect = () => {
+    setIsOpenSelect(true)
+  }
+
+  const handleCloseSelect = () => {
+    setIsOpenSelect(false)
+  }
+
+  const handleOpenModal = () => {
+    isOpenModal ? setIsOpenModal(false) : setIsOpenModal(true)
+  }
+
+  const handlePickAddress = (item: Address | District | Ward, type: 'city' | 'district' | 'ward') => {
+    if (type === 'city') {
+      setAddressCity(item as Address)
+      setAddressValue((prev) => ({ ...prev, city: item.Name }))
+    } else if (type === 'district') {
+      setAddressDistrict(item as District)
+      setAddressValue((prev) => ({ ...prev, district: item.Name }))
+    } else {
+      setAddressValue((prev) => ({ ...prev, ward: item.Name }))
+    }
+  }
+
+  const valueAddress = `${addressValue.city}${addressValue.district && ','} ${addressValue.district}${
+    addressValue.ward && ','
+  } ${addressValue.ward}`
+
+  useOnClickOutside(myElementRef, handleCloseSelect)
+
+  const { profile } = useContext(AppContext)
   return (
     <div className='container mt-4'>
       <div className='bg-white p-6 shadow-sm'>
@@ -12,9 +76,149 @@ export default function Payment() {
         </div>
         <div className='mt-3 text-[15px]'>
           <span className='mr-3 font-bold'>CaoNam</span>
-          <span>Cẩm Lệ, Đà Nẵng</span>
-          <button className='ml-4 text-blue-500'>Thay đổi</button>
+          <span>{profile?.address}</span>
+          <button onClick={handleOpenModal} className='ml-4 text-blue-500'>
+            Thay đổi
+          </button>
         </div>
+        {isOpenModal && (
+          <div className='fixed inset-0 z-50'>
+            <div className='absolute right-[50%] top-[50%] w-[550px] translate-x-[50%] translate-y-[-50%] rounded-sm bg-white p-6 text-left'>
+              <h1 className='text-[20px]'>Địa chỉ mới</h1>
+              <div className='mt-6'>
+                <div ref={myElementRef} className='relative w-full'>
+                  <Input
+                    onChange={() => null}
+                    value={valueAddress || ''}
+                    onClick={handleOpenSelect}
+                    placeholder='Tỉnh/ Thành phố, Quận/Huyện, Phường/Xã'
+                  ></Input>
+                  {isOpenSeclect && (
+                    <div className='absolute top-[80%] w-full border bg-white shadow-sm'>
+                      <div className='grid grid-cols-3 text-center'>
+                        <div
+                          className={classNames('border-b-2 py-4 ', {
+                            'border-primaryColor text-primaryColor': !addressValue.city
+                          })}
+                        >
+                          Tỉnh/Thành phố
+                        </div>
+                        <div
+                          className={classNames('border-b-2 py-4 ', {
+                            'border-primaryColor text-primaryColor': addressValue.city !== '' && !addressDistrict
+                          })}
+                        >
+                          Quận/Huyện
+                        </div>
+                        <div
+                          className={classNames('border-b-2 py-4 ', {
+                            'border-primaryColor text-primaryColor':
+                              addressValue.city !== '' && addressValue.district !== ''
+                          })}
+                        >
+                          Phường/Xã
+                        </div>
+                      </div>
+                      <div className='h-[140px] overflow-auto border-t'>
+                        {!addressCity &&
+                          addressData?.data.data.map((item, index) => {
+                            return (
+                              <button
+                                onClick={() => handlePickAddress(item, 'city')}
+                                className='w-full p-3 text-left hover:bg-gray-100'
+                                key={index}
+                              >
+                                {item.Name}
+                              </button>
+                            )
+                          })}
+                        {addressValue.city !== '' &&
+                          !addressDistrict &&
+                          addressCity?.Districts.map((item, index) => {
+                            return (
+                              <button
+                                onClick={() => handlePickAddress(item, 'district')}
+                                className='w-full p-3 text-left hover:bg-gray-100'
+                                key={index}
+                              >
+                                {item.Name}
+                              </button>
+                            )
+                          })}
+                        {addressValue.city !== '' &&
+                          addressValue.district !== '' &&
+                          addressDistrict?.Wards.map((item, index) => {
+                            console.log(item.Name)
+                            return (
+                              <button
+                                onClick={() => handlePickAddress(item, 'ward')}
+                                className='w-full p-3 text-left hover:bg-gray-100'
+                                key={index}
+                              >
+                                {item.Name}
+                              </button>
+                            )
+                          })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <Input placeholder='Họ và tên'></Input>
+                <Input placeholder='Số điện thoại'></Input>
+              </div>
+              {/* <div className='mt-6 flex gap-3'>
+              <div className='relative'>
+                <Input placeholder='Tỉnh thành' />
+                <div className='absolute top-[60%] h-[180px] w-full overflow-auto border bg-white shadow-sm'>
+                  {addressData?.data.data.map((item, index) => (
+                    <div className='p-3 hover:bg-gray-100' key={index}>
+                      {item.Name}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className='relative'>
+                <Input placeholder='Huyện' />
+                <div className='absolute top-[60%] h-[180px] w-full overflow-auto border bg-white shadow-sm'>
+                  {addressData?.data.data.map((item, index) =>
+                    item.Districts.map((item, index) => (
+                      <div className='p-3 hover:bg-gray-100' key={index}>
+                        {item.Name}
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+              <div className='relative'>
+                <Input placeholder='Phường xã' />
+                <div className='absolute top-[60%] h-[180px] w-full overflow-auto border bg-white shadow-sm'>
+                  {addressData?.data.data.map((item) =>
+                    item.Districts.map((item) =>
+                      item.Wards.map((item, index) => (
+                        <div className='p-3 hover:bg-gray-100' key={index}>
+                          {item.Name}
+                        </div>
+                      ))
+                    )
+                  )}
+                </div>
+              </div>
+            </div> */}
+              <div className='mt-7 flex justify-end gap-3'>
+                <Button
+                  onClick={handleOpenModal}
+                  className='flex w-[150px] items-center justify-center rounded-sm border py-[8px] text-sm '
+                >
+                  Hủy
+                </Button>
+                <Button className='flex w-[150px] items-center justify-center rounded-sm bg-primaryColor py-[8px] text-sm text-white hover:bg-primaryColor/80'>
+                  Hoàn Thành
+                </Button>
+              </div>
+            </div>
+            <button onClick={handleOpenModal} className='h-full w-full bg-black/50'></button>
+          </div>
+        )}
       </div>
       <div className='mt-3 rounded-sm bg-white p-6 shadow-sm'>
         <table className='text-sx w-full text-center'>
