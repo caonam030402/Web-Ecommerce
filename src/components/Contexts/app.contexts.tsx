@@ -1,5 +1,5 @@
 import { createContext, SetStateAction, useState } from 'react'
-import { ExtendedPurchase } from 'src/types/purchase.type'
+import { ExtendedPurchase, Purchase } from 'src/types/purchase.type'
 import { User } from 'src/types/user.type'
 import { getAccessTokenFromLS, getProfileFromLS } from 'src/utils/auth'
 
@@ -11,6 +11,8 @@ interface AppContextInterface {
   extendedPurchases: ExtendedPurchase[]
   setExtendedPurchases: React.Dispatch<SetStateAction<ExtendedPurchase[]>>
   reset: () => void
+  purchasePayment: Purchase[]
+  setPurchasePayment: React.Dispatch<SetStateAction<Purchase[]>>
 }
 
 const initialAppContext: AppContextInterface = {
@@ -20,7 +22,9 @@ const initialAppContext: AppContextInterface = {
   setProfile: () => null,
   extendedPurchases: [],
   setExtendedPurchases: () => null,
-  reset: () => null
+  reset: () => null,
+  purchasePayment: [],
+  setPurchasePayment: () => null
 }
 
 export const AppContext = createContext<AppContextInterface>(initialAppContext)
@@ -29,6 +33,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(initialAppContext.isAuthenticated)
   const [extendedPurchases, setExtendedPurchases] = useState<ExtendedPurchase[]>([])
   const [profile, setProfile] = useState(initialAppContext.profile)
+  const [purchasePayment, setPurchasePayment] = useState(initialAppContext.purchasePayment)
 
   const reset = () => {
     setIsAuthenticated(false), setExtendedPurchases([]), setProfile(null)
@@ -37,6 +42,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <AppContext.Provider
       value={{
+        purchasePayment,
+        setPurchasePayment,
         isAuthenticated,
         setIsAuthenticated,
         profile,

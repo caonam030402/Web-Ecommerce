@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import Popover from '../Popover'
 import { useQuery } from '@tanstack/react-query'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { AppContext } from '../Contexts/app.contexts'
 import { path } from 'src/constants/path'
 import { purchasesStatus } from 'src/constants/purchase'
@@ -19,11 +19,15 @@ export default function Header() {
 
   const { register, onSubmitSearch } = useSearchProducts()
 
-  const { data: purchasesInCartData } = useQuery({
+  const { data: purchasesInCartData, refetch } = useQuery({
     queryKey: ['purchases', { status: purchasesStatus.inCart }],
     queryFn: () => purchaseApi.getPurchases({ status: purchasesStatus.inCart }),
     enabled: isAuthenticated
   })
+
+  useEffect(() => {
+    refetch()
+  }, [refetch])
 
   const purchasesInCart = purchasesInCartData?.data.data
 

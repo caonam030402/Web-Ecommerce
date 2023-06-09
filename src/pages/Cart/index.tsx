@@ -19,7 +19,7 @@ import noCard from 'src/assets/image/no-cart.png'
 
 export default function Cart() {
   const scrollPosition = useScrollPosition()
-  const { extendedPurchases, setExtendedPurchases, profile } = useContext(AppContext)
+  const { extendedPurchases, setExtendedPurchases, setPurchasePayment } = useContext(AppContext)
   const navigate = useNavigate()
 
   const { data: purchasesInCartData, refetch } = useQuery({
@@ -31,14 +31,6 @@ export default function Cart() {
     mutationFn: purchaseApi.updatePurchase,
     onSuccess: () => {
       refetch()
-    }
-  })
-
-  const buyPurchaseMutation = useMutation({
-    mutationFn: purchaseApi.buyProducts,
-    onSuccess: (data) => {
-      refetch()
-      toast.success(data.data.message, { autoClose: 1000 })
     }
   })
 
@@ -141,16 +133,10 @@ export default function Cart() {
   }
 
   const handleBuyPurchases = () => {
-    if (profile?.address === undefined) {
-      navigate(path.profile)
-      toast.error('Vui lòng điền địa chỉ trước khi mua')
-    } else {
-      if (checkedPurchases.length > 0) {
-        const body = checkedPurchases.map((purchase) => ({
-          purchase_id: purchase._id
-        }))
-        buyPurchaseMutation.mutate(body)
-      }
+    if (checkedPurchases.length > 0) {
+      navigate(path.payment)
+      const body = checkedPurchases.map((purchase) => purchase)
+      setPurchasePayment(body)
     }
   }
 
@@ -305,7 +291,7 @@ export default function Cart() {
               <Button
                 onClick={handleBuyPurchases}
                 className='flex items-center justify-center rounded-sm bg-primaryColor py-[10px] px-14 text-sm text-white'
-                disabled={buyPurchaseMutation.isLoading}
+                // disabled={buyPurchaseMutation.isLoading}
               >
                 Mua hàng
               </Button>

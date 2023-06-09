@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom'
 export default function Slide() {
   SwiperCore.use([Autoplay])
   return (
-    <div className='container z-10 mt-6 flex gap-[6px]'>
+    <div className='container z-0 mt-6 flex gap-[6px]'>
       <Swiper
         modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
         spaceBetween={10}

@@ -1,19 +1,26 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import classNames from 'classnames'
 import { Address, District, Ward } from 'src/types/address.type'
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useMemo, useRef, useState } from 'react'
 import { TfiLocationPin } from 'react-icons/tfi'
 import { addressApi } from 'src/apis/address.api'
 import Button from 'src/components/Button'
 import { AppContext } from 'src/components/Contexts/app.contexts'
 import Input from 'src/components/Input'
 import { useOnClickOutside } from 'usehooks-ts'
+import { formatCurrency } from 'src/utils/utils'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { purchaseApi } from 'src/apis/purchase.api'
+import { path } from 'src/constants/path'
 
 export default function Payment() {
   const [isOpenSeclect, setIsOpenSelect] = useState(false)
   const [isOpenModal, setIsOpenModal] = useState(false)
   const [addressCity, setAddressCity] = useState<Address>()
   const [addressDistrict, setAddressDistrict] = useState<District>()
+  const { setPurchasePayment, purchasePayment } = useContext(AppContext)
+  const [isOpenMethodPayment, setIsOpenMethodPayment] = useState(false)
 
   const [addressValue, setAddressValue] = useState({
     city: '',
@@ -21,13 +28,18 @@ export default function Payment() {
     ward: ''
   })
 
-  // const isActive = (type: 'city' | 'district' | 'ward') => {
-  //   if (!addressCity && type === 'city') {
-  //     return true
-  //   } else if (!addressCity && addressDistrict) {
-  //     return true
-  //   }
-  // }
+  const navigate = useNavigate()
+
+  const buyPurchaseMutation = useMutation({
+    mutationFn: purchaseApi.buyProducts,
+    onSuccess: (data) => {
+      toast.success(data.data.message, { autoClose: 1000 })
+    }
+  })
+
+  const handleOpenMethodPayment = () => {
+    setIsOpenMethodPayment(true)
+  }
 
   const myElementRef = useRef<HTMLDivElement>(null)
 
@@ -59,12 +71,33 @@ export default function Payment() {
       setAddressValue((prev) => ({ ...prev, ward: item.Name }))
     }
   }
+  const totalCheckedPurchasePrice = useMemo(
+    () =>
+      purchasePayment.reduce((result, current) => {
+        return result + current.product.price * current.buy_count
+      }, 0),
+    [purchasePayment]
+  )
 
   const valueAddress = `${addressValue.city}${addressValue.district && ','} ${addressValue.district}${
     addressValue.ward && ','
   } ${addressValue.ward}`
 
   useOnClickOutside(myElementRef, handleCloseSelect)
+
+  const handleBuyPurchases = () => {
+    if (profile?.address === undefined) {
+      toast.error('Vui lòng điền địa chỉ trước khi mua')
+    } else {
+      if (purchasePayment.length > 0) {
+        const body = purchasePayment.map((purchase) => ({
+          purchase_id: purchase._id
+        }))
+        navigate(`${path.historyPurchase}/?status=1`)
+        buyPurchaseMutation.mutate(body)
+      }
+    }
+  }
 
   const { profile } = useContext(AppContext)
   return (
@@ -166,44 +199,6 @@ export default function Payment() {
                 <Input placeholder='Họ và tên'></Input>
                 <Input placeholder='Số điện thoại'></Input>
               </div>
-              {/* <div className='mt-6 flex gap-3'>
-              <div className='relative'>
-                <Input placeholder='Tỉnh thành' />
-                <div className='absolute top-[60%] h-[180px] w-full overflow-auto border bg-white shadow-sm'>
-                  {addressData?.data.data.map((item, index) => (
-                    <div className='p-3 hover:bg-gray-100' key={index}>
-                      {item.Name}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className='relative'>
-                <Input placeholder='Huyện' />
-                <div className='absolute top-[60%] h-[180px] w-full overflow-auto border bg-white shadow-sm'>
-                  {addressData?.data.data.map((item, index) =>
-                    item.Districts.map((item, index) => (
-                      <div className='p-3 hover:bg-gray-100' key={index}>
-                        {item.Name}
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-              <div className='relative'>
-                <Input placeholder='Phường xã' />
-                <div className='absolute top-[60%] h-[180px] w-full overflow-auto border bg-white shadow-sm'>
-                  {addressData?.data.data.map((item) =>
-                    item.Districts.map((item) =>
-                      item.Wards.map((item, index) => (
-                        <div className='p-3 hover:bg-gray-100' key={index}>
-                          {item.Name}
-                        </div>
-                      ))
-                    )
-                  )}
-                </div>
-              </div>
-            </div> */}
               <div className='mt-7 flex justify-end gap-3'>
                 <Button
                   onClick={handleOpenModal}
@@ -231,68 +226,65 @@ export default function Payment() {
             </tr>
           </thead>
           <tbody>
-            <tr className='text-center'>
-              <td className='max-w-[300px] pb-0 pt-6'>
-                <div className='flex items-center gap-3'>
-                  <img
-                    className='h-14 w-14 border'
-                    src=' https://api-ecom.duthanhduoc.com/images/51ef469d-0eb5-48fb-958d-ce2b9c664adc.jpg'
-                    alt=''
-                  />
-                  <span className='truncate'>
-                    Sansmug S21 Điện thoại giá rẻ Điện thoại di động Bán (16GB/1TB) Thương hiệu mới 5G WiFi Smartphone
-                    zalo google
-                  </span>
-                </div>
-              </td>
-              <td className='pb-0 pt-6'>200.000đ</td>
-              <td className='pb-0 pt-6'>1</td>
-              <td className='pb-0 pt-6 text-right'>300.000đ</td>
-            </tr>
-            <tr className='text-center'>
-              <td className='max-w-[300px] pb-0 pt-6'>
-                <div className='flex items-center gap-3'>
-                  <img
-                    className='h-14 w-14 border'
-                    src=' https://api-ecom.duthanhduoc.com/images/51ef469d-0eb5-48fb-958d-ce2b9c664adc.jpg'
-                    alt=''
-                  />
-                  <span className='truncate'>
-                    Sansmug S21 Điện thoại giá rẻ Điện thoại di động Bán (16GB/1TB) Thương hiệu mới 5G WiFi Smartphone
-                    zalo google
-                  </span>
-                </div>
-              </td>
-              <td className='pb-0 pt-6'>200.000đ</td>
-              <td className='pb-0 pt-6'>1</td>
-              <td className='pb-0 pt-6 text-right'>300.000đ</td>
-            </tr>
+            {purchasePayment.map((purchase, index) => (
+              <tr key={index} className='text-center'>
+                <td className='max-w-[300px] pb-0 pt-6'>
+                  <div className='flex items-center gap-3'>
+                    <img className='h-14 w-14 border' src={purchase.product.image} alt='' />
+                    <span className='truncate'>{purchase.product.name}</span>
+                  </div>
+                </td>
+                <td className='pb-0 pt-6'>₫{formatCurrency(purchase.price)}</td>
+                <td className='pb-0 pt-6'>{formatCurrency(purchase.buy_count)}</td>
+                <td className='pb-0 pt-6 text-right'>₫{formatCurrency(purchase.buy_count * purchase.price)}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
       <div className='relative mt-3 bg-white p-6 shadow-sm'>
-        <div className='flex items-center justify-between'>
-          <div className='text-lg font-normal text-gray-800'>Phương thức thanh toán</div>
-          <div>
-            <span className='mr-16'>Thanh toán khi nhận hàng</span>
-            <span className='text-blue-600'>THAY ĐỔI</span>
+        {!isOpenMethodPayment ? (
+          <div className='flex items-center justify-between'>
+            <div className='text-lg font-normal text-gray-800'>Phương thức thanh toán</div>
+            <div>
+              <span className='mr-16'>Thanh toán khi nhận hàng</span>
+              <button onClick={handleOpenMethodPayment} className='text-blue-600'>
+                THAY ĐỔI
+              </button>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div>
+            <div className='mt-3 flex items-center gap-5'>
+              <h1 className='text-lg'>Phương thức thanh toán</h1>
+              <div>
+                <button className='mr-3 border-[1px] border-primaryColor px-3 py-2 text-primaryColor'>
+                  Thanh toán khi nhận hàng
+                </button>
+                <button className='border-[2px] px-3 py-2'>Thanh toán ví Momo</button>
+              </div>
+            </div>
+          </div>
+        )}
         <div className=' mt-10 flex items-end justify-between'>
           <div>
-            Nhấn Đặt hàng đồng nghĩa với việc bạn đồng ý tuân theo{' '}
-            <span className='text-blue-600'>Điều khoản Shopee</span>
+            Nhấn Đặt hàng đồng nghĩa với việc bạn đồng ý tuân theo
+            <span className='text-blue-600'> Điều khoản Shopee</span>
           </div>
           <div className='flex flex-col items-end'>
             <div>
-              Tổng thanh toán: <span className='ml-4 text-2xl text-primaryColor'>đ1999.000</span>
+              Tổng thanh toán:
+              <span className='ml-4 text-2xl text-primaryColor'>₫{formatCurrency(totalCheckedPurchasePrice)}</span>
             </div>
-            <Button className='mt-4 flex w-[180px] items-center justify-center rounded-sm bg-primaryColor py-[10px] text-sm text-white'>
+            <Button
+              onClick={handleBuyPurchases}
+              className='mt-4 flex w-[180px] items-center justify-center rounded-sm bg-primaryColor py-[10px] text-sm text-white'
+            >
               Đặt hàng
             </Button>
           </div>
         </div>
-        <div className='absolute top-[35%] right-0 h-[1px] w-full bg-gray-200'></div>
+        {/* <div className='absolute top-[35%] right-0 h-[1px] w-full bg-gray-200'></div> */}
       </div>
     </div>
   )
