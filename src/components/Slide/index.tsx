@@ -1,6 +1,5 @@
 /* eslint-disable import/no-unresolved */
 import { ImageSlide, Image } from 'src/assets/image/slide'
-
 import { Swiper, SwiperSlide } from 'swiper/react'
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y, Autoplay } from 'swiper'
 // eslint-disable-next-line import/no-unresolved
@@ -8,7 +7,6 @@ import 'swiper/css'
 import 'swiper/scss'
 import 'swiper/scss/navigation'
 import 'swiper/scss/pagination'
-import { Link } from 'react-router-dom'
 
 export default function Slide() {
   SwiperCore.use([Autoplay])
@@ -49,7 +47,7 @@ export default function Slide() {
             enableBackground='new 0 0 13 20'
             viewBox='0 0 13 20'
             role='img'
-            className='stardust-icon stardust-icon-arrow-left-bold w-4 text-white'
+            className='stardust-icon stardust-icon-arrow-left-bold w-4 rotate-180 text-white'
           >
             <path fill='#fff' stroke='none' d='m4.2 10l7.9-7.9-2.1-2.2-9 9-1.1 1.1 1.1 1 9 9 2.1-2.1z' />
           </svg>

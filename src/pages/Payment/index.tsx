@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import classNames from 'classnames'
 import { Address, District, Ward } from 'src/types/address.type'
-import React, { useContext, useMemo, useRef, useState } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { TfiLocationPin } from 'react-icons/tfi'
 import { addressApi } from 'src/apis/address.api'
 import Button from 'src/components/Button'
@@ -13,27 +13,81 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { purchaseApi } from 'src/apis/purchase.api'
 import { path } from 'src/constants/path'
+import { vnpPaymentApi } from 'src/apis/vnpPayment.api'
+import { userApi } from 'src/apis/user.api'
+import { Controller, useForm } from 'react-hook-form'
+import { UserSchema, userSchema } from 'src/utils/rules'
+import { yupResolver } from '@hookform/resolvers/yup'
+import InputNumber from 'src/components/InputNumber'
+import { setProfileToLS } from 'src/utils/auth'
+
+const addressDefaultValue = {
+  city: '',
+  district: '',
+  ward: ''
+}
+
+type FormData = Pick<UserSchema, 'name' | 'address' | 'phone'>
+const profileSchema = userSchema.pick(['name', 'address', 'phone'])
 
 export default function Payment() {
   const [isOpenSeclect, setIsOpenSelect] = useState(false)
   const [isOpenModal, setIsOpenModal] = useState(false)
   const [addressCity, setAddressCity] = useState<Address>()
   const [addressDistrict, setAddressDistrict] = useState<District>()
-  const { setPurchasePayment, purchasePayment } = useContext(AppContext)
+  const { purchasePayment, profile, setProfile } = useContext(AppContext)
+  const [activePayment, setActivePayment] = useState({
+    Athome: true,
+    VnPay: false
+  })
   const [isOpenMethodPayment, setIsOpenMethodPayment] = useState(false)
+  const [address, setAddress] = useState(addressDefaultValue)
+  const updateProfileMutation = useMutation(userApi.updateProfile)
+  const navigate = useNavigate()
 
-  const [addressValue, setAddressValue] = useState({
-    city: '',
-    district: '',
-    ward: ''
+  const {
+    register,
+    handleSubmit,
+    control,
+    getValues,
+    formState: { errors },
+    watch,
+    setValue,
+    setError
+  } = useForm<FormData>({
+    defaultValues: {
+      name: '',
+      phone: '',
+      address: ''
+    },
+    resolver: yupResolver(profileSchema)
   })
 
-  const navigate = useNavigate()
+  const handlePayment = (namePayment: 'ATHOME' | 'VNPAY') => {
+    if (namePayment === 'ATHOME') {
+      setActivePayment(() => {
+        return { VnPay: false, Athome: true }
+      })
+    }
+
+    if (namePayment === 'VNPAY') {
+      setActivePayment(() => {
+        return { Athome: false, VnPay: true }
+      })
+    }
+  }
 
   const buyPurchaseMutation = useMutation({
     mutationFn: purchaseApi.buyProducts,
     onSuccess: (data) => {
       toast.success(data.data.message, { autoClose: 1000 })
+    }
+  })
+
+  const buyPurchaseByVNP = useMutation({
+    mutationFn: vnpPaymentApi.postPayment,
+    onSuccess: (data) => {
+      window.location.href = data.data.data
     }
   })
 
@@ -50,27 +104,35 @@ export default function Payment() {
 
   const handleOpenSelect = () => {
     setIsOpenSelect(true)
+    setValue('address', '')
   }
 
   const handleCloseSelect = () => {
     setIsOpenSelect(false)
+    setValue('address', valueAddress)
   }
 
-  const handleOpenModal = () => {
-    isOpenModal ? setIsOpenModal(false) : setIsOpenModal(true)
-  }
+  const valueAddress = `${address.city}${address.district && ','} ${address.district}${address.ward && ','} ${
+    address.ward
+  }`
 
   const handlePickAddress = (item: Address | District | Ward, type: 'city' | 'district' | 'ward') => {
     if (type === 'city') {
       setAddressCity(item as Address)
-      setAddressValue((prev) => ({ ...prev, city: item.Name }))
+      setAddress((prev) => ({ ...prev, city: item.Name }))
     } else if (type === 'district') {
       setAddressDistrict(item as District)
-      setAddressValue((prev) => ({ ...prev, district: item.Name }))
+      setAddress((prev) => ({ ...prev, district: item.Name }))
     } else {
-      setAddressValue((prev) => ({ ...prev, ward: item.Name }))
+      setAddress((prev) => ({ ...prev, ward: item.Name }))
+      setIsOpenSelect(false)
     }
   }
+
+  useEffect(() => {
+    valueAddress !== '  ' ? setValue('address', valueAddress) : ''
+  }, [valueAddress, setValue])
+
   const totalCheckedPurchasePrice = useMemo(
     () =>
       purchasePayment.reduce((result, current) => {
@@ -79,9 +141,13 @@ export default function Payment() {
     [purchasePayment]
   )
 
-  const valueAddress = `${addressValue.city}${addressValue.district && ','} ${addressValue.district}${
-    addressValue.ward && ','
-  } ${addressValue.ward}`
+  const handleOpenModal = () => {
+    if (isOpenModal) {
+      setIsOpenModal(false)
+    } else {
+      setIsOpenModal(true)
+    }
+  }
 
   useOnClickOutside(myElementRef, handleCloseSelect)
 
@@ -90,16 +156,29 @@ export default function Payment() {
       toast.error('Vui lòng điền địa chỉ trước khi mua')
     } else {
       if (purchasePayment.length > 0) {
-        const body = purchasePayment.map((purchase) => ({
-          purchase_id: purchase._id
-        }))
-        navigate(`${path.historyPurchase}/?status=1`)
-        buyPurchaseMutation.mutate(body)
+        if (activePayment.Athome) {
+          const body = purchasePayment.map((purchase) => ({
+            purchase_id: purchase._id
+          }))
+          navigate(`${path.historyPurchase}/?status=1`)
+          buyPurchaseMutation.mutate(body)
+        } else {
+          buyPurchaseByVNP.mutate({ amount: totalCheckedPurchasePrice, bankCode: '', language: 'vn' })
+        }
       }
     }
   }
 
-  const { profile } = useContext(AppContext)
+  const onSubmit = handleSubmit(async (data) => {
+    const res = await updateProfileMutation.mutateAsync({
+      ...data
+    })
+    setIsOpenModal(false)
+    toast.success(res.data.message)
+    setProfileToLS(res.data.data)
+    setProfile(res.data.data)
+  })
+
   return (
     <div className='container mt-4'>
       <div className='bg-white p-6 shadow-sm'>
@@ -108,21 +187,26 @@ export default function Payment() {
           <span className='text-[17px]'>Địa Chỉ Nhận Hàng</span>
         </div>
         <div className='mt-3 text-[15px]'>
-          <span className='mr-3 font-bold'>CaoNam</span>
-          <span>{profile?.address}</span>
+          <span className='mr-3 font-bold'>{profile?.name ? profile.name : profile?.email}</span>
+          <span>{profile?.address ? profile?.address : 'Vui lòng thêm địa chỉ'}</span>
           <button onClick={handleOpenModal} className='ml-4 text-blue-500'>
             Thay đổi
           </button>
         </div>
         {isOpenModal && (
           <div className='fixed inset-0 z-50'>
-            <div className='absolute right-[50%] top-[50%] w-[550px] translate-x-[50%] translate-y-[-50%] rounded-sm bg-white p-6 text-left'>
+            <form
+              onSubmit={onSubmit}
+              action=''
+              className='absolute right-[50%] top-[50%] w-[550px] translate-x-[50%] translate-y-[-50%] rounded-sm bg-white p-6 text-left'
+            >
               <h1 className='text-[20px]'>Địa chỉ mới</h1>
               <div className='mt-6'>
                 <div ref={myElementRef} className='relative w-full'>
                   <Input
-                    onChange={() => null}
-                    value={valueAddress || ''}
+                    name='address'
+                    register={register}
+                    errorMessage={errors.address?.message}
                     onClick={handleOpenSelect}
                     placeholder='Tỉnh/ Thành phố, Quận/Huyện, Phường/Xã'
                   ></Input>
@@ -131,22 +215,21 @@ export default function Payment() {
                       <div className='grid grid-cols-3 text-center'>
                         <div
                           className={classNames('border-b-2 py-4 ', {
-                            'border-primaryColor text-primaryColor': !addressValue.city
+                            'border-primaryColor text-primaryColor': !address.city
                           })}
                         >
                           Tỉnh/Thành phố
                         </div>
                         <div
                           className={classNames('border-b-2 py-4 ', {
-                            'border-primaryColor text-primaryColor': addressValue.city !== '' && !addressDistrict
+                            'border-primaryColor text-primaryColor': address.city !== '' && !addressDistrict
                           })}
                         >
                           Quận/Huyện
                         </div>
                         <div
                           className={classNames('border-b-2 py-4 ', {
-                            'border-primaryColor text-primaryColor':
-                              addressValue.city !== '' && addressValue.district !== ''
+                            'border-primaryColor text-primaryColor': address.city !== '' && address.district !== ''
                           })}
                         >
                           Phường/Xã
@@ -157,6 +240,7 @@ export default function Payment() {
                           addressData?.data.data.map((item, index) => {
                             return (
                               <button
+                                type='button'
                                 onClick={() => handlePickAddress(item, 'city')}
                                 className='w-full p-3 text-left hover:bg-gray-100'
                                 key={index}
@@ -165,11 +249,12 @@ export default function Payment() {
                               </button>
                             )
                           })}
-                        {addressValue.city !== '' &&
+                        {address.city !== '' &&
                           !addressDistrict &&
                           addressCity?.Districts.map((item, index) => {
                             return (
                               <button
+                                type='button'
                                 onClick={() => handlePickAddress(item, 'district')}
                                 className='w-full p-3 text-left hover:bg-gray-100'
                                 key={index}
@@ -178,12 +263,12 @@ export default function Payment() {
                               </button>
                             )
                           })}
-                        {addressValue.city !== '' &&
-                          addressValue.district !== '' &&
+                        {address.city !== '' &&
+                          address.district !== '' &&
                           addressDistrict?.Wards.map((item, index) => {
-                            console.log(item.Name)
                             return (
                               <button
+                                type='button'
                                 onClick={() => handlePickAddress(item, 'ward')}
                                 className='w-full p-3 text-left hover:bg-gray-100'
                                 key={index}
@@ -196,22 +281,45 @@ export default function Payment() {
                     </div>
                   )}
                 </div>
-                <Input placeholder='Họ và tên'></Input>
-                <Input placeholder='Số điện thoại'></Input>
+                <Input
+                  errorMessage={errors.name?.message}
+                  className='mt-3'
+                  register={register}
+                  name='name'
+                  placeholder='Họ và tên'
+                ></Input>
+                <Controller
+                  control={control}
+                  name='phone'
+                  render={({ field }) => (
+                    <InputNumber
+                      placeholder='Số Điện Thoại'
+                      errorMessage={errors.phone?.message}
+                      className='mt-3'
+                      classNameInput='w-full flex-shrink-0 rounded-sm border-[1px] border-slate-300 px-2 py-2 outline-none'
+                      {...field}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
               </div>
               <div className='mt-7 flex justify-end gap-3'>
                 <Button
+                  type='button'
                   onClick={handleOpenModal}
                   className='flex w-[150px] items-center justify-center rounded-sm border py-[8px] text-sm '
                 >
                   Hủy
                 </Button>
-                <Button className='flex w-[150px] items-center justify-center rounded-sm bg-primaryColor py-[8px] text-sm text-white hover:bg-primaryColor/80'>
+                <Button
+                  type='submit'
+                  className='flex w-[150px] items-center justify-center rounded-sm bg-primaryColor py-[8px] text-sm text-white hover:bg-primaryColor/80'
+                >
                   Hoàn Thành
                 </Button>
               </div>
-            </div>
-            <button onClick={handleOpenModal} className='h-full w-full bg-black/50'></button>
+            </form>
+            <button onClick={handleOpenModal} type='button' className='h-full w-full bg-black/50'></button>
           </div>
         )}
       </div>
@@ -258,10 +366,22 @@ export default function Payment() {
             <div className='mt-3 flex items-center gap-5'>
               <h1 className='text-lg'>Phương thức thanh toán</h1>
               <div>
-                <button className='mr-3 border-[1px] border-primaryColor px-3 py-2 text-primaryColor'>
+                <button
+                  onClick={() => handlePayment('ATHOME')}
+                  className={`mr-3 border-[1px] px-3 py-2 ${
+                    activePayment.Athome && 'border-[1px] border-primaryColor text-primaryColor'
+                  }`}
+                >
                   Thanh toán khi nhận hàng
                 </button>
-                <button className='border-[2px] px-3 py-2'>Thanh toán ví Momo</button>
+                <button
+                  className={`border-[1px] px-3 py-2 ${
+                    activePayment.VnPay && 'border-[1px] border-primaryColor text-primaryColor'
+                  }`}
+                  onClick={() => handlePayment('VNPAY')}
+                >
+                  Thánh toán qua ví VNPAY
+                </button>
               </div>
             </div>
           </div>

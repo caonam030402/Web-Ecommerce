@@ -72,7 +72,7 @@ export default function ChangePassword() {
           <table className='w-full'>
             <tbody>
               <tr className=''>
-                <td className='text-right'>Mật Khẩu Cũ</td>
+                <td className='pr-[20px] text-right'>Mật Khẩu Cũ</td>
                 <td className='w-[75%]'>
                   <div className='align-items 2px h-[40px] w-full'>
                     <Input
@@ -89,7 +89,7 @@ export default function ChangePassword() {
                 </td>
               </tr>
               <tr className=''>
-                <td className='text-right'>Mật Khẩu Mới</td>
+                <td className='pr-[20px] text-right '>Mật Khẩu Mới</td>
                 <td className='w-[75%]'>
                   <div className='align-items 2px h-[40px] w-full'>
                     <Input
@@ -106,7 +106,7 @@ export default function ChangePassword() {
                 </td>
               </tr>
               <tr className=''>
-                <td className='text-right'>Xác nhận mật khẩu</td>
+                <td className='pr-[20px] text-right '>Xác nhận mật khẩu</td>
                 <td className='w-[75%]'>
                   <div className='align-items 2px h-[40px] w-full'>
                     <Input

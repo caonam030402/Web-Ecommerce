@@ -14,7 +14,7 @@ export default function Button(props: ButtonProps) {
   const newClassName = disabled ? className + ' cursor-not-allowed opacity-70' : className
 
   return (
-    <button className={newClassName} disabled={disabled} {...rest}>
+    <button type={rest.type} className={newClassName} disabled={disabled} {...rest}>
       <span>{children}</span>
     </button>
   )

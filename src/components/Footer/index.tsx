@@ -7,7 +7,7 @@ export default function Footer() {
     <footer className='my-10'>
       <div className='x mx-auto mt-9 px-3 text-gray-500 lg:max-w-7xl lg:px-0 lg:text-left'>
         <div className=' grid grid-cols-1 text-center text-sm lg:grid-cols-3 lg:text-left'>
-          <p className='lg:col-span-1'>© 2023 Shopee. Tất cả các quyền được bảo lưu.</p>
+          <p className='lg:col-span-1'>© 2023 CaoNam. Tất cả các quyền được bảo lưu.</p>
           <p className=' lg:col-span-2 '>
             Quốc gia & Khu vực: Singapore | Indonesia | Đài Loan | Thái Lan | Malaysia | Việt Nam | Philippines | Brazil
             | México | Colombia | Chile
@@ -47,7 +47,7 @@ export default function Footer() {
           <p className='mb-1'>
             Mã số doanh nghiệp: 0106773786 do Sở Kế hoạch & Đầu tư TP Hà Nội cấp lần đầu ngày 10/02/2015
           </p>
-          <p className='mb-1'>© 2015 - Bản quyền thuộc về Công ty TNHH Shopee</p>
+          <p className='mb-1'>© 2015 - Bản quyền thuộc quyền sở hữu của Cao Nam</p>
         </div>
       </div>
     </footer>

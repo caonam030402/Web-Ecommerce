@@ -57,11 +57,13 @@ export default function Profile() {
     resolver: yupResolver(profileSchema)
   })
 
+  console.log(errors)
+
   useEffect(() => {
-    if (profile) {
-      setValue('name', profile.name)
-      setValue('phone', profile.phone)
-      setValue('address', profile.address)
+    if (profile !== undefined) {
+      setValue('name', profile.name as string)
+      setValue('phone', profile.phone as string)
+      setValue('address', profile.address as string)
       setValue('avatar', profile.avatar)
       setValue('date_of_birth', profile.date_of_birth ? new Date(profile.date_of_birth) : new Date(1990, 0, 1))
     }

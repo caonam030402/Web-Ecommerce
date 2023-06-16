@@ -9,5 +9,6 @@ export const path = {
   logout: '/logout',
   productDetail: ':nameId',
   cart: '/cart',
-  payment: '/payment'
+  payment: '/payment',
+  paymentReturn: '/payment/vnpay_return'
 } as const
