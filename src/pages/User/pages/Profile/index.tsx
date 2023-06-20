@@ -9,9 +9,9 @@ import InputNumber from 'src/components/InputNumber'
 import { UserSchema, userSchema } from 'src/utils/rules'
 import DateSelect from '../../components/DateSelect'
 import { toast } from 'react-toastify'
-import { AppContext } from 'src/components/Contexts/app.contexts'
-import { setProfileToLS } from 'src/utils/auth'
-import { getAvatarUrl, isAxiosUnprocessableEntity } from 'src/utils/utils'
+import { AppContext } from 'src/Contexts/app.contexts'
+import { isAxiosUnprocessableEntityError, setProfileToLS } from 'src/utils/auth'
+import { getAvatarUrl } from 'src/utils/utils'
 import { ErrorResponse } from 'src/types/utils.type'
 import InputFile from 'src/components/InputFile'
 
@@ -93,7 +93,7 @@ export default function Profile() {
       refetch()
       toast.success(res.data.message)
     } catch (error) {
-      const isError = isAxiosUnprocessableEntity<ErrorResponse<FormDataError>>(errors)
+      const isError = isAxiosUnprocessableEntityError<ErrorResponse<FormDataError>>(errors)
       if (isError) {
         const formError = errors.response?.data.data
         if (formError) {

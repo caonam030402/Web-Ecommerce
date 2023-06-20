@@ -6,12 +6,12 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import { authApi } from 'src/apis/auth.api'
 import omit from 'lodash/omit'
-import { isAxiosUnprocessableEntity } from 'src/utils/utils'
 import { ErrorResponse } from 'src/types/utils.type'
 import { useContext } from 'react'
-import { AppContext } from 'src/components/Contexts/app.contexts'
+import { AppContext } from 'src/Contexts/app.contexts'
 import Button from 'src/components/Button'
 import { path } from 'src/constants/path'
+import { isAxiosUnprocessableEntityError } from 'src/utils/auth'
 
 type FormData = Pick<Schema, 'email' | 'password' | 'confirm_password'> // Pick the fields from Schema type which are required
 const registerSchema = schema.pick(['email', 'password', 'confirm_password']) // Create a new schema with only picked fields
@@ -58,7 +58,7 @@ export default function Register() {
         navigate('/')
       },
       onError: (errors) => {
-        const isError = isAxiosUnprocessableEntity<ErrorResponse<Omit<FormData, 'confirm_password'>>>(errors)
+        const isError = isAxiosUnprocessableEntityError<ErrorResponse<Omit<FormData, 'confirm_password'>>>(errors)
         if (isError) {
           const formError = errors.response?.data.data
           if (formError) {

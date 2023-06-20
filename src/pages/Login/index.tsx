@@ -5,12 +5,12 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { Schema, schema } from 'src/utils/rules'
 import { useMutation } from '@tanstack/react-query'
 import { authApi } from 'src/apis/auth.api'
-import { isAxiosUnprocessableEntity } from 'src/utils/utils'
 import { ErrorResponse } from 'src/types/utils.type'
 import { useContext } from 'react'
-import { AppContext } from 'src/components/Contexts/app.contexts'
+import { AppContext } from 'src/Contexts/app.contexts'
 import Button from 'src/components/Button'
 import { path } from 'src/constants/path'
+import { isAxiosUnprocessableEntityError } from 'src/utils/auth'
 
 type FormData = Pick<Schema, 'email' | 'password'> // Pick the fields from Schema object which we want to keep
 const LoginSchema = schema.pick(['email', 'password']) // Create a new object with those selected fields
@@ -49,7 +49,7 @@ export default function Login() {
         navigate('/')
       },
       onError: (errors) => {
-        if (isAxiosUnprocessableEntity<ErrorResponse<FormData>>(errors)) {
+        if (isAxiosUnprocessableEntityError<ErrorResponse<FormData>>(errors)) {
           const formError = errors.response?.data.data
           if (formError) {
             Object.keys(formError).forEach((key) => {

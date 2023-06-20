@@ -14,7 +14,7 @@ import { Purchase } from 'src/types/purchase.type'
 import { formatCurrency, generateNameId } from 'src/utils/utils'
 import keyBy from 'lodash/keyBy'
 import { toast } from 'react-toastify'
-import { AppContext } from 'src/components/Contexts/app.contexts'
+import { AppContext } from 'src/Contexts/app.contexts'
 import noCard from 'src/assets/image/no-cart.png'
 
 export default function Cart() {

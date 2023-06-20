@@ -5,10 +5,10 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { userApi } from 'src/apis/user.api'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
-import { isAxiosUnprocessableEntity } from 'src/utils/utils'
 import { ErrorResponse } from 'src/types/utils.type'
 import omit from 'lodash/omit'
 import Button from 'src/components/Button'
+import { isAxiosUnprocessableEntityError } from 'src/utils/auth'
 
 type FormData = Pick<UserSchema, 'password' | 'confirm_password' | 'new_password'>
 const profileSchema = userSchema.pick(['confirm_password', 'password', 'new_password'])
@@ -39,7 +39,7 @@ export default function ChangePassword() {
       toast.success(res.data.message)
       reset()
     } catch (error) {
-      const isError = isAxiosUnprocessableEntity<ErrorResponse<FormData>>(error)
+      const isError = isAxiosUnprocessableEntityError<ErrorResponse<FormData>>(error)
       if (isError) {
         const formError = error.response?.data.data
         if (formError) {

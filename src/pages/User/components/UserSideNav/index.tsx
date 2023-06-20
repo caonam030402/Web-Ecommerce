@@ -4,7 +4,7 @@ import { FaRegUser } from 'react-icons/fa'
 import { MdOutlineModeEditOutline, MdPassword } from 'react-icons/md'
 import { RiBillLine } from 'react-icons/ri'
 import { Link, NavLink } from 'react-router-dom'
-import { AppContext } from 'src/components/Contexts/app.contexts'
+import { AppContext } from 'src/Contexts/app.contexts'
 import { path } from 'src/constants/path'
 import { getAvatarUrl } from 'src/utils/utils'
 

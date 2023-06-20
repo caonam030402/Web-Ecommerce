@@ -1,6 +1,6 @@
 import { useContext, lazy, Suspense } from 'react'
 import { Navigate, Outlet, useRoutes } from 'react-router-dom'
-import { AppContext } from './components/Contexts/app.contexts'
+import { AppContext } from './Contexts/app.contexts'
 import { path } from './constants/path'
 import MainLayout from './layouts/MainLayout'
 import RegisterLayout from './layouts/RegisterLayout'
