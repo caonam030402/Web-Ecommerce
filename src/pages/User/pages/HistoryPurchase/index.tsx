@@ -10,17 +10,20 @@ import { PurchaseListStatus } from 'src/types/purchase.type'
 import { formatCurrency, generateNameId } from 'src/utils/utils'
 import { AiOutlineFieldTime } from 'react-icons/ai'
 import noCard from 'src/assets/image/no-cart.png'
-
-const purchaseTabs = [
-  { status: purchasesStatus.all, name: 'Tất cả' },
-  { status: purchasesStatus.waitForConfirmation, name: 'Chờ xác nhận' },
-  { status: purchasesStatus.waitForGetting, name: 'Chờ lấy hàng' },
-  { status: purchasesStatus.inProgress, name: 'Đang giao' },
-  { status: purchasesStatus.delivered, name: 'Đã giao' },
-  { status: purchasesStatus.cancelled, name: 'Đã hủy' }
-]
+import { useTranslation } from 'react-i18next'
 
 export default function HistoryPurchase() {
+  const { t } = useTranslation('user')
+
+  const purchaseTabs = [
+    { status: purchasesStatus.all, name: t('Purchase.all') },
+    { status: purchasesStatus.waitForConfirmation, name: t('Purchase.wait for confirmation') },
+    { status: purchasesStatus.waitForGetting, name: t('Purchase.wait for getting') },
+    { status: purchasesStatus.inProgress, name: t('Purchase.in progress') },
+    { status: purchasesStatus.delivered, name: t('Purchase.delivered') },
+    { status: purchasesStatus.cancelled, name: t('Purchase.cancelled') }
+  ]
+
   const queryParams: { status?: string } = UseQueryParams()
   const status: number = Number(queryParams.status) || purchasesStatus.all
 
@@ -56,7 +59,7 @@ export default function HistoryPurchase() {
           status: String(tab.status)
         }).toString()
       }}
-      className={classNames('flex flex-1 items-center justify-center border-b-2 bg-white py-4 text-center', {
+      className={classNames('flex flex-1 items-center justify-center border-b-2 bg-white py-4 text-center capitalize', {
         'border-b-primaryColor text-primaryColor': status === tab.status,
         'border-b-black/10 text-gray-900': status !== tab.status
       })}
@@ -85,7 +88,7 @@ export default function HistoryPurchase() {
                     <div>
                       <div className='text-base'>{purchase.product.name}</div>
                       <div className='mt-1'>
-                        <span className='mr-1'>Số lượng:</span>
+                        <span className='mr-1'>{t('Purchase.quanlity')}:</span>
                         <span>{purchase.buy_count}</span>
                       </div>
                     </div>
@@ -108,7 +111,7 @@ export default function HistoryPurchase() {
                   </div>
                   <div className='flex flex-col items-end'>
                     <div className='flex items-center gap-2'>
-                      <span>Thành tiền:</span>
+                      <span className='capitalize'>{t('Purchase.into money')}:</span>
                       <span className='text-2xl text-primaryColor'>
                         ₫{formatCurrency(purchase.buy_count * purchase.price)}
                       </span>
@@ -117,7 +120,7 @@ export default function HistoryPurchase() {
                       className='mt-4 flex w-[180px] items-center justify-center rounded-sm bg-primaryColor py-[10px] text-sm text-white'
                       onClick={() => buyNow(purchase.buy_count, purchase.product._id)}
                     >
-                      Mua Lại
+                      {t('Purchase.repurchase')}
                     </Button>
                   </div>
                 </div>
@@ -128,7 +131,7 @@ export default function HistoryPurchase() {
       ) : (
         <div className='mt-5 flex flex-col items-center rounded-sm bg-white py-40 shadow-sm'>
           <img className='h-24 w-24' src={noCard} alt='' />
-          <div>Chưa có đơn hàng</div>
+          <div>{t('Purchase.no orders yet')}</div>
         </div>
       )}
     </div>

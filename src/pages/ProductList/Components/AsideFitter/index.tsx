@@ -14,6 +14,7 @@ import { NoUndefineField } from 'src/types/utils.type'
 import RatingStars from '../RatingStars'
 import omit from 'lodash/omit'
 import { QueryConfig } from 'src/hooks/useQueryConfig'
+import { useTranslation } from 'react-i18next'
 
 interface Props {
   queryConfig: QueryConfig
@@ -25,6 +26,7 @@ const priceSchema = schema.pick(['price_max', 'price_min'])
 
 export default function AsideFitter({ categories, queryConfig }: Props) {
   const { category } = queryConfig
+  const { t } = useTranslation('productList')
 
   const navigate = useNavigate()
 
@@ -66,7 +68,7 @@ export default function AsideFitter({ categories, queryConfig }: Props) {
           'text-primaryColor': !category
         })}
       >
-        <MdOutlineMenu className='mr-1' /> Tất cả doanh mục
+        <MdOutlineMenu className='mr-1' /> {t('asideFilter.all categories')}
       </h1>
       <div className='my-4 h-[0.8px] bg-gray-300'></div>
       <ul>
@@ -98,10 +100,10 @@ export default function AsideFitter({ categories, queryConfig }: Props) {
         <span>
           <CiFilter className='text-base' />
         </span>
-        <span>BỘ LỌC TÌM KIẾM</span>
+        <span className='uppercase'>{t('asideFilter.filter search')}</span>
       </h1>
       <div className='my-5'>
-        <h1>Khoảng giá</h1>
+        <h1> {t('asideFilter.price range')}</h1>
         <form className='mt-4' onSubmit={onsubmit}>
           <div className='flex items-center gap-2 text-xs'>
             <Controller
@@ -110,9 +112,9 @@ export default function AsideFitter({ categories, queryConfig }: Props) {
               render={({ field }) => {
                 return (
                   <InputNumber
-                    classNameInput='w-full rounded-sm border-[0.5px] border-gray-300 px-2 py-2 outline-none focus:border-gray-400'
+                    classNameInput='placeholder:uppercase w-full rounded-sm border-[0.5px] border-gray-300 px-2 py-2 outline-none focus:border-gray-400'
                     type='text'
-                    placeholder='₫ TỪ'
+                    placeholder={t('asideFilter.from')}
                     onChange={(event) => {
                       field.onChange(event)
                       trigger('price_max')
@@ -141,9 +143,9 @@ export default function AsideFitter({ categories, queryConfig }: Props) {
               render={({ field }) => {
                 return (
                   <InputNumber
-                    classNameInput='w-full rounded-sm border-[0.5px] border-gray-300 px-2 py-2 outline-none focus:border-gray-400 '
+                    classNameInput='placeholder:uppercase w-full rounded-sm border-[0.5px] border-gray-300 px-2 py-2 outline-none focus:border-gray-400 '
                     type='text'
-                    placeholder='₫ ĐẾN'
+                    placeholder={t('asideFilter.to')}
                     onChange={(event) => {
                       field.onChange(event)
                       trigger('price_min')
@@ -157,19 +159,19 @@ export default function AsideFitter({ categories, queryConfig }: Props) {
           </div>
           <div className='mt-2 text-center text-xs text-red-600'> {errors.price_max?.message}</div>
           <Button className='mt-5 flex w-full items-center justify-center rounded-sm bg-primaryColor p-2 text-sm uppercase text-white hover:opacity-90'>
-            Áp dụng
+            {t('asideFilter.apply')}
           </Button>
         </form>
       </div>
       <div className='my-5'>
-        <h1 className=''> Đánh giá</h1>
+        <h1 className=''> {t('asideFilter.rating')}</h1>
         <RatingStars queryConfig={queryConfig} />
         <div className='my-4 h-[0.8px] bg-gray-300'></div>
         <Button
           onClick={handleRemoveAll}
-          className='mt-5 flex w-full items-center justify-center rounded-sm bg-primaryColor p-2 text-sm uppercase uppercase text-white hover:opacity-90'
+          className='mt-5 flex w-full items-center justify-center rounded-sm bg-primaryColor p-2 text-sm uppercase text-white hover:opacity-90'
         >
-          Xóa tất cả
+          {t('asideFilter.clear all')}
         </Button>
       </div>
     </div>

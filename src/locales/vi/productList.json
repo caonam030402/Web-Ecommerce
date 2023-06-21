@@ -1,0 +1,22 @@
+{
+  "asideFilter": {
+    "all categories": "Tất Cả Danh Mục",
+    "filter search": "Bộ Lọc Tìm Kiếm",
+    "price range": "Khoảng Giá",
+    "clear all": "Xóa Tất Cả",
+    "apply": "Xác Nhận",
+    "rating": "Đánh Giá",
+    "up": "Trở Lên",
+    "from": "Từ",
+    "to": "Đến"
+  },
+  "sortProductList": {
+    "sort by": "Sắp xếp theo",
+    "popular": "Phổ biến",
+    "latest": "Mới nhất",
+    "top sale": "Bán chạy",
+    "price": "Giá",
+    "price low to high": "Giá: Thấp đến Cao",
+    "price high to low": "Giá: Cao đến Thấp"
+  }
+}

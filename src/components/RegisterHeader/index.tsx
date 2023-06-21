@@ -1,7 +1,9 @@
+import { useTranslation } from 'react-i18next'
 import { Link, useMatch } from 'react-router-dom'
 import { path } from 'src/constants/path'
 
 export default function RegisterHeader() {
+  const { t } = useTranslation('header')
   const matchRegister = useMatch(path.register)
   const isRegister = Boolean(matchRegister)
   return (
@@ -21,12 +23,12 @@ export default function RegisterHeader() {
               </g>
             </svg>
           </Link>
-          <h1 className='text-2xl'>
-            {isRegister && 'Đăng Ký'}
-            {!isRegister && 'Đăng Nhập'}
+          <h1 className='text-2xl capitalize'>
+            {isRegister && t('navHeader.register')}
+            {!isRegister && t('navHeader.login')}
           </h1>
         </div>
-        <h3 className='text-sm text-primaryColor'>Bạn cần giúp đỡ?</h3>
+        <h3 className='text-sm text-primaryColor'>{t('navHeader.you have to help support?')}</h3>
       </nav>
     </header>
   )

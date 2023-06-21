@@ -1,0 +1,39 @@
+{
+  "save": "Lưu",
+  "userSideNav": {
+    "edit profile": "Sửa hồ sơ",
+    "my account": "Tài khoản của tôi",
+    "my purchase": "Đơn hàng",
+    "change password": "Đổi mật khẩu"
+  },
+  "changPassword": {
+    "add password": "Thêm mật khẩu",
+    "for account security, please do not share your password with others": "Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác",
+    "old password": "Mật khẩu cũ",
+    "new password": "Mật khẩu mới",
+    "confirm password": "Xác nhận mật khẩu"
+  },
+  "Profile": {
+    "my profile": "Hồ sơ của tôi",
+    "manage profile information for account security": "Quản lý thông tin hồ sơ để bảo mật tài khoảnd",
+    "name": "Tên",
+    "phone number": "Số điện thoại",
+    "address": "Địa chỉ",
+    "date of birth": "Ngày sinh",
+    "choose photo": "Chọn ảnh",
+    "maximum file": "Dung lượng file tối đa 1 MB Định dạng:.JPEG, .PNG",
+    "month": "Tháng"
+  },
+  "Purchase": {
+    "all": "Tất cả",
+    "wait for confirmation": "Chờ xác nhận",
+    "wait for getting": "Chờ lấy hàng",
+    "in progress": "Đang giao",
+    "delivered": "Đã giao",
+    "cancelled": "Đã hủy",
+    "repurchase": "Mua lại",
+    "into money": "Thành tiền",
+    "quanlity": "Số lượng",
+    "no orders yet": "Chưa có đơn hàng"
+  }
+}

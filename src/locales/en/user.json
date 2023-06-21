@@ -1,0 +1,39 @@
+{
+  "save": "Save",
+  "userSideNav": {
+    "edit profile": "Edit profile",
+    "my account": "My account",
+    "my purchase": "My purchase",
+    "change password": "Change password"
+  },
+  "changPassword": {
+    "add password": "Add password",
+    "for account security, please do not share your password with others": "For account security, please do not share your password with others",
+    "old password": "Old password",
+    "new password": "New password",
+    "confirm password": "Confirm password"
+  },
+  "Profile": {
+    "my profile": "My profile",
+    "manage profile information for account security": "Manage profile information for account security",
+    "name": "Name",
+    "phone number": "Phone number",
+    "address": "Address",
+    "date of birth": "Date of birth",
+    "choose photo": "Choose photo",
+    "maximum file": "File size: maximum 1 MB File extension: .JPEG, .PNG",
+    "month": "Month"
+  },
+  "Purchase": {
+    "all": "All",
+    "wait for confirmation": "Wait for confirmation",
+    "wait for getting": "Wait for getting",
+    "in progress": "In progress",
+    "delivered": "Delivered",
+    "cancelled": "Cancelled",
+    "repurchase": "Repurchase",
+    "into money": "Into money",
+    "quanlity": "Quanlity",
+    "no orders yet": "No orders yet"
+  }
+}

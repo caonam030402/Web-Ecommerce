@@ -13,12 +13,13 @@ import useScrollPosition from 'src/hooks/useScrollPosition'
 import { Purchase } from 'src/types/purchase.type'
 import { formatCurrency, generateNameId } from 'src/utils/utils'
 import keyBy from 'lodash/keyBy'
-import { toast } from 'react-toastify'
 import { AppContext } from 'src/Contexts/app.contexts'
 import noCard from 'src/assets/image/no-cart.png'
+import { useTranslation } from 'react-i18next'
 
 export default function Cart() {
   const scrollPosition = useScrollPosition()
+  const { t } = useTranslation('cart')
   const { extendedPurchases, setExtendedPurchases, setPurchasePayment } = useContext(AppContext)
   const navigate = useNavigate()
 
@@ -155,14 +156,14 @@ export default function Cart() {
                 }`}
                 disabled={purchasesInCart?.length === 0 && true}
               />
-              <h2>Sản phẩm</h2>
+              <h2>{t('product')}</h2>
             </div>
             <div className='col-span-7'>
-              <div className='grid grid-cols-12 text-center text-gray-500'>
-                <div className='col-span-3'>Đơn Giá</div>
-                <div className='col-span-3'>Số Lượng</div>
-                <div className='col-span-3'>Số Tiền</div>
-                <div className='col-span-3'>Thao Tác</div>
+              <div className='grid grid-cols-12 text-center capitalize text-gray-500'>
+                <div className='col-span-3'>{t('unit price')}</div>
+                <div className='col-span-3'>{t('quantity')}</div>
+                <div className='col-span-3'>{t('total price')}</div>
+                <div className='col-span-3'>{t('actions')}</div>
               </div>
             </div>
           </div>
@@ -220,7 +221,7 @@ export default function Cart() {
                     ₫{formatCurrency(purchare.buy_count * purchare.price)}
                   </div>
                   <button onClick={handleDelete(index)} className='col-span-3 hover:text-primaryColor'>
-                    Xóa
+                    {t('delete')}
                   </button>
                 </div>
               </div>
@@ -243,8 +244,10 @@ export default function Cart() {
                   }`}
                   disabled={purchasesInCart?.length === 0 && true}
                 />
-                <h2>Chọn tất cả ({extendedPurchases.length})</h2>
-                <button onClick={hanleDeleteManyPurchases}>Xóa</button>
+                <h2 className='capitalize'>
+                  {t('select all')} ({extendedPurchases.length})
+                </h2>
+                <button onClick={hanleDeleteManyPurchases}>{t('delete')}</button>
               </div>
             </div>
             <div className='col-span-9 flex items-center justify-end gap-5'>
@@ -256,44 +259,48 @@ export default function Cart() {
                     placementArrow='top-end'
                     renderPopover={
                       <div className=' w-[500px] rounded-sm bg-white p-7 shadow-md'>
-                        <div className='mb-5 text-xl'>Chi tiết khuyến mãi</div>
+                        <div className='mb-5 text-xl capitalize'>{t('discount detail')}</div>
                         <div className='flex justify-between border-t-[1px] border-[#f3ebeb] py-3'>
-                          <div>Tổng tiền hàng</div>
+                          <div className='capitalize'>{t('total amount')}</div>
                           <div>₫{formatCurrency(totalCheckedPurchasePrice + totalCheckedPurchaseSavingPrice)}</div>
                         </div>
                         <div className='flex justify-between border-t-[1px] border-[#f3ebeb] py-3'>
-                          <div>Giảm giá sản phẩm</div>
+                          <div className='capitalize'>{t('product discount')}</div>
                           <div>₫{formatCurrency(totalCheckedPurchaseSavingPrice)}</div>
                         </div>
                         <div className='flex justify-between border-t-[1px] border-[#f3ebeb] py-3'>
-                          <div>Tiết kiệm</div>
+                          <div>{t('saved')}</div>
                           <div className='text-primaryColor'>₫{formatCurrency(totalCheckedPurchaseSavingPrice)}</div>
                         </div>
                         <div className='flex justify-between'>
-                          <div>Tổng số tiền</div>
+                          <div>{t('total')}</div>
                           <div>₫{formatCurrency(totalCheckedPurchasePrice)}</div>
                         </div>
-                        <div className='mt-2 text-right text-xs text-gray-500'>Số tiền cuối cùng thanh toán</div>
+                        <div className='mt-2 text-right text-xs text-gray-500'>
+                          {t('final price shown at checkout')}
+                        </div>
                       </div>
                     }
                   >
                     <div className='flex items-center'>
-                      <span className='text-base'>Tổng thanh toán ({checkedPurchasesCount} sản phẩm):</span>
+                      <span className='text-base'>
+                        {t('total')} ( {checkedPurchasesCount} {t('product')} ):
+                      </span>
                       <span className='text-2xl text-primaryColor'>₫{formatCurrency(totalCheckedPurchasePrice)}</span>
                     </div>
                   </Popover>
                 }
                 <div>
-                  <span className='mr-4'>Tiết kiệm</span>
+                  <span className='mr-4'>{t('saved')}</span>
                   <span className='text-primaryColor'>₫{formatCurrency(totalCheckedPurchaseSavingPrice)}</span>
                 </div>
               </div>
               <Button
                 onClick={handleBuyPurchases}
-                className='flex items-center justify-center rounded-sm bg-primaryColor py-[10px] px-14 text-sm text-white'
+                className='flex items-center justify-center rounded-sm bg-primaryColor py-[10px] px-14 text-sm capitalize text-white'
                 // disabled={buyPurchaseMutation.isLoading}
               >
-                Mua hàng
+                {t('check out')}
               </Button>
             </div>
           </div>
@@ -301,9 +308,12 @@ export default function Cart() {
       ) : (
         <div className='flex flex-col items-center py-20'>
           <img className='w-[120px]' src={noCard} alt='' />
-          <h1 className='py-3 text-gray-500'>Bạn chưa có sản phẩm nào trong giỏ</h1>
-          <Link to={path.home} className='bg-primaryColor px-8 py-2 text-white transition-all hover:opacity-80'>
-            MUA NGAY
+          <h1 className='py-3 capitalize text-gray-500'>{t('your shopping cart is empty')}</h1>
+          <Link
+            to={path.home}
+            className='bg-primaryColor px-8 py-2 capitalize text-white transition-all hover:opacity-80'
+          >
+            {t('go shopping now')}
           </Link>
         </div>
       )}

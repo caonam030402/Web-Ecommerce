@@ -14,8 +14,10 @@ import { purchaseApi } from 'src/apis/purchase.api'
 import { purchasesStatus } from 'src/constants/purchase'
 import { toast } from 'react-toastify'
 import { path } from 'src/constants/path'
+import { useTranslation } from 'react-i18next'
 
 export default function ProductDetail() {
+  const { t } = useTranslation('productDetail')
   const [buyCount, setBuyCount] = useState(1)
   const { nameId } = useParams()
 
@@ -229,24 +231,25 @@ export default function ProductDetail() {
                 />
                 <div className='mx-4 h-5 w-[0.5px] bg-slate-300' />
                 <p className='text-base'>
-                  <span className='text-primaryColor'>Đã bán:</span> {formatNumberToSocialStyle(product.sold)}
+                  <span className='capitalize text-primaryColor'>{t('sold')}:</span>{' '}
+                  {formatNumberToSocialStyle(product.sold)}
                 </p>
               </div>
               <div className='mt-7 bg-primaryColor/5 p-4 text-base'>
                 <div className=''>
                   <span className='line-through opacity-50'>₫{formatCurrency(product.price_before_discount)}</span>{' '}
-                  <span className='text-sm opacity-70'>Giảm còn</span>
+                  <span className='text-sm capitalize opacity-70'>{t('reduced')}</span>
                 </div>
                 <div className='mt-2 flex items-center font-medium text-primaryColor'>
                   <span className='text-2xl'>₫{formatCurrency(product.price)}</span>
-                  <span className='ml-2 rounded-sm bg-primaryColor px-2 text-[13px] font-bold text-white'>
-                    {rateSale(product.price_before_discount, product.price)} GIẢM
+                  <span className='ml-2 rounded-sm bg-primaryColor px-2 text-[13px] font-bold uppercase text-white'>
+                    {rateSale(product.price_before_discount, product.price)} {t('off')}
                   </span>
                 </div>
               </div>
             </div>
             <div className='mt-8 flex items-center gap-6 text-black/60'>
-              <p>Số Lượng</p>
+              <p className='capitalize'>{t('quantity')}</p>
               <QuantityController
                 onDecrease={hanleBuyCount}
                 onType={hanleBuyCount}
@@ -254,7 +257,9 @@ export default function ProductDetail() {
                 value={buyCount}
                 max={product.quantity}
               />
-              <p>{product.quantity} Sản phẩm có sẵn</p>
+              <p>
+                {product.quantity} {t('pieces available')}
+              </p>
             </div>
             <div className='mt-8 flex text-base text-primaryColor'>
               <button
@@ -264,13 +269,13 @@ export default function ProductDetail() {
                 <span>
                   <BsCartPlus className='mr-2 text-xl' />
                 </span>
-                <span>Thêm vào giỏ hàng</span>
+                <span className='capitalize'>{t('add to cart')}</span>
               </button>
               <button
                 onClick={buyNow}
                 className='ml-3 rounded-sm border-[1px] border-primaryColor bg-primaryColor px-5 capitalize text-white hover:bg-primaryColor/90'
               >
-                Mua ngay
+                {t('buy now')}
               </button>
             </div>
           </div>
@@ -278,7 +283,7 @@ export default function ProductDetail() {
       </div>
       <div className='container mt-4 grid grid-cols-12 px-0'>
         <div className='col-span-10 bg-white p-8 shadow-sm'>
-          <h1 className='mb-3 text-xl uppercase'>Mô tả sản phẩm</h1>
+          <h1 className='mb-3 text-xl uppercase'>{t('product description')}</h1>
           <div
             className='overflow-hidden'
             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.description) }}
@@ -338,7 +343,7 @@ export default function ProductDetail() {
       )}
       {productsData && (
         <div className='container z-0 mt-6 p-0'>
-          <h1 className='mb-3 text-gray-600'>CÓ THỂ BẠN CŨNG THÍCH</h1>
+          <h1 className='mb-3 uppercase text-gray-600'>{t('you may also like')}</h1>
           <div className=' grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'>
             {productsData?.data.data.products.map((product) => (
               <div className='' key={product._id}>

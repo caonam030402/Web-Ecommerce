@@ -9,11 +9,14 @@ import { ErrorResponse } from 'src/types/utils.type'
 import omit from 'lodash/omit'
 import Button from 'src/components/Button'
 import { isAxiosUnprocessableEntityError } from 'src/utils/auth'
+import { useTranslation } from 'react-i18next'
 
 type FormData = Pick<UserSchema, 'password' | 'confirm_password' | 'new_password'>
 const profileSchema = userSchema.pick(['confirm_password', 'password', 'new_password'])
 
 export default function ChangePassword() {
+  const { t } = useTranslation('user')
+
   const {
     register,
     handleSubmit,
@@ -35,7 +38,6 @@ export default function ChangePassword() {
   const onSubmit = handleSubmit(async (data) => {
     try {
       const res = await updateProfileMutation.mutateAsync(omit(data, ['confirm_password']))
-      console.log(res)
       toast.success(res.data.message)
       reset()
     } catch (error) {
@@ -64,49 +66,49 @@ export default function ChangePassword() {
 
   return (
     <div className='bg-white p-7 text-gray-700 shadow-sm'>
-      <div className='mb-1 text-xl'>Thêm Mật Khẩu</div>
-      <div>Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác</div>
+      <div className='mb-1 text-xl capitalize'>{t('changPassword.add password')}</div>
+      <div>{t('changPassword.for account security, please do not share your password with others')}</div>
       <div className='my-8 h-[1px] w-full bg-slate-100'></div>
       <div className='grid grid-cols-12 gap-9'>
         <form className='col-span-8 gap-8' action='' onSubmit={onSubmit}>
           <table className='w-full'>
             <tbody>
               <tr className=''>
-                <td className='pr-[20px] text-right'>Mật Khẩu Cũ</td>
+                <td className='pr-[20px] text-right capitalize'>{t('changPassword.old password')}</td>
                 <td className='w-[75%]'>
                   <div className='align-items 2px h-[40px] w-full'>
                     <Input
                       register={register}
                       errorMessage={errors.password?.message}
                       name='password'
-                      placeholder='Mật Khẩu Cũ'
+                      placeholder={t('changPassword.old password')}
                       className='w-full'
                       type='password'
                       isEyePassword={true}
-                      classNameInput='w-full flex-shrink-0 rounded-sm border-[1px] border-slate-300 px-2 py-2 outline-none'
+                      classNameInput='placeholder:capitalize w-full flex-shrink-0 rounded-sm border-[1px] border-slate-300 px-2 py-2 outline-none'
                     />
                   </div>
                 </td>
               </tr>
               <tr className=''>
-                <td className='pr-[20px] text-right '>Mật Khẩu Mới</td>
+                <td className='pr-[20px] text-right capitalize'>{t('changPassword.new password')}</td>
                 <td className='w-[75%]'>
                   <div className='align-items 2px h-[40px] w-full'>
                     <Input
                       errorMessage={errors.new_password?.message}
                       register={register}
                       name='new_password'
-                      placeholder='Mật Khẩu Mới'
+                      placeholder={t('changPassword.new password')}
                       className='w-full'
                       type='password'
                       isEyePassword={true}
-                      classNameInput='w-full flex-shrink-0 rounded-sm border-[1px] border-slate-300 px-2 py-2 outline-none'
+                      classNameInput='placeholder:capitalize w-full flex-shrink-0 rounded-sm border-[1px] border-slate-300 px-2 py-2 outline-none'
                     />
                   </div>
                 </td>
               </tr>
               <tr className=''>
-                <td className='pr-[20px] text-right '>Xác nhận mật khẩu</td>
+                <td className='pr-[20px] text-right capitalize'>{t('changPassword.confirm password')}</td>
                 <td className='w-[75%]'>
                   <div className='align-items 2px h-[40px] w-full'>
                     <Input
@@ -114,10 +116,10 @@ export default function ChangePassword() {
                       register={register}
                       name='confirm_password'
                       type='password'
-                      placeholder='Xác nhận mật khẩu'
+                      placeholder={t('changPassword.confirm password')}
                       className='w-full'
                       isEyePassword={true}
-                      classNameInput='w-full flex-shrink-0 rounded-sm border-[1px] border-slate-300 px-2 py-2 outline-none'
+                      classNameInput='placeholder:capitalize w-full flex-shrink-0 rounded-sm border-[1px] border-slate-300 px-2 py-2 outline-none'
                     />
                   </div>
                 </td>
@@ -130,7 +132,7 @@ export default function ChangePassword() {
                     type='submit'
                     className='rounded-sm bg-primaryColor px-5 py-2 text-white'
                   >
-                    Lưu
+                    {t('save')}
                   </Button>
                 </td>
               </tr>

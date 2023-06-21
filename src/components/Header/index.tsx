@@ -10,10 +10,13 @@ import noCard from 'src/assets/image/no-cart.png'
 import { formatCurrency } from 'src/utils/utils'
 import NavHeader from '../NavHeader'
 import useSearchProducts from 'src/hooks/useSearchProducts'
+import { useTranslation } from 'react-i18next'
+import { categoryApi } from 'src/apis/category.api'
 
 const MAX_PURCHASES = 5
 
 export default function Header() {
+  const { t } = useTranslation('header')
   // useContext
   const { isAuthenticated } = useContext(AppContext)
 
@@ -23,6 +26,13 @@ export default function Header() {
     queryKey: ['purchases', { status: purchasesStatus.inCart }],
     queryFn: () => purchaseApi.getPurchases({ status: purchasesStatus.inCart }),
     enabled: isAuthenticated
+  })
+
+  const { data: categoriesData } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => {
+      return categoryApi.getCategories()
+    }
   })
 
   useEffect(() => {
@@ -83,7 +93,7 @@ export default function Header() {
                 <div className='relative max-w-[400px] rounded-sm bg-white shadow-md '>
                   {purchasesInCart && purchasesInCart?.length >= 1 ? (
                     <div>
-                      <h1 className='cursor-default p-3 capitalize text-gray-400'>Sản phẩm được thêm</h1>
+                      <h1 className='cursor-default p-3 capitalize text-gray-400'>{t('navHeader.products added')}</h1>
                       <ul>
                         {purchasesInCart.slice(0, MAX_PURCHASES).map((purchase, index) => (
                           <Link key={index} to='' className='flex p-3 hover:bg-slate-50'>
@@ -95,21 +105,21 @@ export default function Header() {
                       </ul>
                       <div className='flex items-center justify-between p-3'>
                         <p className='cursor-default text-xs capitalize'>
-                          {purchasesInCart.length < MAX_PURCHASES ? 0 : purchasesInCart.length - MAX_PURCHASES} thêm vào
-                          giỏ hàng
+                          {purchasesInCart.length < MAX_PURCHASES ? 0 : purchasesInCart.length - MAX_PURCHASES}{' '}
+                          {t('navHeader.products in the basket')}
                         </p>
                         <Link
                           to={path.cart}
-                          className='bg-primaryColor px-3 py-2 text-sm text-white transition-all hover:opacity-80'
+                          className='bg-primaryColor px-3 py-2 text-sm capitalize text-white transition-all hover:opacity-80'
                         >
-                          Xem Giỏ Hàng
+                          {t('navHeader.view cart')}
                         </Link>
                       </div>
                     </div>
                   ) : (
                     <div className='flex h-[250px] w-[400px] flex-col items-center justify-center'>
                       <img className='w-[100px]' src={noCard} alt='' />
-                      <p className='mt-1 text-sm'>Chưa có sản phẩm</p>
+                      <p className='mt-1 text-sm'>{t('navHeader.no products yet')}</p>
                     </div>
                   )}
                 </div>
@@ -140,14 +150,11 @@ export default function Header() {
           </div>
         </div>
         <div className='mt-1 flex gap-3 pl-[13%] text-[12px]'>
-          <Link to=''>Dép</Link>
-          <Link to=''>Áo Khoác</Link>
-          <Link to=''>Áo Croptop</Link>
-          <Link to=''>Túi Xách Nữ</Link>
-          <Link to=''>Ốp iPhone</Link>
-          <Link to=''>Áo Phông</Link>
-          <Link to=''>Tai Nghe Bluetooth</Link>
-          <Link to=''>LEGO</Link>
+          {categoriesData?.data.data.map((category, index) => (
+            <Link key={index} to=''>
+              {category.name}
+            </Link>
+          ))}
         </div>
       </div>
     </header>

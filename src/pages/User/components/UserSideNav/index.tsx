@@ -1,5 +1,6 @@
 import classNames from 'classnames'
 import { useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 import { FaRegUser } from 'react-icons/fa'
 import { MdOutlineModeEditOutline, MdPassword } from 'react-icons/md'
 import { RiBillLine } from 'react-icons/ri'
@@ -9,6 +10,7 @@ import { path } from 'src/constants/path'
 import { getAvatarUrl } from 'src/utils/utils'
 
 export default function UserSideNav() {
+  const { t } = useTranslation('user')
   const { profile } = useContext(AppContext)
   return (
     <div className='mt-10'>
@@ -17,7 +19,7 @@ export default function UserSideNav() {
         <div className='ml-3'>
           <div className='w-[70%] truncate text-sm font-bold'>{profile?.name || profile?.email}</div>
           <div className='flex items-center text-gray-500'>
-            <MdOutlineModeEditOutline /> <p>Sửa Hồ Sơ</p>
+            <MdOutlineModeEditOutline /> <p className='capitalize'>{t('userSideNav.edit profile')}</p>
           </div>
         </div>
       </Link>
@@ -34,7 +36,7 @@ export default function UserSideNav() {
             }
           >
             <FaRegUser className='mr-2 text-xl text-blue-700' />
-            <p>Tài Khoản Của Tôi</p>
+            <p className='capitalize'>{t('userSideNav.my account')}</p>
           </NavLink>
           <NavLink
             to={path.changPassword}
@@ -46,7 +48,7 @@ export default function UserSideNav() {
             }
           >
             <MdPassword className='mr-2 text-xl text-blue-700' />
-            <p>Đổi Mật Khẩu</p>
+            <p className='capitalize'>{t('userSideNav.change password')}</p>
           </NavLink>
           <NavLink
             to={path.historyPurchase}
@@ -58,7 +60,7 @@ export default function UserSideNav() {
             }
           >
             <RiBillLine className='mr-2 text-xl text-blue-700' />
-            <p>Đơn Mua</p>
+            <p className='capitalize'>{t('userSideNav.my purchase')}</p>
           </NavLink>
         </div>
       </div>

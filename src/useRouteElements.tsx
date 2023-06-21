@@ -15,6 +15,7 @@ import HistoryPurchase from './pages/User/pages/HistoryPurchase'
 import Payment from './pages/Payment'
 import LayoutHeaderV2 from './layouts/LayoutHeaderV2'
 import PaymentReturn from './pages/PaymentReturn'
+import { useTranslation } from 'react-i18next'
 
 const Login = lazy(() => import('./pages/Login'))
 
@@ -29,6 +30,7 @@ function RejectedRoute() {
 }
 
 export default function useRouteElements() {
+  const { t } = useTranslation('header')
   const routeElements = useRoutes([
     // Home Page
     {
@@ -82,7 +84,7 @@ export default function useRouteElements() {
         {
           path: path.cart,
           element: (
-            <LayoutHeaderV2 searchBar={true} namePage='Giỏ Hàng'>
+            <LayoutHeaderV2 searchBar={true} namePage={t('navHeader.cart')}>
               <Cart />
             </LayoutHeaderV2>
           )
@@ -112,7 +114,7 @@ export default function useRouteElements() {
         {
           path: path.payment,
           element: (
-            <LayoutHeaderV2 searchBar={false} namePage='Thanh Toán'>
+            <LayoutHeaderV2 searchBar={false} namePage={t('navHeader.payment')}>
               <Payment />
             </LayoutHeaderV2>
           )
@@ -120,7 +122,7 @@ export default function useRouteElements() {
         {
           path: path.paymentReturn,
           element: (
-            <LayoutHeaderV2 searchBar={false} namePage='Thanh Toán VNPAY'>
+            <LayoutHeaderV2 searchBar={false} namePage={t('navHeader.payment VNPAY')}>
               <PaymentReturn />
             </LayoutHeaderV2>
           )

@@ -7,6 +7,7 @@ import { sortBy, order as orderConstant } from 'src/constants/product'
 import classNames from 'classnames'
 import { path } from 'src/constants/path'
 import omit from 'lodash/omit'
+import { useTranslation } from 'react-i18next'
 
 interface Props {
   queryConfig: QueryConfig
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export default function SortProductList({ queryConfig, pageSize }: Props) {
+  const { t } = useTranslation('productList')
   const { sort_by = sortBy.view, order } = queryConfig
   const page = Number(queryConfig.page)
   const navigate = useNavigate()
@@ -45,7 +47,7 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
   return (
     <div className='flex w-full flex-wrap justify-between bg-gray-200/50 px-5 py-3'>
       <div className='flex flex-wrap items-center gap-3 '>
-        <h1>Sắp xếp theo</h1>
+        <h1>{t('sortProductList.sort by')}</h1>
         {/* SORT COMMON */}
         <button
           className={classNames('flex items-center justify-center rounded-sm  px-3 py-2 text-sm ', {
@@ -54,7 +56,7 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
           })}
           onClick={() => handleSort(sortBy.view)}
         >
-          Phổ biến
+          {t('sortProductList.popular')}
         </button>
         {/* SORT LATEST */}
         <button
@@ -64,7 +66,7 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
           })}
           onClick={() => handleSort(sortBy.createdAt)}
         >
-          Mới nhất
+          {t('sortProductList.latest')}
         </button>
         {/* SORT SOLD */}
         <button
@@ -74,7 +76,7 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
           })}
           onClick={() => handleSort(sortBy.sold)}
         >
-          Bán chạy
+          {t('sortProductList.top sale')}
         </button>
         {/* SORT PRICE */}
         <Popover
@@ -89,7 +91,7 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
                   className=' flex w-full justify-between p-3 hover:text-primaryColor'
                   onClick={() => handlePriceOrder(orderConstant.asc as Exclude<ProductListConfig['order'], undefined>)}
                 >
-                  Giá: Thấp đến Cao
+                  {t('sortProductList.price low to high')}
                   {isActivePriceOrder(orderConstant.asc) && (
                     <span className='text-primaryColor'>
                       <MdOutlineCheck className='text-lg text-primaryColor' />
@@ -100,7 +102,7 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
                   className=' flex w-full justify-between p-3 hover:text-primaryColor'
                   onClick={() => handlePriceOrder(orderConstant.desc)}
                 >
-                  <span> Giá: Cao đến Thấp </span>
+                  <span> {t('sortProductList.price high to low')} </span>
                   {isActivePriceOrder(orderConstant.desc) && (
                     <span className='text-primaryColor'>
                       <MdOutlineCheck className='text-lg text-primaryColor' />
@@ -113,7 +115,11 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
         >
           <div className='flex w-[200px] items-center justify-between rounded-sm bg-white px-3 py-2'>
             <span className={classNames({ 'text-primaryColor': order })}>
-              {order ? (order === orderConstant.asc ? 'Giá: Thấp đến Cao' : ' Giá: Cao đến Thấp') : 'Giá'}
+              {order
+                ? order === orderConstant.asc
+                  ? t('sortProductList.price low to high')
+                  : t('sortProductList.price high to low')
+                : t('sortProductList.price')}
             </span>
             <span>
               <MdKeyboardArrowDown className='text-base' />

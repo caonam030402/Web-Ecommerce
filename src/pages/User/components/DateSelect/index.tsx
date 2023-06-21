@@ -1,5 +1,6 @@
 import range from 'lodash/range'
 import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface Props {
   onChange?: (value: Date) => void
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export default function DateSelect({ errorMessage, onChange, value }: Props) {
+  const { t } = useTranslation('user')
   const [date, setDate] = useState({
     date: value?.getDate() || 1,
     month: value?.getMonth() || 0,
@@ -63,7 +65,7 @@ export default function DateSelect({ errorMessage, onChange, value }: Props) {
         >
           {range(0, 12).map((item) => (
             <option value={item} key={item}>
-              Tháng {item + 1}
+              {t('Profile.month')} {item + 1}
             </option>
           ))}
         </select>

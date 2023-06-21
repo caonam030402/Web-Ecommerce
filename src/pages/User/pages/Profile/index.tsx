@@ -14,6 +14,7 @@ import { isAxiosUnprocessableEntityError, setProfileToLS } from 'src/utils/auth'
 import { getAvatarUrl } from 'src/utils/utils'
 import { ErrorResponse } from 'src/types/utils.type'
 import InputFile from 'src/components/InputFile'
+import { useTranslation } from 'react-i18next'
 
 type FormData = Pick<UserSchema, 'name' | 'address' | 'phone' | 'date_of_birth' | 'avatar'>
 type FormDataError = Omit<FormData, 'date_of_birth'> & {
@@ -24,6 +25,8 @@ const profileSchema = userSchema.pick(['name', 'address', 'phone', 'date_of_birt
 export default function Profile() {
   const { setProfile } = useContext(AppContext)
   const [file, setFile] = useState<File>()
+
+  const { t } = useTranslation('user')
 
   const previewImage = useMemo(() => {
     return file ? URL.createObjectURL(file) : ''
@@ -116,8 +119,8 @@ export default function Profile() {
 
   return (
     <div className='bg-white p-7 text-gray-700 shadow-sm'>
-      <div className='mb-1 text-xl'>Hồ sơ của tôi</div>
-      <div>Quản lý thông tin hồ sơ để bảo mật tài khoản</div>
+      <div className='mb-1 text-xl'>{t('Profile.my profile')}</div>
+      <div>{t('Profile.manage profile information for account security')}</div>
       <div className='my-8 h-[1px] w-full bg-slate-100'></div>
       <div className='grid grid-cols-12 gap-9'>
         <form className='col-span-8 gap-8' action='' onSubmit={onSubmit}>
@@ -128,7 +131,7 @@ export default function Profile() {
                 <td>{profile?.email}</td>
               </tr>
               <tr className=''>
-                <td className='pr-[20px] text-right'>Tên</td>
+                <td className='pr-[20px] text-right'>{t('Profile.name')}</td>
                 <td className='w-[75%]'>
                   <div className='align-items 2px h-[40px] w-full'>
                     <Input
@@ -144,7 +147,7 @@ export default function Profile() {
                 </td>
               </tr>
               <tr className=''>
-                <td className='pr-[20px] text-right'>Số Điện Thoại</td>
+                <td className='pr-[20px] text-right'>{t('Profile.phone number')}</td>
                 <td className='w-[75%]'>
                   <div className='align-items 2px flex h-[40px] w-full'>
                     <Controller
@@ -165,7 +168,7 @@ export default function Profile() {
                 </td>
               </tr>
               <tr className=''>
-                <td className='pr-[20px] text-right'>Địa chỉ</td>
+                <td className='pr-[20px] text-right'>{t('Profile.address')}</td>
                 <td className='w-[75%]'>
                   <div className='align-items 2px h-[40px] w-full'>
                     <Input
@@ -181,7 +184,7 @@ export default function Profile() {
                 </td>
               </tr>
               <tr>
-                <td className='pr-[20px] text-right'>Ngày sinh</td>
+                <td className='pr-[20px] text-right'>{t('Profile.date of birth')}</td>
                 <td>
                   <Controller
                     control={control}
@@ -200,7 +203,7 @@ export default function Profile() {
                 <td></td>
                 <td className='p-0'>
                   <button type='submit' className='rounded-sm bg-primaryColor px-5 py-2 text-white'>
-                    Lưu
+                    {t('save')}
                   </button>
                 </td>
               </tr>
@@ -216,7 +219,7 @@ export default function Profile() {
                 className='h-[100px] w-[100px] rounded-full object-cover'
               />
               <InputFile name='avatar' onChange={handleChangeFile} />
-              <p className='text-sm text-gray-500'> Dụng lượng file tối đa 1 MB Định dạng:.JPEG, .PNG</p>
+              <p className='text-sm text-gray-500'> {t('Profile.maximum file')}</p>
             </div>
           </div>
         </div>

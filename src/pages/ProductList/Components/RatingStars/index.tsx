@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { BsStar, BsStarFill } from 'react-icons/bs'
 import { createSearchParams, useNavigate } from 'react-router-dom'
 import { path } from 'src/constants/path'
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export default function RatingStars({ queryConfig }: Props) {
+  const { t } = useTranslation('productList')
   const navigate = useNavigate()
   const handleFilterStar = (ratingFilter: number) => {
     navigate({
@@ -38,7 +40,7 @@ export default function RatingStars({ queryConfig }: Props) {
                       return <BsStar key={indexStar} className='mr-[6px] text-[13px] text-yellow-500' />
                     }
                   })}
-                {index !== 0 && <span>trở lên</span>}
+                {index !== 0 && <span className='lowercase'>{t('asideFilter.up')}</span>}
               </div>
             </li>
           ))}
