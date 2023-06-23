@@ -12,6 +12,8 @@ import USER_VI from 'src/locales/vi/user.json'
 import USER_EN from 'src/locales/en/user.json'
 import FOOTER_VI from 'src/locales/vi/footer.json'
 import FOOTER_EN from 'src/locales/en/footer.json'
+import PAYMENT_VI from 'src/locales/vi/payment.json'
+import PAYMENT_EN from 'src/locales/en/payment.json'
 
 export const getLanguageFromLS = () => localStorage.getItem('language')
 export const setLanguageToLS = (language: string) => localStorage.setItem('language', language)
@@ -28,7 +30,8 @@ export const resources = {
     productDetail: PRODUCT_DETAIL_EN,
     cart: CART_EN,
     user: USER_EN,
-    footer: FOOTER_EN
+    footer: FOOTER_EN,
+    payment: PAYMENT_EN
   },
   vi: {
     productList: PRODUCT_LIST_VI,
@@ -36,7 +39,8 @@ export const resources = {
     productDetail: PRODUCT_DETAIL_VI,
     cart: CART_VI,
     user: USER_VI,
-    footer: FOOTER_VI
+    footer: FOOTER_VI,
+    payment: PAYMENT_VI
   }
 } as const
 
@@ -46,7 +50,7 @@ export const defaultNS = 'product'
 i18n.use(initReactI18next).init({
   resources,
   lng: 'vi',
-  ns: ['productList', 'header', 'product', 'productDetail', 'cart', 'user', 'footer'],
+  ns: ['productList', 'header', 'product', 'productDetail', 'cart', 'user', 'footer', 'payment'],
   fallbackLng: 'vi',
   defaultNS,
   interpolation: {

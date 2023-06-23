@@ -60,8 +60,6 @@ export default function Profile() {
     resolver: yupResolver(profileSchema)
   })
 
-  console.log(errors)
-
   useEffect(() => {
     if (profile !== undefined) {
       setValue('name', profile.name as string)
@@ -122,8 +120,8 @@ export default function Profile() {
       <div className='mb-1 text-xl'>{t('Profile.my profile')}</div>
       <div>{t('Profile.manage profile information for account security')}</div>
       <div className='my-8 h-[1px] w-full bg-slate-100'></div>
-      <div className='grid grid-cols-12 gap-9'>
-        <form className='col-span-8 gap-8' action='' onSubmit={onSubmit}>
+      <div className='grid grid-cols-12 md:gap-9'>
+        <form className='order-2 col-span-12 gap-8 lg:order-1 lg:col-span-8' action='' onSubmit={onSubmit}>
           <table className='w-full'>
             <tbody>
               <tr>
@@ -201,7 +199,7 @@ export default function Profile() {
               </tr>
               <tr>
                 <td></td>
-                <td className='p-0'>
+                <td className='p-0 text-right'>
                   <button type='submit' className='rounded-sm bg-primaryColor px-5 py-2 text-white'>
                     {t('save')}
                   </button>
@@ -210,8 +208,8 @@ export default function Profile() {
             </tbody>
           </table>
         </form>
-        <div className='col-span-4 '>
-          <div className='border-l-[1px] border-slate-200'>
+        <div className='lg-order-2 order-1 col-span-12 lg:col-span-4 '>
+          <div className='border-slate-200 lg:border-l-[1px]'>
             <div className='flex flex-col items-center justify-center px-14 py-6'>
               <img
                 src={previewImage || getAvatarUrl(profile?.avatar)}
@@ -219,7 +217,7 @@ export default function Profile() {
                 className='h-[100px] w-[100px] rounded-full object-cover'
               />
               <InputFile name='avatar' onChange={handleChangeFile} />
-              <p className='text-sm text-gray-500'> {t('Profile.maximum file')}</p>
+              <p className='text-center text-sm text-gray-500 lg:text-left'> {t('Profile.maximum file')}</p>
             </div>
           </div>
         </div>

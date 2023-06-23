@@ -37,7 +37,6 @@ export default function DateSelect({ errorMessage, onChange, value }: Props) {
 
     setDate(newDate)
     onChange && onChange(new Date(newDate.year, newDate.month, newDate.date))
-    console.log(onChange)
   }
 
   return (

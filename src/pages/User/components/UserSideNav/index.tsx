@@ -13,17 +13,17 @@ export default function UserSideNav() {
   const { t } = useTranslation('user')
   const { profile } = useContext(AppContext)
   return (
-    <div className='mt-10'>
+    <div className='mt-3 md:mt-9'>
       <Link to={path.profile} className='flex items-center '>
         <img className='h-[35px] w-[35px] flex-shrink-0 rounded-full' src={getAvatarUrl(profile?.avatar)} alt='' />
         <div className='ml-3'>
-          <div className='w-[70%] truncate text-sm font-bold'>{profile?.name || profile?.email}</div>
+          <div className='w-full truncate text-sm font-bold md:w-[50%]'>{profile?.name || profile?.email}</div>
           <div className='flex items-center text-gray-500'>
             <MdOutlineModeEditOutline /> <p className='capitalize'>{t('userSideNav.edit profile')}</p>
           </div>
         </div>
       </Link>
-      <div className='my-8 h-[1px] w-[80%] bg-gray-200'></div>
+      <div className='my-4 h-[1px] w-[80%] bg-gray-200 md:my-8'></div>
       <div className='text-sm'>
         <div className='flex flex-col gap-5'>
           <NavLink

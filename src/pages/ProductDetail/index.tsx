@@ -159,22 +159,22 @@ export default function ProductDetail() {
   if (!product) return null
 
   return (
-    <div>
-      <div className='container relative mt-10 bg-white p-4 shadow'>
-        <div className='grid grid-cols-12 gap-9'>
-          <div className='col-span-5'>
+    <div className='container'>
+      <div className='container relative mt-5 bg-white p-4 shadow md:mt-10'>
+        <div className='grid grid-cols-12 gap-2 lg:gap-9'>
+          <div className='col-span-12 md:col-span-5'>
             <div
               onClick={() => {
                 setOpenModalImage(true)
                 setActiveImageInModal(activeImage)
               }}
               aria-hidden='true'
-              className=' relative w-full cursor-zoom-in overflow-hidden pt-[100%]'
+              className='relative w-full cursor-zoom-in overflow-hidden pt-[100%]'
               onMouseMove={handleZoomImage}
               onMouseLeave={handleRemoveZoomImage}
             >
               <img
-                className='pointer-events-none absolute top-0 right-0 h-full w-[100%] rounded-t-sm object-cover'
+                className='pointer-events-none absolute top-0 left-0 h-full w-[100%] rounded-t-sm object-cover'
                 src={activeImage}
                 alt={product.name}
                 ref={refImage}
@@ -216,7 +216,7 @@ export default function ProductDetail() {
               </button>
             </div>
           </div>
-          <div className='col-span-7 mt-3'>
+          <div className='col-span-12 mt-3 md:col-span-7'>
             <h1 className=' border-gray-100 text-lg'>{product.name}</h1>
             <div className='my-3 h-[0.5px] w-full bg-gray-100'></div>
             <div>
@@ -249,7 +249,7 @@ export default function ProductDetail() {
               </div>
             </div>
             <div className='mt-8 flex items-center gap-6 text-black/60'>
-              <p className='capitalize'>{t('quantity')}</p>
+              <p className='hidden capitalize md:block'>{t('quantity')}</p>
               <QuantityController
                 onDecrease={hanleBuyCount}
                 onType={hanleBuyCount}
@@ -261,7 +261,7 @@ export default function ProductDetail() {
                 {product.quantity} {t('pieces available')}
               </p>
             </div>
-            <div className='mt-8 flex text-base text-primaryColor'>
+            <div className='mt-8 hidden text-base text-primaryColor sm:flex'>
               <button
                 onClick={addToCart}
                 className='flex items-center justify-center rounded-sm border-[1px] border-primaryColor bg-primaryColor/10 py-3 px-5 capitalize hover:bg-primaryColor/5'
@@ -282,16 +282,14 @@ export default function ProductDetail() {
         </div>
       </div>
       <div className='container mt-4 grid grid-cols-12 px-0'>
-        <div className='col-span-10 bg-white p-8 shadow-sm'>
+        <div className='col-span-12 bg-white p-4 shadow-sm md:p-8'>
           <h1 className='mb-3 text-xl uppercase'>{t('product description')}</h1>
           <div
-            className='overflow-hidden'
+            className='overflow-hidden text-sm text-neutral-700'
             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.description) }}
           ></div>
         </div>
-        <div className='col-span-2'></div>
       </div>
-
       {/* MODAL */}
       {openModalImage && (
         <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/30'>
@@ -353,6 +351,23 @@ export default function ProductDetail() {
           </div>
         </div>
       )}
+      {/* Nav Mobile */}
+      <div className='required: fixed bottom-0 left-0 col-span-12 grid w-full grid-cols-12 bg-white text-primaryColor shadow-md sm:hidden'>
+        <button
+          onClick={addToCart}
+          className='col-span-6 flex flex-col items-center justify-center bg-secondaryYellow py-3 capitalize text-white transition hover:opacity-90'
+        >
+          <span>
+            <BsCartPlus className='text-xl' />
+          </span>
+        </button>
+        <button
+          onClick={buyNow}
+          className='col-span-6 bg-primaryColor capitalize text-white transition hover:bg-primaryColor/90'
+        >
+          {t('buy now')}
+        </button>
+      </div>
     </div>
   )
 }

@@ -62,7 +62,7 @@ export default function AsideFitter({ categories, queryConfig }: Props) {
   }
 
   return (
-    <div>
+    <div className=''>
       <h1
         className={classNames('flex items-center gap-1 text-base font-semibold', {
           'text-primaryColor': !category

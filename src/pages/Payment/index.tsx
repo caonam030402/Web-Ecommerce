@@ -20,6 +20,7 @@ import { UserSchema, userSchema } from 'src/utils/rules'
 import { yupResolver } from '@hookform/resolvers/yup'
 import InputNumber from 'src/components/InputNumber'
 import { setProfileToLS } from 'src/utils/auth'
+import { useTranslation } from 'react-i18next'
 
 const addressDefaultValue = {
   city: '',
@@ -44,16 +45,14 @@ export default function Payment() {
   const [address, setAddress] = useState(addressDefaultValue)
   const updateProfileMutation = useMutation(userApi.updateProfile)
   const navigate = useNavigate()
+  const { t } = useTranslation('payment')
 
   const {
     register,
     handleSubmit,
     control,
-    getValues,
     formState: { errors },
-    watch,
-    setValue,
-    setError
+    setValue
   } = useForm<FormData>({
     defaultValues: {
       name: '',
@@ -181,16 +180,16 @@ export default function Payment() {
 
   return (
     <div className='container mt-4'>
-      <div className='bg-white p-6 shadow-sm'>
+      <div className='bg-white p-3 shadow-sm md:p-6'>
         <div className='flex items-center gap-1 text-primaryColor'>
           <TfiLocationPin className='text-xl' />
-          <span className='text-[17px]'>Địa Chỉ Nhận Hàng</span>
+          <span className='text-[17px] capitalize'>{t('delivery address')}</span>
         </div>
         <div className='mt-3 text-[15px]'>
           <span className='mr-3 font-bold'>{profile?.name ? profile.name : profile?.email}</span>
           <span>{profile?.address ? profile?.address : 'Vui lòng thêm địa chỉ'}</span>
           <button onClick={handleOpenModal} className='ml-4 text-blue-500'>
-            Thay đổi
+            {t('change')}
           </button>
         </div>
         {isOpenModal && (
@@ -198,9 +197,9 @@ export default function Payment() {
             <form
               onSubmit={onSubmit}
               action=''
-              className='absolute right-[50%] top-[50%] w-[550px] translate-x-[50%] translate-y-[-50%] rounded-sm bg-white p-6 text-left'
+              className='absolute right-[50%] top-[50%] w-[85%] translate-x-[50%] translate-y-[-50%] rounded-sm bg-white p-6 text-left md:w-[40%]'
             >
-              <h1 className='text-[20px]'>Địa chỉ mới</h1>
+              <h1 className='text-[20px] capitalize'>{t('new address')}</h1>
               <div className='mt-6'>
                 <div ref={myElementRef} className='relative w-full'>
                   <Input
@@ -208,7 +207,7 @@ export default function Payment() {
                     register={register}
                     errorMessage={errors.address?.message}
                     onClick={handleOpenSelect}
-                    placeholder='Tỉnh/ Thành phố, Quận/Huyện, Phường/Xã'
+                    placeholder={`${t('province/City')}, ${t('district/District')}, ${t('ward/Commune')}`}
                   ></Input>
                   {isOpenSeclect && (
                     <div className='absolute top-[80%] w-full border bg-white shadow-sm'>
@@ -218,21 +217,21 @@ export default function Payment() {
                             'border-primaryColor text-primaryColor': !address.city
                           })}
                         >
-                          Tỉnh/Thành phố
+                          {t('province/City')}
                         </div>
                         <div
                           className={classNames('border-b-2 py-4 ', {
                             'border-primaryColor text-primaryColor': address.city !== '' && !addressDistrict
                           })}
                         >
-                          Quận/Huyện
+                          {t('district/District')}
                         </div>
                         <div
                           className={classNames('border-b-2 py-4 ', {
                             'border-primaryColor text-primaryColor': address.city !== '' && address.district !== ''
                           })}
                         >
-                          Phường/Xã
+                          {t('ward/Commune')}
                         </div>
                       </div>
                       <div className='h-[140px] overflow-auto border-t'>
@@ -283,20 +282,20 @@ export default function Payment() {
                 </div>
                 <Input
                   errorMessage={errors.name?.message}
-                  className='mt-3'
+                  className='mt-3 placeholder:capitalize'
                   register={register}
                   name='name'
-                  placeholder='Họ và tên'
+                  placeholder={t('full name')}
                 ></Input>
                 <Controller
                   control={control}
                   name='phone'
                   render={({ field }) => (
                     <InputNumber
-                      placeholder='Số Điện Thoại'
+                      placeholder={t('phone number')}
                       errorMessage={errors.phone?.message}
                       className='mt-3'
-                      classNameInput='w-full flex-shrink-0 rounded-sm border-[1px] border-slate-300 px-2 py-2 outline-none'
+                      classNameInput=' placeholder:capitalize w-full flex-shrink-0 rounded-sm border-[1px] border-slate-300 px-2 py-2 outline-none'
                       {...field}
                       onChange={field.onChange}
                     />
@@ -309,13 +308,13 @@ export default function Payment() {
                   onClick={handleOpenModal}
                   className='flex w-[150px] items-center justify-center rounded-sm border py-[8px] text-sm '
                 >
-                  Hủy
+                  {t('cancel')}
                 </Button>
                 <Button
                   type='submit'
                   className='flex w-[150px] items-center justify-center rounded-sm bg-primaryColor py-[8px] text-sm text-white hover:bg-primaryColor/80'
                 >
-                  Hoàn Thành
+                  {t('complete')}
                 </Button>
               </div>
             </form>
@@ -323,84 +322,96 @@ export default function Payment() {
           </div>
         )}
       </div>
-      <div className='mt-3 rounded-sm bg-white p-6 shadow-sm'>
+      <div className='mt-3 rounded-sm bg-white p-3 shadow-sm md:p-6'>
         <table className='text-sx w-full text-center'>
           <thead>
-            <tr className=' text-gray-400'>
-              <th className='text-left text-lg font-normal text-gray-800'>Sản phẩm</th>
-              <th className='font-normal'>Đơn giá</th>
-              <th className='font-normal'>Số lượng</th>
-              <th className='text-right font-normal'>Thành tiền</th>
+            <tr className='hidden text-gray-400 md:contents'>
+              <th className='text-left text-lg font-normal capitalize text-gray-800'>{t('product')}</th>
+              <th className='font-normal capitalize'>{t('into money')}</th>
+              <th className='font-normal capitalize'>{t('quanlity')}</th>
+              <th className='text-right font-normal capitalize'>{t('total payment')}</th>
             </tr>
           </thead>
           <tbody>
             {purchasePayment.map((purchase, index) => (
               <tr key={index} className='text-center'>
-                <td className='max-w-[300px] pb-0 pt-6'>
-                  <div className='flex items-center gap-3'>
-                    <img className='h-14 w-14 border' src={purchase.product.image} alt='' />
-                    <span className='truncate'>{purchase.product.name}</span>
+                <td className='pt-3 pb-0 md:max-w-[300px] md:pt-6'>
+                  <div className='flex items-start gap-3 md:items-center'>
+                    <img className='h-14 w-14 shrink-0 border object-cover' src={purchase.product.image} alt='' />
+                    <div className='w-full'>
+                      <span className='text-left line-clamp-2'>{purchase.product.name}</span>
+                      <div className='mt-2 flex justify-between md:hidden'>
+                        <div className='pb-0'>x{formatCurrency(purchase.buy_count)}</div>
+                        <div className='pb-0 font-bold text-primaryColor'>
+                          ₫{formatCurrency(purchase.buy_count * purchase.price)}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </td>
-                <td className='pb-0 pt-6'>₫{formatCurrency(purchase.price)}</td>
-                <td className='pb-0 pt-6'>{formatCurrency(purchase.buy_count)}</td>
-                <td className='pb-0 pt-6 text-right'>₫{formatCurrency(purchase.buy_count * purchase.price)}</td>
+                <td className='hidden pb-0 md:table-cell md:pt-6'>₫{formatCurrency(purchase.price)}</td>
+                <td className='hidden pb-0 md:table-cell md:pt-6'>{formatCurrency(purchase.buy_count)}</td>
+                <td className='hidden pb-0 text-right md:table-cell md:pt-6'>
+                  ₫{formatCurrency(purchase.buy_count * purchase.price)}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <div className='relative mt-3 bg-white p-6 shadow-sm'>
+      <div className='relative mt-3 bg-white p-3 shadow-sm md:p-6'>
         {!isOpenMethodPayment ? (
           <div className='flex items-center justify-between'>
-            <div className='text-lg font-normal text-gray-800'>Phương thức thanh toán</div>
+            <div className='hidden text-lg font-normal capitalize text-gray-800 md:block'>{t('payment methods')}</div>
             <div>
-              <span className='mr-16'>Thanh toán khi nhận hàng</span>
-              <button onClick={handleOpenMethodPayment} className='text-blue-600'>
-                THAY ĐỔI
+              <span className='mr-16 capitalize'>{t('payment on delivery')}</span>
+              <button onClick={handleOpenMethodPayment} className='uppercase text-blue-600'>
+                {t('change')}
               </button>
             </div>
           </div>
         ) : (
           <div>
-            <div className='mt-3 flex items-center gap-5'>
-              <h1 className='text-lg'>Phương thức thanh toán</h1>
-              <div>
+            <div className='flex items-center gap-5 md:mt-3'>
+              <h1 className='hidden text-lg md:block'>{t('payment methods')}</h1>
+              <div className='w-full'>
                 <button
                   onClick={() => handlePayment('ATHOME')}
                   className={`mr-3 border-[1px] px-3 py-2 ${
                     activePayment.Athome && 'border-[1px] border-primaryColor text-primaryColor'
                   }`}
                 >
-                  Thanh toán khi nhận hàng
+                  {t('delivery')}
                 </button>
                 <button
                   className={`border-[1px] px-3 py-2 ${
-                    activePayment.VnPay && 'border-[1px] border-primaryColor text-primaryColor'
+                    activePayment.VnPay && ' border-[1px] border-primaryColor text-primaryColor'
                   }`}
                   onClick={() => handlePayment('VNPAY')}
                 >
-                  Thánh toán qua ví VNPAY
+                  {t('via VNPAY wallet')}
                 </button>
               </div>
             </div>
           </div>
         )}
-        <div className=' mt-10 flex items-end justify-between'>
-          <div>
-            Nhấn Đặt hàng đồng nghĩa với việc bạn đồng ý tuân theo
-            <span className='text-blue-600'> Điều khoản Shopee</span>
+        <div className='mt-4 flex items-end justify-between md:mt-6'>
+          <div className='hidden md:block'>
+            {t('clicking Order means you agree to abide by the')}
+            <span className='text-blue-600'> {t('shopee terms')}</span>
           </div>
-          <div className='flex flex-col items-end'>
-            <div>
-              Tổng thanh toán:
-              <span className='ml-4 text-2xl text-primaryColor'>₫{formatCurrency(totalCheckedPurchasePrice)}</span>
+          <div className='flex items-center md:flex-col md:items-end'>
+            <div className='capitalize'>
+              {t('total payment')}:
+              <span className='text-xl text-primaryColor md:ml-4 md:text-2xl'>
+                ₫{formatCurrency(totalCheckedPurchasePrice)}
+              </span>
             </div>
             <Button
               onClick={handleBuyPurchases}
-              className='mt-4 flex w-[180px] items-center justify-center rounded-sm bg-primaryColor py-[10px] text-sm text-white'
+              className='flex w-[180px] items-center justify-center rounded-sm bg-primaryColor py-[10px] text-sm capitalize text-white md:mt-4'
             >
-              Đặt hàng
+              {t('order')}
             </Button>
           </div>
         </div>

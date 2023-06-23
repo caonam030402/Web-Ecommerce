@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import NavHeader from '../NavHeader'
 import { Link } from 'react-router-dom'
 import useSearchProducts from 'src/hooks/useSearchProducts'
@@ -9,9 +10,10 @@ interface Props {
 
 export default function HeaderV2({ searchBar, namePage }: Props) {
   const { register, onSubmitSearch } = useSearchProducts()
+  const { t } = useTranslation('header')
   return (
-    <div className='border-b border-b-black/10 bg-white'>
-      <div className='bg-primaryColor py-2 text-white'>
+    <div className='hidden border-b border-b-black/10 bg-white md:block'>
+      <div className='hidden bg-primaryColor py-2 text-white lg:block'>
         <div className='container'>
           <NavHeader />
         </div>
@@ -44,7 +46,7 @@ export default function HeaderV2({ searchBar, namePage }: Props) {
                 {...register('name')}
                 className='flex-1 text-neutral-900 outline-none'
                 type='text'
-                placeholder='Bạn tìm gì hôm nay ?'
+                placeholder={t('navHeader.what are you looking for today?')}
               />
               <button className='flex w-[12%] items-center justify-center bg-primaryColor p-[10px]'>
                 <svg

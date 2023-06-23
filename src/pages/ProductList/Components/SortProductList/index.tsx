@@ -45,12 +45,12 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
   }
 
   return (
-    <div className='flex w-full flex-wrap justify-between bg-gray-200/50 px-5 py-3'>
-      <div className='flex flex-wrap items-center gap-3 '>
-        <h1>{t('sortProductList.sort by')}</h1>
+    <div className='mb-3 flex w-full flex-wrap justify-between bg-gray-200/50 px-2 py-2 sm:mb-0 sm:py-3 sm:px-5'>
+      <div className='grid grid-cols-12 flex-wrap items-center gap-3 sm:flex sm:justify-start'>
+        <h1 className='hidden md:block'>{t('sortProductList.sort by')}</h1>
         {/* SORT COMMON */}
         <button
-          className={classNames('flex items-center justify-center rounded-sm  px-3 py-2 text-sm ', {
+          className={classNames('col-span-4 flex items-center justify-center rounded-sm px-3 py-2 text-sm ', {
             'bg-primaryColor text-white hover:bg-primaryColor/80': isActiveSort(sortBy.view),
             'bg-white text-black hover:bg-slate-100': !isActiveSort(sortBy.view)
           })}
@@ -60,7 +60,7 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
         </button>
         {/* SORT LATEST */}
         <button
-          className={classNames('flex items-center justify-center rounded-sm  px-3 py-2 text-sm', {
+          className={classNames('col-span-4 flex items-center justify-center rounded-sm  px-3 py-2 text-sm', {
             'bg-primaryColor text-white hover:bg-primaryColor/80': isActiveSort(sortBy.createdAt),
             'bg-white text-black hover:bg-slate-100': !isActiveSort(sortBy.createdAt)
           })}
@@ -70,10 +70,13 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
         </button>
         {/* SORT SOLD */}
         <button
-          className={classNames('flex items-center justify-center rounded-sm  px-3 py-2 text-sm ', {
-            'bg-primaryColor text-white hover:bg-primaryColor/80': isActiveSort(sortBy.sold),
-            'bg-white text-black hover:bg-slate-100': !isActiveSort(sortBy.sold)
-          })}
+          className={classNames(
+            'col-span-4 hidden items-center justify-center rounded-sm px-3  py-2 text-sm sm:flex ',
+            {
+              'bg-primaryColor text-white hover:bg-primaryColor/80': isActiveSort(sortBy.sold),
+              'bg-white text-black hover:bg-slate-100': !isActiveSort(sortBy.sold)
+            }
+          )}
           onClick={() => handleSort(sortBy.sold)}
         >
           {t('sortProductList.top sale')}
@@ -83,10 +86,10 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
           classNameArrow=''
           duration={0}
           offsetTop={1}
-          className='flex items-center'
+          className='col-span-4 flex items-center'
           renderPopover={
-            <div className=' rounded-sm bg-white shadow-sm'>
-              <ul className='w-[200px]'>
+            <div className=' rounded-sm bg-white shadow-sm '>
+              <ul className='sm:w-[200px]'>
                 <button
                   className=' flex w-full justify-between p-3 hover:text-primaryColor'
                   onClick={() => handlePriceOrder(orderConstant.asc as Exclude<ProductListConfig['order'], undefined>)}
@@ -113,8 +116,8 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
             </div>
           }
         >
-          <div className='flex w-[200px] items-center justify-between rounded-sm bg-white px-3 py-2'>
-            <span className={classNames({ 'text-primaryColor': order })}>
+          <div className=' flex w-[200px] items-center justify-between rounded-sm bg-white px-3 py-2'>
+            <span className={classNames('line-clamp-1', { 'text-primaryColor': order })}>
               {order
                 ? order === orderConstant.asc
                   ? t('sortProductList.price low to high')
@@ -128,7 +131,7 @@ export default function SortProductList({ queryConfig, pageSize }: Props) {
         </Popover>
         {/* PAGINATION TOP */}
       </div>
-      <div className='flex items-center'>
+      <div className='hidden items-center lg:flex'>
         <div>
           <span className='text-primaryColor'>{page}</span>
           <span>/</span>

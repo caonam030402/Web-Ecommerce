@@ -55,16 +55,16 @@ export default function ProductList() {
       <div>
         <Slide />
       </div>
-      <div className='container mt-10'>
+      <div className='container mt-4 sm:mt-8'>
         {productsData && (
           <div className='grid grid-cols-12 gap-6'>
-            <div className='col-span-2'>
+            <div className='col-span-3 hidden sm:block lg:col-span-2'>
               <AsideFitter queryConfig={queryConfig} categories={categoriesData?.data.data || []} />
             </div>
             {!checkProductListEmpty() && (
-              <div className='col-span-10'>
+              <div className='col-span-12 sm:col-span-9 lg:col-span-10'>
                 <SortProductList queryConfig={queryConfig} pageSize={productsData.data.data.pagination.page_size} />
-                <div className='mt-6 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
+                <div className='mt-0 grid grid-cols-2 gap-4 md:mt-6 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
                   {productsData?.data.data.products.map((product) => (
                     <div className='' key={product._id}>
                       <ProductItem product={product} />

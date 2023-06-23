@@ -16,7 +16,7 @@ function App() {
   }, [reset])
 
   return (
-    <div>
+    <div className='transition'>
       {routeElements}
       <ToastContainer />
     </div>

@@ -8,7 +8,7 @@ module.exports = {
     extend: {
       colors: {
         primaryColor: '#ee4d2d',
-        secondaryYellow: '#F5F5F5'
+        secondaryYellow: '#24a998'
       }
     }
   },
@@ -20,10 +20,15 @@ module.exports = {
           marginLeft: 'auto',
           marginRight: 'auto',
           paddingLeft: theme('spacing.4'),
-          paddingRight: theme('spacing.4')
+          paddingRight: theme('spacing.4'),
+          '@screen sm': {
+            paddingLeft: theme('spacing.6'),
+            paddingRight: theme('spacing.6')
+          }
         }
       })
     }),
-    require('@tailwindcss/line-clamp')
+    require('@tailwindcss/line-clamp'),
+    require('tailwind-scrollbar')({ nocompatible: true })
   ]
 }

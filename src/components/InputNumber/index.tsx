@@ -8,7 +8,7 @@ export interface InputNumberProps extends InputHTMLAttributes<HTMLInputElement> 
 
 const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(function InputNumberInner(
   {
-    classNameInput = 'w-full rounded-sm border-[0.5px] border-gray-300 py-2 px-3 outline-none focus:border-gray-700',
+    classNameInput = 'w-full md:rounded-sm border-[0.5px] border-gray-300 py-2 px-3 outline-none focus:border-gray-700',
     className,
     errorMessage,
     onChange,

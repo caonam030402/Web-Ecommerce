@@ -129,7 +129,7 @@ class Http {
       })
       .then((res) => {
         const { access_token } = res.data.data
-        console.log(access_token)
+
         setAccessTokenToLS(access_token)
         this.accessToken = access_token
         return access_token

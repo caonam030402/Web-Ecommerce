@@ -1,4 +1,4 @@
 export const config = {
-  baseUrl: 'http://localhost:5000/v1/',
+  baseUrl: 'https://caonam-api-ecommerce.onrender.com/',
   maxSizeUploadAvartar: 1048576
 }

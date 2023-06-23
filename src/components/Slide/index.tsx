@@ -21,7 +21,7 @@ export default function Slide() {
         pagination={{ clickable: true }}
         scrollbar={{ draggable: true }}
         autoplay={{ delay: 3000, disableOnInteraction: false }}
-        className='group z-0 w-[67%]'
+        className='group z-0 w-full md:w-[67%]'
         centeredSlides={true}
         loop={true}
       >
@@ -53,7 +53,7 @@ export default function Slide() {
           </svg>
         </div>
       </Swiper>
-      <div className='flex flex-1 flex-col gap-[6px]'>
+      <div className='hidden flex-1 flex-col gap-[6px] md:flex'>
         {Image.map((image, index) => (
           <div key={index} className=''>
             <img src={image} alt='' />

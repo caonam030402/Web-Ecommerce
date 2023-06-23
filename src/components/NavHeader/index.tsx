@@ -1,43 +1,21 @@
 import dealNotify from '../../assets/image/deal.jpg'
 import { AiFillInstagram } from 'react-icons/ai'
 import { FaFacebook } from 'react-icons/fa'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Popover from '../Popover'
 import { MdLanguage, MdNotificationsNone } from 'react-icons/md'
 import { BiHelpCircle } from 'react-icons/bi'
 import { path } from 'src/constants/path'
 import { useContext, useEffect } from 'react'
 import { AppContext } from '../../Contexts/app.contexts'
-import { purchasesStatus } from 'src/constants/purchase'
-import { authApi } from 'src/apis/auth.api'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { getAvatarUrl } from 'src/utils/utils'
 import { useTranslation } from 'react-i18next'
 import { getLanguageFromLS, locales, setLanguageToLS } from 'src/i18n/i18n'
+import Account from '../Account'
 
 export default function NavHeader() {
-  const { setIsAuthenticated, isAuthenticated, setProfile, profile } = useContext(AppContext)
-  const queryClient = useQueryClient()
+  const { isAuthenticated } = useContext(AppContext)
   const { i18n, t } = useTranslation('header')
   const currentLanguage = locales[i18n.language as keyof typeof locales]
-
-  //Navigate
-  const navigate = useNavigate()
-
-  // logout Mutation
-  const logoutMutation = useMutation({
-    mutationFn: authApi.logout,
-    onSuccess: () => {
-      setIsAuthenticated(false)
-      navigate(path.home)
-      setProfile(null)
-      queryClient.removeQueries({ queryKey: ['purchases', { status: purchasesStatus.inCart }] })
-    }
-  })
-
-  const handleLogout = () => {
-    logoutMutation.mutate()
-  }
 
   useEffect(() => {
     const lng = getLanguageFromLS()
@@ -50,13 +28,13 @@ export default function NavHeader() {
   }
 
   return (
-    <div className='flex justify-between text-[13px] font-normal'>
-      <div className='flex gap-5'>
+    <div className='hidden justify-between text-[13px] font-normal lg:flex'>
+      <div className='flex items-center gap-5'>
         <Link to=''>{t('navHeader.merchant channels')}</Link>
         <Link to=''>{t('navHeader.become a Shopee Seller')}</Link>
 
         <div>
-          <div className=' flex items-center'>
+          <div className='flex items-center'>
             <span className='mr-[4px] capitalize'>{t('navHeader.flow us on')}</span>
             <span className='flex items-center gap-1'>
               <FaFacebook className='text-[17px]' />
@@ -68,7 +46,7 @@ export default function NavHeader() {
       <div className='flex items-center gap-5'>
         {/* Popover Notifi */}
         <Popover
-          className='flex items-center'
+          className='md flex items-center'
           renderPopover={
             <div className='rounded-sm bg-white shadow-sm'>
               <h1 className='p-3 text-gray-400'>{t('navHeader.new notifications received')}</h1>
@@ -116,30 +94,7 @@ export default function NavHeader() {
 
         {/* Popover Login */}
         {isAuthenticated ? (
-          <Popover
-            renderPopover={
-              <div className='flex flex-col items-start rounded-sm bg-white shadow-xl'>
-                <button className='px-3 py-2 hover:text-primaryColor'>
-                  <Link className='block' to={path.profile}>
-                    {t('navHeader.my account')}
-                  </Link>
-                </button>
-                <Link to={path.historyPurchase} className='px-3 py-2 capitalize hover:text-primaryColor'>
-                  {t('navHeader.purchase')}
-                </Link>
-                <button onClick={handleLogout} className='px-3 py-2 capitalize hover:text-primaryColor'>
-                  {t('navHeader.logout')}
-                </button>
-              </div>
-            }
-          >
-            <Link to={path.profile}>
-              <div className='flex items-center'>
-                <img src={getAvatarUrl(profile?.avatar)} alt='' className='mr-1 w-5 rounded-full object-cover' />
-                <p className='flex-shrink-0'>{profile?.email}</p>
-              </div>
-            </Link>
-          </Popover>
+          <Account pathTo={path.profile} />
         ) : (
           <div>
             <Link className='mr-5' to={path.login}>

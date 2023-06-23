@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import Popover from '../Popover'
 import { useQuery } from '@tanstack/react-query'
 import { useContext, useEffect } from 'react'
@@ -12,10 +12,13 @@ import NavHeader from '../NavHeader'
 import useSearchProducts from 'src/hooks/useSearchProducts'
 import { useTranslation } from 'react-i18next'
 import { categoryApi } from 'src/apis/category.api'
+import Account from '../Account'
+import { FiArrowLeft } from 'react-icons/fi'
 
 const MAX_PURCHASES = 5
 
 export default function Header() {
+  const currentPath = useLocation()
   const { t } = useTranslation('header')
   // useContext
   const { isAuthenticated } = useContext(AppContext)
@@ -42,14 +45,14 @@ export default function Header() {
   const purchasesInCart = purchasesInCartData?.data.data
 
   return (
-    <header className='bg-primaryColor py-2'>
+    <header className='sticky top-0 z-20 bg-primaryColor py-3 md:relative md:z-0 md:py-5'>
       <div className='container text-white'>
         <NavHeader />
-        <div className='mt-4 flex items-center'>
+        <div className='mt-0 flex items-center lg:mt-4'>
           <Link to={path.home}>
             <svg
               viewBox='0 0 192 65'
-              className='shopee-svg-icon LybVoA m2rqmO icon-shopee-logo mr-5 hidden w-36 md:block '
+              className='shopee-svg-icon LybVoA m2rqmO icon-shopee-logo mr-5 hidden w-28 md:block lg:w-36  '
             >
               <g>
                 <path
@@ -60,21 +63,30 @@ export default function Header() {
             </svg>
           </Link>
 
-          <form onSubmit={onSubmitSearch} className='flex flex-1 rounded-sm bg-white py-[3px] pr-[3px] pl-5'>
+          {currentPath.pathname !== path.home && (
+            <Link to={path.home}>
+              <FiArrowLeft className='mr-2 block text-[24px] md:hidden' />
+            </Link>
+          )}
+
+          <form
+            onSubmit={onSubmitSearch}
+            className='flex flex-1 rounded-sm bg-white py-[1px] pr-[3px] pl-2 sm:pl-5 md:py-[3px]'
+          >
             <input
               {...register('name')}
               className='flex-1 text-neutral-900 outline-none'
               type='text'
-              placeholder='Bạn tìm gì hôm nay ?'
+              placeholder={t('navHeader.what are you looking for today?')}
             />
-            <button className='flex w-[6.5%] items-center justify-center rounded-sm bg-primaryColor p-[6px]'>
+            <button className='flex w-[12%] shrink-0 items-center justify-center rounded-sm p-[6px] sm:bg-primaryColor md:w-[6.5%]'>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 fill='none'
                 viewBox='0 0 24 24'
                 strokeWidth={1.5}
                 stroke='currentColor'
-                className='h-6 w-6'
+                className='h-5 w-5 text-neutral-600 sm:h-6 sm:w-6 sm:text-white'
               >
                 <path
                   strokeLinecap='round'
@@ -84,13 +96,13 @@ export default function Header() {
               </svg>
             </button>
           </form>
-          <div className='flex w-[10%] justify-center'>
+          <div className='mx-4 flex justify-center lg:mx-0 lg:w-[10%]'>
             {/* Popover Cart */}
             <Popover
               placementArrow='bottom-end'
               className='index-1000'
               renderPopover={
-                <div className='relative max-w-[400px] rounded-sm bg-white shadow-md '>
+                <div className='relative w-[320px] rounded-sm bg-white shadow-md sm:w-[400px] '>
                   {purchasesInCart && purchasesInCart?.length >= 1 ? (
                     <div>
                       <h1 className='cursor-default p-3 capitalize text-gray-400'>{t('navHeader.products added')}</h1>
@@ -117,7 +129,7 @@ export default function Header() {
                       </div>
                     </div>
                   ) : (
-                    <div className='flex h-[250px] w-[400px] flex-col items-center justify-center'>
+                    <div className='flex h-[250px] w-[320px] flex-col items-center justify-center sm:w-[400px]'>
                       <img className='w-[100px]' src={noCard} alt='' />
                       <p className='mt-1 text-sm'>{t('navHeader.no products yet')}</p>
                     </div>
@@ -148,14 +160,17 @@ export default function Header() {
               </Link>
             </Popover>
           </div>
+          <div className='z-40 block lg:hidden'>
+            <Account name={false} pathTo={isAuthenticated ? path.profile : path.login} />
+          </div>
         </div>
-        <div className='mt-1 flex gap-3 pl-[13%] text-[12px]'>
+        {/* <div className='mt-1 flex gap-3 text-[12px]'>
           {categoriesData?.data.data.map((category, index) => (
             <Link key={index} to=''>
               {category.name}
             </Link>
           ))}
-        </div>
+        </div> */}
       </div>
     </header>
   )

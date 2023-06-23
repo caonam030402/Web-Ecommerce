@@ -68,14 +68,14 @@ export default function ChangePassword() {
     <div className='bg-white p-7 text-gray-700 shadow-sm'>
       <div className='mb-1 text-xl capitalize'>{t('changPassword.add password')}</div>
       <div>{t('changPassword.for account security, please do not share your password with others')}</div>
-      <div className='my-8 h-[1px] w-full bg-slate-100'></div>
-      <div className='grid grid-cols-12 gap-9'>
-        <form className='col-span-8 gap-8' action='' onSubmit={onSubmit}>
+      <div className='my-4 h-[1px] w-full bg-slate-100 md:my-8'></div>
+      <div className='grid grid-cols-12 md:gap-9'>
+        <form className='col-span-12 gap-8 md:col-span-8' action='' onSubmit={onSubmit}>
           <table className='w-full'>
             <tbody>
               <tr className=''>
-                <td className='pr-[20px] text-right capitalize'>{t('changPassword.old password')}</td>
-                <td className='w-[75%]'>
+                <td className='hidden pr-[20px] text-right capitalize md:block'>{t('changPassword.old password')}</td>
+                <td className='w-full md:w-[75%]'>
                   <div className='align-items 2px h-[40px] w-full'>
                     <Input
                       register={register}
@@ -91,7 +91,7 @@ export default function ChangePassword() {
                 </td>
               </tr>
               <tr className=''>
-                <td className='pr-[20px] text-right capitalize'>{t('changPassword.new password')}</td>
+                <td className='hidden pr-[20px] text-right capitalize md:block'>{t('changPassword.new password')}</td>
                 <td className='w-[75%]'>
                   <div className='align-items 2px h-[40px] w-full'>
                     <Input
@@ -108,7 +108,9 @@ export default function ChangePassword() {
                 </td>
               </tr>
               <tr className=''>
-                <td className='pr-[20px] text-right capitalize'>{t('changPassword.confirm password')}</td>
+                <td className='hidden pr-[20px] text-right capitalize md:block'>
+                  {t('changPassword.confirm password')}
+                </td>
                 <td className='w-[75%]'>
                   <div className='align-items 2px h-[40px] w-full'>
                     <Input
@@ -125,7 +127,7 @@ export default function ChangePassword() {
                 </td>
               </tr>
               <tr>
-                <td></td>
+                <td className='hidden md:block'></td>
                 <td className='p-0'>
                   <Button
                     disabled={updateProfileMutation.isLoading || checkInputEmpty()}
@@ -139,7 +141,7 @@ export default function ChangePassword() {
             </tbody>
           </table>
         </form>
-        <div className='col-span-4 '></div>
+        <div className='col-span-4 hidden md:block'></div>
       </div>
     </div>
   )

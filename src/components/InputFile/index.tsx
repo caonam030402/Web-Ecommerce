@@ -14,7 +14,7 @@ export default function InputFile({ onChange, name }: Props) {
 
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileFromLocal = event.target.files?.[0]
-    console.log(fileFromLocal)
+
     if (
       (fileFromLocal && fileFromLocal.size >= config.maxSizeUploadAvartar) ||
       !fileFromLocal?.type.includes('image')

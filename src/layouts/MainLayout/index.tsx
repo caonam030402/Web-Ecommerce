@@ -22,8 +22,12 @@ export default function MainLayout({ children }: Props) {
     <div>
       <Header />
       {loading && (
-        <div className='fixed inset-0 z-10 h-full w-full bg-white/100 transition-all'>
-          <BeatLoader size={10} color='#ee4d2d' className='absolute left-[50%] top-[50%] z-20' />
+        <div className='fixed inset-0 z-30 h-full w-full bg-white/100 transition-all'>
+          <BeatLoader
+            size={10}
+            color='#ee4d2d'
+            className='absolute left-[50%] top-[50%] z-20 translate-x-[-50%] translate-y-[50%]'
+          />
         </div>
       )}
       {children}

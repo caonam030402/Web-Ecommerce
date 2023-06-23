@@ -12,3 +12,5 @@ export const path = {
   payment: '/payment',
   paymentReturn: '/payment/vnpay_return'
 } as const
+
+export const PORT = 4000

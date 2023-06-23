@@ -58,7 +58,7 @@ export default function QuantityController({
 
   return (
     <div className='mb-0'>
-      <div className={classNameWrapper + ' flex justify-center'}>
+      <div className={'flex justify-center' + classNameWrapper}>
         <button className='flex h-8 w-8 items-center justify-center rounded-l-sm border border-gray-300 text-gray-600'>
           <VscChromeMinimize onClick={decrease} />
         </button>
@@ -72,7 +72,7 @@ export default function QuantityController({
         ></InputNumber>
         <button
           onClick={increase}
-          className='flex h-8 w-8 items-center justify-center rounded-l-sm border border-gray-300 text-gray-600 '
+          className='flex h-8 w-8 items-center justify-center rounded-r-sm border border-gray-300 text-gray-600 '
         >
           <VscAdd />
         </button>
