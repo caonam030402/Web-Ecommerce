@@ -24,7 +24,6 @@ const CountdownTimer = ({ targetTime }: { targetTime: number }) => {
   function calculateRemainingTime() {
     const now = moment()
     const distance = moment(targetTime).diff(now)
-
     if (distance <= 0) {
       return {
         hours: ('0' + 0).slice(-2),

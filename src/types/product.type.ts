@@ -1,3 +1,5 @@
+import { Promotion } from './promotion.type'
+
 export interface Product {
   _id: string
   images: string[]
@@ -14,6 +16,7 @@ export interface Product {
     name: string
   }
   image: string
+  promotion?: Promotion
   createdAt: string
   updatedAt: string
 }

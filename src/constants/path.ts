@@ -1,4 +1,5 @@
 export const path = {
+  flashSale: 'flash_sale',
   home: '/',
   user: '/user',
   profile: '/user/profile',

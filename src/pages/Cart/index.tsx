@@ -11,7 +11,7 @@ import { path } from 'src/constants/path'
 import { purchasesStatus } from 'src/constants/purchase'
 import useScrollPosition from 'src/hooks/useScrollPosition'
 import { ExtendedPurchase, Purchase } from 'src/types/purchase.type'
-import { formatCurrency, generateNameId } from 'src/utils/utils'
+import { formatCurrency, formatNumberToSocialStyle, generateNameId } from 'src/utils/utils'
 import keyBy from 'lodash/keyBy'
 import { AppContext } from 'src/Contexts/app.contexts'
 import noCard from 'src/assets/image/no-cart.png'
@@ -24,7 +24,7 @@ export default function Cart() {
     query: '(min-width: 768px)'
   })
 
-  const scrollPosition = useScrollPosition()
+  const scrollPosition = useScrollPosition({ scrollY: 800 })
   const { t } = useTranslation('cart')
   const { extendedPurchases, setExtendedPurchases, setPurchasePayment } = useContext(AppContext)
   const navigate = useNavigate()

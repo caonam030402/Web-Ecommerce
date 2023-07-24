@@ -16,6 +16,7 @@ import Payment from './pages/Payment'
 import LayoutHeaderV2 from './layouts/LayoutHeaderV2'
 import PaymentReturn from './pages/PaymentReturn'
 import { useTranslation } from 'react-i18next'
+import FlashSale from './pages/FlashSale'
 
 const Login = lazy(() => import('./pages/Login'))
 
@@ -125,6 +126,14 @@ export default function useRouteElements() {
             <LayoutHeaderV2 searchBar={false} namePage={t('navHeader.payment VNPAY')}>
               <PaymentReturn />
             </LayoutHeaderV2>
+          )
+        },
+        {
+          path: path.flashSale,
+          element: (
+            <MainLayout>
+              <FlashSale />
+            </MainLayout>
           )
         }
       ]

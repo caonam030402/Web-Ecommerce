@@ -40,7 +40,7 @@ export default function Input({
     <div>
       <div className={`${className} ${isEyePassword && 'relative'}`}>
         <input
-          className={`${classNameInput} capitalize ${
+          className={`${classNameInput} ${
             errorMessage && 'bg-red- border-red-600 bg-red-700/10 outline focus:border-red-700'
           }`}
           {...registerResult}

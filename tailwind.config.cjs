@@ -9,6 +9,15 @@ module.exports = {
       colors: {
         primaryColor: '#ee4d2d',
         secondaryYellow: '#24a998'
+      },
+      animation: {
+        slideDown: 'slideDown 0.35s ease-out'
+      },
+      keyframes: {
+        slideDown: {
+          '0%': { transform: 'translateY(-100%)' },
+          '100%': { transform: 'translateY(0)' }
+        }
       }
     }
   },
