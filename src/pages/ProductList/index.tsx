@@ -74,7 +74,7 @@ export default function ProductList() {
 
   return (
     <div>
-      <div className='container z-0 mt-6 flex gap-[6px]'>
+      <div className='z-0 flex gap-[6px] md:container md:mt-6'>
         <Slide
           autoplay={true}
           pagination={true}
@@ -109,7 +109,7 @@ export default function ProductList() {
             {!checkProductListEmpty() && (
               <div className='col-span-12 sm:col-span-9 lg:col-span-10'>
                 <SortProductList queryConfig={queryConfig} pageSize={productsData.data.data.pagination.page_size} />
-                <div className='mt-0 grid grid-cols-2 gap-4 md:mt-6 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
+                <div className='mt-0 grid grid-cols-2 gap-2 md:mt-6 md:grid-cols-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5'>
                   {productsData?.data.data.products.map((product) => (
                     <div className='' key={product._id}>
                       <ProductItem product={product} />

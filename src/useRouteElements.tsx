@@ -17,6 +17,7 @@ import LayoutHeaderV2 from './layouts/LayoutHeaderV2'
 import PaymentReturn from './pages/PaymentReturn'
 import { useTranslation } from 'react-i18next'
 import FlashSale from './pages/FlashSale'
+import useMediaQuery from './hooks/useMediaQuery'
 
 const Login = lazy(() => import('./pages/Login'))
 
@@ -31,6 +32,7 @@ function RejectedRoute() {
 }
 
 export default function useRouteElements() {
+  const { isMobile } = useMediaQuery()
   const { t } = useTranslation('header')
   const routeElements = useRoutes([
     // Home Page
@@ -85,7 +87,7 @@ export default function useRouteElements() {
         {
           path: path.cart,
           element: (
-            <LayoutHeaderV2 searchBar={true} namePage={t('navHeader.cart')}>
+            <LayoutHeaderV2 classNameHeaderMobile='text-white' searchBar={true} namePage={t('navHeader.cart')}>
               <Cart />
             </LayoutHeaderV2>
           )
@@ -115,7 +117,7 @@ export default function useRouteElements() {
         {
           path: path.payment,
           element: (
-            <LayoutHeaderV2 searchBar={false} namePage={t('navHeader.payment')}>
+            <LayoutHeaderV2 classNameHeaderMobile='text-white' searchBar={false} namePage={t('navHeader.payment')}>
               <Payment />
             </LayoutHeaderV2>
           )
@@ -123,14 +125,25 @@ export default function useRouteElements() {
         {
           path: path.paymentReturn,
           element: (
-            <LayoutHeaderV2 searchBar={false} namePage={t('navHeader.payment VNPAY')}>
+            <LayoutHeaderV2
+              classNameHeaderMobile='text-white'
+              searchBar={false}
+              namePage={t('navHeader.payment VNPAY')}
+            >
               <PaymentReturn />
             </LayoutHeaderV2>
           )
         },
         {
           path: path.flashSale,
-          element: (
+          element: isMobile ? (
+            <LayoutHeaderV2
+              classNameHeaderMobile='bg-white shadow-sm'
+              nameImagePage='https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/fb1088de81e42c4e538967ec12cb5caa.png'
+            >
+              <FlashSale />
+            </LayoutHeaderV2>
+          ) : (
             <MainLayout>
               <FlashSale />
             </MainLayout>

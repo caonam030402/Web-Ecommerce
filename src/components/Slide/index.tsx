@@ -38,7 +38,6 @@ export default function Slide({
   return (
     <Swiper
       effect='cards'
-      slidesPerGroup={slidesPerGroup}
       modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
       spaceBetween={spaceBetween}
       loop={true}
